@@ -45,22 +45,31 @@ class RedisCache(CacheInterface):
         """
         self._serialize = pickle.dumps
         self._deserialize = pickle.loads
+        self._prefix = None
         self._redis = redis.Redis(**kwargs)
 
     def get(self, key):
+        if self._prefix is not None:
+            key = key + self._prefix
         v = self._redis.get(key)
         if v is None:
             return None
         return self._deserialize(v)
 
     def set(self, key, value, ttl=None):
+        if self._prefix is not None:
+            key = key + self._prefix
         value = self._serialize(value)
         return self._redis.set(key, value, ex=ttl)
 
     def has(self, key):
+        if self._prefix is not None:
+            key = key + self._prefix
         return self._redis.exists(key)
 
     def remove(self, key):
+        if self._prefix is not None:
+            key = key + self._prefix
         return self._redis.unlink(key)
 
     def purge(self):
@@ -72,6 +81,9 @@ class RedisCache(CacheInterface):
     def close(self):
         self._redis.close()
         self._redis = None
+
+    def set_prefix(self, prefix):
+        self._prefix = prefix
 
     def __del__(self):
         self._redis.close()

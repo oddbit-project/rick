@@ -1,2 +1,2 @@
 # rick
-opinionated python micro-framework
+Python plumbing for micro-framework based applications

@@ -1,8 +1,3 @@
-import collections
-import threading
-from typing import Union
-
-
 class CacheInterface:
 
     def get(self, key):
@@ -20,3 +15,17 @@ class CacheInterface:
     def purge(self):
         pass
 
+    def set_prefix(self, prefix):
+        pass
+
+
+class CacheNull(CacheInterface):
+
+    def get(self, key):
+        return None
+
+    def set(self, key, value, ttl=None):
+        return None
+
+    def has(self, key):
+        return False

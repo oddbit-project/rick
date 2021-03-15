@@ -1,1 +1,1 @@
-from .cache import CacheInterface
+from .cache import CacheInterface, CacheNull
