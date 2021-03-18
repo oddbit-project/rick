@@ -127,11 +127,15 @@ class CryptRedisCache(RedisCache):
             raise RuntimeError("Empty fernet encryption key")
         super().__init__(**kwargs)
         self._crypt = Fernet256(key)
-        self._serialize = self._serialize
-        self._deserialize = self._deserialize
+        self._serialize = self._serializer
+        self._deserialize = self._deserializer
 
-    def _serialize(self, data):
-        return self._crypt.encrypt(pickle.dumps(data))
+    def _serializer(self, data):
+        if data is not None:
+            return self._crypt.encrypt(pickle.dumps(data))
+        return data
 
-    def _deserialize(self, data):
-        return self._crypt.decrypt(pickle.loads(data))
+    def _deserializer(self, data):
+        if data is not None:
+            return pickle.loads(self._crypt.decrypt(data))
+        return data

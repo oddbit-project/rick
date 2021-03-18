@@ -41,14 +41,11 @@ setup(
     python_requires=">=3.7",
     extras_require={
         "redis": ["redis >= 3.5.0"],
+        "bcrypt": ["bcrypt >= 3.2.0"]
     },
     install_requires=[],
     zip_safe=False,
     tests_require=[
-        "flake8>=2.1.0",
-        "tox>=1.7.0",
-        "codecov>=2.0.0",
-        "pytest-cov>=2.8.1",
     ],
     entry_points={
         'console_scripts': [
