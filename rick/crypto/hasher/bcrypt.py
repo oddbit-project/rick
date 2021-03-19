@@ -22,7 +22,7 @@ class BcryptHasher(HasherInterface):
         :return: hash string
         """
         if len(password) == 0:
-            raise ValueError("empty password")
+            raise ValueError("hash(): empty password")
 
         password = hashlib.sha256(password.encode('utf-8')).hexdigest().encode('utf-8')
         salt = bcrypt.gensalt(rounds=self._rounds, prefix=self._prefix.encode('utf-8'))
@@ -51,9 +51,9 @@ class BcryptHasher(HasherInterface):
         if prefix is None:
             prefix = self._prefix
         if len(pw_hash) < 4:
-            raise ValueError("hash cannot be empty")
+            raise ValueError("hash(): hash cannot be empty")
         tokens = pw_hash[1:].split('$', 2)
         if len(tokens) < 3 or tokens[0] != prefix or not tokens[1].isdigit():
-            raise ValueError("invalid hash")
+            raise ValueError("hash(): invalid hash")
 
         return int(tokens[1]) < self._rounds

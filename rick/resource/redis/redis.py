@@ -124,7 +124,7 @@ class CryptRedisCache(RedisCache):
             health_check_interval=0
         """
         if key is None:
-            raise RuntimeError("Empty fernet encryption key")
+            raise ValueError("Empty fernet encryption key")
         super().__init__(**kwargs)
         self._crypt = Fernet256(key)
         self._serialize = self._serializer
