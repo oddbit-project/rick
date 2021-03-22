@@ -8,7 +8,7 @@ class TestBcryptHasher:
         '12345678': '$2b$08$Y1nUUzX0ZikQi0hSoGZXlODlQYUnF6SnyZIrFIVUZ2jgnIun/mDOO',
         'sdktrqjkl4dskl': '$2b$08$5McEp4dvSohJdxnWONX3JOYJ8P6TQK6qosOAz0CSAkOr5T647r5G2',
         '423FDS$&dYdcWs/dAS5': '$2b$08$WiCcKN2HtPzjH58dNEIcf.o/NoFKCZDJIr0c/Fqy1jKiknpvIuvTC'
-        
+
     }
 
     invalid_passwords = ['', ]
