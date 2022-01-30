@@ -1,12 +1,10 @@
 import copy
 import importlib
-from collections.abc import Iterable
 from threading import Lock
 from inspect import isclass
 
 from rick.base import Di
 from rick.event.handler import EventHandler
-from rick.mixin.injectable import Injectable
 
 
 class EventState:
@@ -20,15 +18,14 @@ class EventState:
         self.data = copy.deepcopy(src)
 
 
-class EventManager(Injectable):
+class EventManager:
 
-    def __init__(self, di: Di):
+    def __init__(self):
         #
         self._handlers = {}
         self._stack = []
         self._stack_lock = Lock()
         self._handler_lock = Lock()
-        super().__init__(di)
 
     def sleep(self) -> EventState:
         """
@@ -163,9 +160,10 @@ class EventManager(Injectable):
         with self._handler_lock:
             return list(self._handlers.keys())
 
-    def dispatch(self, event_name: str, **kwargs):
+    def dispatch(self,di:Di, event_name: str, **kwargs):
         """
         Dispatches an Event by name
+        :param di: Di instance
         :param event_name: event name to dispatch
         :param kwargs:
         :return:
@@ -201,7 +199,7 @@ class EventManager(Injectable):
 
                     if isclass(cls) and issubclass(cls, EventHandler):
                         # build object from class
-                        obj = cls(self.get_di())
+                        obj = cls(di)
 
                         # check if event method handler exists
                         obj_handler = getattr(obj, event_name, None)
