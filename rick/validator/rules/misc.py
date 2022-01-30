@@ -43,7 +43,7 @@ class Uuid(Rule):
 
 @registry.register_cls(name='required')
 class Required(Rule):
-    MSG_ERROR = "required"
+    MSG_ERROR = "value required"
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
         if value is None:
