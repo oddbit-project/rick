@@ -58,24 +58,24 @@ invalid_mgr_cfg = {
 
 def test_manager():
     di = Di()
-    mgr = EventManager(di)
+    mgr = EventManager()
     mgr.load_handlers(mgr_cfg)
 
     # test dispatching event 1
     out_list = []
     # dispatch an event, each event changes the out list
-    mgr.dispatch('event_one', out=out_list)
+    mgr.dispatch(di, 'event_one', out=out_list)
     assert out_list == [3, 2, 1]
 
     # test dispatching event 2
     out_list = []
     # dispatch an event, each event changes the out list
-    mgr.dispatch('event_two', out=out_list)
+    mgr.dispatch(di, 'event_two', out=out_list)
     assert out_list == [3, -2, -1]
 
 def test_manager_invalid():
     di = Di()
-    mgr = EventManager(di)
+    mgr = EventManager()
     mgr.load_handlers(invalid_mgr_cfg)
 
     with pytest.raises(RuntimeError):
@@ -83,27 +83,27 @@ def test_manager_invalid():
         out_list = []
         # dispatch event 1, should fail because Handler_0 is not descendant of
         # EventHandler
-        mgr.dispatch('event_one', out=out_list)
+        mgr.dispatch(di, 'event_one', out=out_list)
         assert out_list == [3, 2, 1]
 
 def test_manager_sleep():
     di = Di()
-    mgr = EventManager(di)
+    mgr = EventManager()
     mgr.load_handlers(mgr_cfg)
 
     # save mgr state, create new object & reload config
     state = mgr.sleep()
-    mgr = EventManager(di)
+    mgr = EventManager()
     mgr.wakeup(state)
 
     # test dispatching event 1
     out_list = []
     # dispatch an event, each event changes the out list
-    mgr.dispatch('event_one', out=out_list)
+    mgr.dispatch(di, 'event_one', out=out_list)
     assert out_list == [3, 2, 1]
 
     # test dispatching event 2
     out_list = []
     # dispatch an event, each event changes the out list
-    mgr.dispatch('event_two', out=out_list)
+    mgr.dispatch(di, 'event_two', out=out_list)
     assert out_list == [3, -2, -1]
