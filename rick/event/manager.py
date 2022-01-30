@@ -1,11 +1,23 @@
 import copy
 import importlib
+from collections.abc import Iterable
 from threading import Lock
 from inspect import isclass
 
 from rick.base import Di
 from rick.event.handler import EventHandler
 from rick.mixin.injectable import Injectable
+
+
+class EventState:
+    """
+    Wrapper for EventManager sleep() configuration
+    This class should be treated as read-only, as EventManager will reference EventState.data on wakeup(), instead
+    of copying the attribute
+    """
+
+    def __init__(self, src: dict):
+        self.data = copy.deepcopy(src)
 
 
 class EventManager(Injectable):
@@ -18,22 +30,25 @@ class EventManager(Injectable):
         self._handler_lock = Lock()
         super().__init__(di)
 
-    def sleep(self) -> dict:
+    def sleep(self) -> EventState:
         """
         Serialize EventManager config
+        This can be used with self.wakeup() to save/restore internal state for the manager,
+        for fast instantiation
+        :return EventState
         """
         with self._handler_lock:
-            return copy.deepcopy(self._handlers)
+            return EventState(self._handlers)
 
-    def wakeup(self, src: dict):
+    def wakeup(self, src: EventState):
         """
         Unserialize EventManager config
-        :param src:
+        :param src: EventState object
         :return:
         """
         with self._handler_lock:
             with self._stack_lock:
-                self._handlers = src
+                self._handlers = src.data
 
     def load_handlers(self, src: dict):
         """
@@ -48,7 +63,13 @@ class EventManager(Injectable):
         :return:
         """
         for event_name, priorities in src.items():
+            if not isinstance(priorities, dict):
+                raise RuntimeError("load_handlers(): priority list for '%s' must be of dict type" % (event_name,))
             for pri, handlers in priorities.items():
+                if not isinstance(handlers, (list, tuple)):
+                    raise RuntimeError(
+                        "load_handlers(): handler list for '%s':%s must be of list type" % (event_name, pri))
+
                 for h in handlers:
                     self.add_handler(event_name, h, pri)
 
@@ -159,6 +180,7 @@ class EventManager(Injectable):
         with self._handler_lock:
             evt = self._handlers[event_name]
             priorities = list(evt.keys())
+            priorities.remove('handlers')
             priorities.sort()
             for p in priorities:
                 for handler in evt[p]:
@@ -188,7 +210,7 @@ class EventManager(Injectable):
                                 "dispatch(): event handler for '%s' not found in '%s'" % (event_name, handler))
                         obj_handler(**kwargs)
 
-                    elif callable(cls):
+                    elif callable(cls) and not isclass(cls):
                         # cls is a function
                         kwargs['event_name'] = event_name
                         cls(**kwargs)
