@@ -98,6 +98,7 @@ class Form:
         self.fields = {}
         self.validator = Validator()
         self.controls = {}
+        self.errors = {}
         self.method = self.METHOD_POST
         self.action = ""
         self._translator = translator
@@ -189,6 +190,7 @@ class Form:
                 else:
                     field.value = None
             return True
+        self.errors = self.validator.get_errors()
         return False
 
     def error_messages(self) -> dict:
@@ -196,7 +198,7 @@ class Form:
         Get validation error messages
         :return: dict
         """
-        return self.validator.get_errors()
+        return self.errors
 
     def get(self, id: str) -> Any:
         """
