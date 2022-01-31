@@ -5,12 +5,12 @@ from rick.form import Form
 class SampleForm(Form):
 
     def init(self):
-        self.field('text', 'name', 'Full Name', validators="required|minlen:4|maxlen:8")\
+        self.field('text', 'name', 'Full Name', validators="required|minlen:4|maxlen:8") \
             .field('text', 'age', 'Age', validators="required|numeric|between:9,125")
         return self
 
-def test_form_simple():
 
+def test_form_simple():
     frm = SampleForm().init()
 
     # empty data, must fail

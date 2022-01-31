@@ -29,8 +29,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
         'Topic :: Software Development :: Libraries :: Python Modules',
@@ -38,7 +38,7 @@ setup(
     long_description_content_type='text/markdown',
     packages=find_packages(),
     include_package_data=True,
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     extras_require={
         "redis": ["redis >= 3.5.0"],
         "bcrypt": ["bcrypt >= 3.2.0"]

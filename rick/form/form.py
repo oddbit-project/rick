@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 from rick.mixin import Translator
 from rick.validator import Validator
 
@@ -28,6 +28,18 @@ class Field:
                     self.validators['required'] = None
 
 
+class Control:
+    type = ""
+    label = ""
+    value = None
+    attributes = {}
+    options = {}
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+
 class FieldSet:
 
     def __init__(self, id: str, label: str):
@@ -53,7 +65,7 @@ class FieldSet:
         required=True: If field is required
         validators=[list] |  validators="string": Validator list
         messages={}: Custom validation messages
-        select=[list]: dict of values for select
+        select={}: dict of values:labels for select
         attributes={}: optional visualization attributes
         options={}: optional field-specific options
 
@@ -76,13 +88,34 @@ class FieldSet:
 
 class Form:
     DEFAULT_FIELDSET = '__default__'
+    METHOD_POST = 'POST'
+    METHOD_PUT = 'PUT'
+    METHOD_PATCH = 'PATCH'
+    METHOD_SEARCH = 'SEARCH'
 
     def __init__(self, translator: Translator = None):
         self._fieldset = {}
         self.fields = {}
         self.validator = Validator()
+        self.controls = {}
+        self.method = self.METHOD_POST
+        self.action = ""
         self._translator = translator
         self.fieldset(self.DEFAULT_FIELDSET, '')
+
+    def set_action(self, url: str):
+        self.action = url
+        return self
+
+    def get_action(self) -> str:
+        return self.action
+
+    def set_method(self, method: str):
+        self.method = method
+        return self
+
+    def get_method(self) -> str:
+        return self.method
 
     def fieldset(self, id: str, label: str) -> FieldSet:
         """
@@ -111,9 +144,24 @@ class Form:
         :param field_id:
         :param label:
         :param kwargs:
-        :return:
+        :return: FieldSet
         """
         return self.fieldset(self.DEFAULT_FIELDSET, '').field(field_type, field_id, label, **kwargs)
+
+    def control(self, control_type: str, control_id: str, label: str, **kwargs):
+        """
+        Adds a control element to the form
+        :param control_type: 
+        :param control_id: 
+        :param label: 
+        :param kwargs:
+        :return: self
+        """
+        kwargs['type'] = control_type
+        kwargs['label'] = label
+        control = Control(**kwargs)
+        self.controls[control_id] = control
+        return self
 
     def add_field(self, id: str, field: Field):
         """
@@ -123,7 +171,8 @@ class Form:
         :return: self
         """
         self.fields[id] = field
-        self.validator.add_field(id, field.validators, field.messages)
+        if len(field.validators) > 0:
+            self.validator.add_field(id, field.validators, field.messages)
         return self
 
     def is_valid(self, data: dict) -> bool:
@@ -169,3 +218,9 @@ class Form:
         if id in self.fields.keys():
             self.fields[id].value = value
         return self
+
+    def get_fieldsets(self) -> List:
+        return self._fieldset
+
+    def get_translator(self) -> Translator:
+        return self._translator
