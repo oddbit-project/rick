@@ -200,6 +200,21 @@ class Form:
         """
         return self.errors
 
+    def add_error(self, id: str, error_message: str):
+        """
+        Adds or overrides a validation error to a field
+        if field already have errors, they are removed and replaced by a wildcard error
+        :param id field id
+        :param error_message error message
+        :return self
+        """
+        if id not in self.fields.keys():
+            raise ValueError("invalid field id %s" % (id,))
+        if self._translator is not None:
+            error_message = self._translator.t(error_message)
+        self.errors[id] = {'*': error_message}
+        return self
+
     def get(self, id: str) -> Any:
         """
         Retrieve field value by id
@@ -209,6 +224,16 @@ class Form:
         if id in self.fields.keys():
             return self.fields[id].value
         return None
+
+    def get_data(self) -> dict:
+        """
+        Retrieve all data as a dict
+        :return: dict
+        """
+        result = {}
+        for id, f in self.fields.items():
+            result[id] = f.value
+        return result
 
     def set(self, id: str, value: Any):
         """
@@ -221,7 +246,7 @@ class Form:
             self.fields[id].value = value
         return self
 
-    def get_fieldsets(self) -> List:
+    def get_fieldsets(self) -> dict:
         return self._fieldset
 
     def get_translator(self) -> Translator:
