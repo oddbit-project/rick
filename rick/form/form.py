@@ -8,6 +8,7 @@ class Field:
     label = ""
     value = None
     required = False
+    readonly = False
     validators = ""
     messages = None
     select = []
