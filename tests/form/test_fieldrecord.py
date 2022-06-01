@@ -1,5 +1,6 @@
 import pytest
 from rick.form import FieldRecord, Field
+from rick.mixin import Translator
 
 
 class FieldRecord_A(FieldRecord):
@@ -10,7 +11,7 @@ class FieldRecord_A(FieldRecord):
             .field('phone',validators="numeric|minlen:8|maxlen:16")
         return self
 
-    def validator_name(self, data, field: Field):
+    def validator_name(self, data, t:Translator):
         # this validator is only run if standard form validation is successful
         if data['name'] == 'dave':
             self.add_error('name', 'Dave is not here, man')

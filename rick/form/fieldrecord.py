@@ -68,12 +68,15 @@ class FieldRecord:
                 # if exists and is method
                 if custom_validator and callable(custom_validator):
                     # execute custom validator method
-                    if not custom_validator(data, field):
+                    if not custom_validator(data, self._translator):
                         # note: errors are added inside the custom validator method
                         return False
 
                 if field_name in data.keys():
-                    field.value = data[field_name]
+                    if field.filter is None:
+                        field.value = data[field_name]
+                    else:
+                        field.value = field.filter.transform(data[field_name])
                 else:
                     field.value = None
             return True

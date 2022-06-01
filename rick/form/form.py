@@ -5,6 +5,7 @@ from deprecated import deprecated
 from .fieldrecord import FieldRecord
 from .field import Field
 
+
 class Control:
     type = ""
     label = ""
@@ -16,9 +17,10 @@ class Control:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
+
 class FieldSet:
 
-    def __init__(self, parent:object, id: str, label: str):
+    def __init__(self, parent: object, id: str, label: str):
         self.id = id
         self.label = label
         self.form = parent
@@ -53,6 +55,7 @@ class FieldSet:
         self.fields[field_id] = field
         self.form.add_field(field_id, field)
         return self
+
 
 class Form(FieldRecord):
     DEFAULT_FIELDSET = '__default__'

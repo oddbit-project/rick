@@ -43,7 +43,7 @@ class RequestRecord:
                 # if exists and is method
                 if custom_validator and callable(custom_validator):
                     # execute custom validator method
-                    if not custom_validator(data, field, t):
+                    if not custom_validator(data, t):
                         # note: errors are added inside the custom validator method
                         return False
 

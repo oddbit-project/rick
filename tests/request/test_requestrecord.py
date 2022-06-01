@@ -5,12 +5,13 @@ from rick.mixin import Translator
 from rick.filter import Filter
 from typing import Any
 
+
 class RequestRecordSample(RequestRecord):
     name = Field(validators="required|minlen:4|maxlen:8")
     age = Field(validators="required|numeric|between:9,125")
     phone = Field(validators="numeric|minlen:8|maxlen:16")
 
-    def validator_name(self, data, field: Field, t:Translator):
+    def validator_name(self, data, t: Translator):
         # this validator is only run if standard form validation is successful
         if data['name'] == 'dave':
             self.add_error('name', 'Dave is not here, man', t)
@@ -29,6 +30,7 @@ class RequestRecordFilter(RequestRecord):
     name = Field(validators="required|minlen:4|maxlen:8")
     age = Field(validators="required|numeric|between:9,125", filter='int')
     phone = Field(validators="numeric|minlen:8|maxlen:16", filter=DudeFilter)
+
 
 requestrecord_fixture = {
     'no_error': {'name': 'john', 'age': 32},
@@ -82,12 +84,14 @@ def test_requestrecord_validator(fixture):
         assert frm.is_valid(data) == (len(expected_errors) == 0)
         assert frm.get_errors() == expected_errors
 
+
 def test_requestrecord_misc():
     frm = RequestRecordSample()
     assert frm.is_valid({}) is False
     assert len(frm.get_errors()) > 0
     frm.clear()
     assert len(frm.get_errors()) == 0
+
 
 @pytest.mark.parametrize("fixture", [(requestrecord_filter_fixture, requestrecord_filter_result)])
 def test_requestrecord_filter_1(fixture):
@@ -99,9 +103,6 @@ def test_requestrecord_filter_1(fixture):
         assert frm.is_valid(data) == (len(expected_errors) == 0)
         assert frm.get_errors() == expected_errors
 
+
 def test_requestrecord_filter_2():
     pass
-
-
-
-

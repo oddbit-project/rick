@@ -2,15 +2,19 @@ import pytest
 from rick.form import Form, Field
 from rick.mixin import Translator
 
+
 class SampleForm_Simple(Form):
 
     def init(self):
         self.field('text', 'name', 'Full Name', validators="required|minlen:4|maxlen:8") \
             .field('text', 'age', 'Age', validators="required|numeric|between:9,125") \
             .field('text', 'phone', 'Phone', validators="numeric|minlen:8|maxlen:16")
+
+        self.control('submit', 'save', 'Save') \
+            .control('reset', 'clear', 'Clear Form')
         return self
 
-    def validator_name(self, data, field: Field):
+    def validator_name(self, data, t:Translator):
         # this validator is only run if standard form validation is successful
         if data['name'] == 'dave':
             self.add_error('name', 'Dave is not here, man')
@@ -31,7 +35,7 @@ class SampleForm_Fieldset_a(Form):
 
         return self
 
-    def validator_name(self, data, field: Field):
+    def validator_name(self, data, t: Translator):
         if data['name'] == 'dave':
             self.add_error('name', 'Dave is not here, man')
             return False
