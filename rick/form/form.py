@@ -1,33 +1,9 @@
 from typing import Any, List
 from rick.mixin import Translator
 from rick.validator import Validator
-
-
-class Field:
-    type = ""
-    label = ""
-    value = None
-    required = False
-    readonly = False
-    validators = ""
-    messages = None
-    select = []
-    attributes = {}
-    options = {}
-
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-        if self.required:
-            # add required validator
-            if len(self.validators) == 0:
-                self.validators = {'required': None}
-            else:
-                if isinstance(self.validators, str):
-                    self.validators = self.validators + "|required"
-                elif isinstance(self.validators, dict):
-                    self.validators['required'] = None
-
+from deprecated import deprecated
+from .fieldrecord import FieldRecord
+from .field import Field
 
 class Control:
     type = ""
@@ -40,22 +16,14 @@ class Control:
         for k, v in kwargs.items():
             setattr(self, k, v)
 
-
 class FieldSet:
 
-    def __init__(self, id: str, label: str):
+    def __init__(self, parent:object, id: str, label: str):
         self.id = id
         self.label = label
-        self.form = None
+        self.form = parent
+        self._translator = self.form.get_translator()
         self.fields = {}
-
-    def use_form(self, form: object):
-        """
-        Set parent form object
-        :param form:
-        :return:
-        """
-        self.form = form
 
     def field(self, field_type: str, field_id: str, label: str, **kwargs):
         """
@@ -80,14 +48,13 @@ class FieldSet:
             raise RuntimeError("duplicated field id '%s'" % (id,))
 
         kwargs['type'] = field_type
-        kwargs['label'] = label
+        kwargs['label'] = self._translator.t(label)
         field = Field(**kwargs)
         self.fields[field_id] = field
         self.form.add_field(field_id, field)
         return self
 
-
-class Form:
+class Form(FieldRecord):
     DEFAULT_FIELDSET = '__default__'
     METHOD_POST = 'POST'
     METHOD_PUT = 'PUT'
@@ -95,45 +62,78 @@ class Form:
     METHOD_SEARCH = 'SEARCH'
 
     def __init__(self, translator: Translator = None):
-        self._fieldset = {}
-        self.fields = {}
-        self.validator = Validator()
+        super().__init__(translator)
+        self._fieldsets = {}
         self.controls = {}
-        self.errors = {}
         self.method = self.METHOD_POST
         self.action = ""
-        self._translator = translator
         self.fieldset(self.DEFAULT_FIELDSET, '')
 
     def set_action(self, url: str):
+        """
+        Define action URL
+        :param url: action url
+        :return: self
+        """
         self.action = url
         return self
 
     def get_action(self) -> str:
+        """
+        Get action url value
+        :return: str
+        """
         return self.action
 
     def set_method(self, method: str):
+        """
+        Set HTTP method
+        :param method:
+        :return: self
+        """
         self.method = method
         return self
 
     def get_method(self) -> str:
+        """
+        Get HTTP Method
+        :return: str
+        """
         return self.method
+
+    def clear(self):
+        """
+        Removes all defined items
+        :return:
+        """
+        super().clear()
+        self._fieldsets = {}
+        self.controls = {}
+        self.method = self.METHOD_POST
+        self.action = ""
 
     def fieldset(self, id: str, label: str) -> FieldSet:
         """
         Adds/retrieves a fieldset to the form
         If fieldset doesn't exist, it is created
+        If a fieldset exists, its label is updated **unless** label is empty
+
         :param id: fieldset id
         :param label: fieldset legend
         :return: FieldSet
         """
-        # if its existing, just return it
-        if id in self._fieldset.keys():
-            return self._fieldset[id]
+        if len(label) > 0:
+            label = self._translator.t(label)
+        # if its existing, update label and return
 
-        fs = FieldSet(id, label)
-        fs.use_form(self)
-        self._fieldset[id] = fs
+        if id in self._fieldsets.keys():
+            # only update label if label is not none
+            if len(label) > 0:
+                self._fieldsets[id].label = label
+            return self._fieldsets[id]
+
+        fs = FieldSet(self, id, label)
+        self._fieldsets[id] = fs
         return fs
 
     def field(self, field_type: str, field_id: str, label: str, **kwargs):
@@ -148,7 +148,7 @@ class Form:
         :param kwargs:
         :return: FieldSet
         """
-        return self.fieldset(self.DEFAULT_FIELDSET, '').field(field_type, field_id, label, **kwargs)
+        return self.fieldset(self.DEFAULT_FIELDSET, '').field(field_type, field_id, self._translator.t(label), **kwargs)
 
     def control(self, control_type: str, control_id: str, label: str, **kwargs):
         """
@@ -160,7 +160,7 @@ class Form:
         :return: self
         """
         kwargs['type'] = control_type
-        kwargs['label'] = label
+        kwargs['label'] = self._translator.t(label)
         control = Control(**kwargs)
         self.controls[control_id] = control
         return self
@@ -177,30 +177,6 @@ class Form:
             self.validator.add_field(id, field.validators, field.messages)
         return self
 
-    def is_valid(self, data: dict) -> bool:
-        """
-        Validate fields
-        :param data: dict of values to validate
-        :return: True if dict is valid, False otherwise
-        """
-        if self.validator.is_valid(data, self._translator):
-            # set values for fields
-            for id, field in self.fields.items():
-                if id in data.keys():
-                    field.value = data[id]
-                else:
-                    field.value = None
-            return True
-        self.errors = self.validator.get_errors()
-        return False
-
-    def error_messages(self) -> dict:
-        """
-        Get validation error messages
-        :return: dict
-        """
-        return self.errors
-
     def add_error(self, id: str, error_message: str):
         """
         Adds or overrides a validation error to a field
@@ -216,39 +192,9 @@ class Form:
         self.errors[id] = {'*': error_message}
         return self
 
-    def get(self, id: str) -> Any:
+    def get_fieldsets(self) -> dict:
         """
-        Retrieve field value by id
-        :param id: field id
-        :return: Any
-        """
-        if id in self.fields.keys():
-            return self.fields[id].value
-        return None
-
-    def get_data(self) -> dict:
-        """
-        Retrieve all data as a dict
+        Get internal fieldset dict
         :return: dict
         """
-        result = {}
-        for id, f in self.fields.items():
-            result[id] = f.value
-        return result
-
-    def set(self, id: str, value: Any):
-        """
-        Set field value
-        :param id: field id
-        :param value: value
-        :return: self
-        """
-        if id in self.fields.keys():
-            self.fields[id].value = value
-        return self
-
-    def get_fieldsets(self) -> dict:
-        return self._fieldset
-
-    def get_translator(self) -> Translator:
-        return self._translator
+        return self._fieldsets

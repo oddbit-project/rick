@@ -1,4 +1,4 @@
 class Translator:
 
-    def t(self, text: str):
+    def t(self, text: str) -> str:
         return text

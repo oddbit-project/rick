@@ -1,1 +1,3 @@
-from .form import Field, FieldSet, Form
+from .form import FieldSet, Form
+from .field import Field
+from .fieldrecord import FieldRecord

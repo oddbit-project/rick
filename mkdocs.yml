@@ -1,0 +1,32 @@
+site_name: Rick
+site_description: Python plumbing for micro-framework based applications
+strict: true
+site_url: https://github.com/oddbit-project/rick/
+repo_name: oddbit-project/rick
+repo_url: https://github.com/oddbit-project/rick/
+
+theme:
+  name: material
+
+nav:
+- Overview: index.md
+- Forms:
+  - Overview: 'forms/index.md'
+  - Form Class: 'forms/form.class.md'
+- Validators:
+  - Overview: 'validators/index.md'
+  - Available Validators: 'validators/validator_list.md'
+- Mixins:
+    - Translation: 'mixins/translator.class.md'
+
+plugins:
+- search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+

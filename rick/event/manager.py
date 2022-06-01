@@ -98,7 +98,7 @@ class EventManager:
                 evt = self._handlers[event_name]
                 existing_handlers = evt['handlers']
                 if handler in existing_handlers:
-                    raise RuntimeError("add_handler(): duplicated handler for event {}".format(event_name))
+                    raise RuntimeError("add_handler(): duplicated handler {} for event {}".format(handler, event_name))
                 existing_handlers.append(handler)
 
                 if priority in evt.keys():
