@@ -107,6 +107,9 @@ Fields are defined on class declaration, and there is no field grouping availabl
 All the field-related options are available, including validators and filters. On success, field values can be accessed
 directly via the attributes, e.g. object.field.value.
 
+Please note: field names must **not** start with an underscore('_'); underscore attributes are considered private and internal
+to the class implementation.
+
 RequestRecord example:
 
 ```python

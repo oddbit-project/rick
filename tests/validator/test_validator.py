@@ -21,7 +21,7 @@ validator_case1 = [
     {
         'field1': 'required|maxlen:3',
         'field2': 'minlen:4',
-        'field3': 'bail|required|numeric|len:2,4'
+        'field3': 'bail|required|numeric|len:2,4',
     }
 ]
 

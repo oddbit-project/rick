@@ -1,1 +1,2 @@
-from .requestrecord import RequestRecord
+from .requestrecord import RequestRecord, SetOf
+

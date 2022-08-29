@@ -142,3 +142,35 @@ class ISO8601(Rule):
         except iso8601.ParseError:
             return False, self.error_message(error_msg, translator)
         return True, ""
+
+@registry.register_cls(name='list')
+class List(Rule):
+    MSG_ERROR = "value is not a list"
+
+    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+        if type(value) not in (tuple, list):
+            return False, self.error_message(error_msg, translator)
+        return True, ""
+
+
+@registry.register_cls(name='listlen')
+class List(Rule):
+    MSG_ERROR = "item count must be betweem {0} and {1}"
+
+    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+        value_len=0
+        if type(value) in (list, tuple):
+            value_len = len(value)
+
+        if len(options) >= 2:
+            min = int(options[0])
+            max = int(options[1])
+            if (value_len > max) or (value_len < min):
+                return False, self.error_message(error_msg, translator, *options)
+        if len(options) == 1:
+            min = int(options[0])
+            if value_len < min:
+                _args = [min, str(u"\u221E")]
+                return False, self.error_message(error_msg, translator, *_args)
+        return True, ""
+

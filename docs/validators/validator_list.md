@@ -29,6 +29,13 @@
 |maxlen|max| Value char length must be upto max chars|
 
 
+## List Validators
+| Name | Parameters | Description |
+|---|---|---|
+|list| | Value must be a list of items|
+|listlen| min[, max]] | Item list must have at least min elements and optionally max elements|
+
+
 ## Numeric Validators
 
 | Name | Parameters | Description |
