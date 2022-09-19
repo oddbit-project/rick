@@ -22,7 +22,7 @@ setup(
     author_email="",
     url="https://github.com/oddbit-project/rick",
     description='Python plumbing for micro-framework based applications',
-    license='MIT',
+    license='BSD',
     long_description=description,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -42,7 +42,8 @@ setup(
     python_requires=">=3.8",
     extras_require={
         "redis": ["redis >= 3.5.0"],
-        "bcrypt": ["bcrypt >= 3.2.0"]
+        "bcrypt": ["bcrypt >= 3.2.0"],
+        "minio": ["minio >= 7.1.11"]
     },
     install_requires=[],
     zip_safe=False,
