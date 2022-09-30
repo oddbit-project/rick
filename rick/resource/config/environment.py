@@ -1,7 +1,52 @@
+import abc
 import json
 import os
 from rick.base import ShallowContainer
 from typing import Any, List
+from abc import abstractmethod, ABC
+from pathlib import Path
+
+class WrapType(ABC):
+    """
+    Base encapsulation class
+    """
+
+    @abc.abstractmethod
+    def unwrap(self):
+        pass
+
+
+class StrOrFile(WrapType):
+    """
+    Encapsulation class for Strings to be processed either as values or as path to files holding values
+    """
+
+    def __init__(self, value: str, silent=False):
+        self.value = value
+        self.silent = silent
+
+    def unwrap(self):
+        """
+        Unwraps value
+        If value starts with '/' or value starts with './', assume it is a file and try to read it;
+        If file doesnt exist, raise ValueError() to make sure error is noted, unless self.silent==True
+        :return: str
+        """
+        if self.value.startswith(os.sep) or self.value.startswith(os.curdir + os.sep):
+            path = Path(self.value)
+            if path.exists() and path.is_file():
+                try:
+                    with open(path) as f:
+                        return f.read().strip()
+                except Exception as e:
+                    raise ValueError("StrOrFile: error reading file '{}' - {}".format(self.value, str(e)))
+            else:
+                if self.silent:
+                    # return value as-is, raise no exception
+                    return self.value
+                raise ValueError("StrOrFile: invalid file path '{}'".format(self.value))
+        return self.value
+
 
 class EnvironmentConfig:
     """
@@ -40,7 +85,10 @@ class EnvironmentConfig:
                 if not callable(value):
                     value = self._parse_value(prefix + name, value)
                     setattr(self, name, value)
-                    data[name.lower()] = value
+                    if isinstance(value, WrapType):
+                        data[name.lower()] = value.unwrap()
+                    else:
+                        data[name.lower()] = value
         return ShallowContainer(data)
 
     def _parse_value(self, env_var_name, existing_value) -> Any:
@@ -100,5 +148,15 @@ class EnvironmentConfig:
             raise ValueError("Invalid data type to extract dict: expecting str, got '{}'".format(type(v).__name__))
         try:
             return json.loads(v)
-        except e:
+        except Exception as e:
             raise ValueError("Error when parsing JSON: {}".format(e))
+
+    def _StrOrFile_conv(self, v) -> StrOrFile:
+        """
+        StrOrFile mapper
+        :param v: a string
+        :return: StrOrFile
+        """
+        if not type(v) is str:
+            raise ValueError("StrOrFile requires a str to be wrapped; found '{}'  instead".format(type(v).__name__))
+        return StrOrFile(v)

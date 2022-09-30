@@ -3,9 +3,11 @@ import pytest
 from rick.resource.config import EnvironmentConfig
 from rick.base import ShallowContainer
 
+
 class ConfigTest1(EnvironmentConfig):
     OPTION_1 = None
     OPTION_2 = 'x'
+
 
 class ConfigTest2(EnvironmentConfig):
     FOO_LIST = []
@@ -13,24 +15,26 @@ class ConfigTest2(EnvironmentConfig):
     FOO_STR = None
     FOO_DICT = {}
 
+
 fixture_configtest1 = [(ConfigTest1, {'OPTION_1': 'abc', 'OPTION_2': 'def'})]
 fixture_configtest_prefix = [(ConfigTest1, {'PREFIX_OPTION_1': 'abc', 'PREFIX_OPTION_2': 'def'})]
 
 fixture_configtest2 = [(
     ConfigTest2,
-    { # env vars
+    {  # env vars
         'FOO_LIST': 'abc,def',
         'FOO_INT': '5',
         'FOO_STR': 'joe',
-        'FOO_DICT':'{"key":"value"}'
-    }, # expected result
+        'FOO_DICT': '{"key":"value"}'
+    },  # expected result
     {
         'foo_list': ['abc', 'def'],
         'foo_int': 5,
         'foo_str': 'joe',
-        'foo_dict': {"key":"value"}
+        'foo_dict': {"key": "value"}
     }
 )]
+
 
 @pytest.mark.parametrize("fixture", fixture_configtest1)
 def test_EnvConfig(fixture):
@@ -43,6 +47,7 @@ def test_EnvConfig(fixture):
     # check if values were overridden
     for name, value in fixture[1].items():
         assert cfg.get(name.lower()) == str(value)
+
 
 @pytest.mark.parametrize("fixture", fixture_configtest_prefix)
 def test_EnvConfig_prefix(fixture):
