@@ -6,6 +6,7 @@ from typing import Any, List
 from abc import abstractmethod, ABC
 from pathlib import Path
 
+
 class WrapType(ABC):
     """
     Base encapsulation class
@@ -19,9 +20,17 @@ class WrapType(ABC):
 class StrOrFile(WrapType):
     """
     Encapsulation class for Strings to be processed either as values or as path to files holding values
+
+    The value is unrwapped as a string by default; however it will be unwrapped as file content if the string value
+    starts with '/' or './'
     """
 
     def __init__(self, value: str, silent=False):
+        """
+        Constructor
+        :param value: value to wrap
+        :param silent: if True, no exception is raised if file doesn't exist, and value is returned instead
+        """
         self.value = value
         self.silent = silent
 

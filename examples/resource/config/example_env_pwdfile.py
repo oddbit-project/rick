@@ -1,6 +1,8 @@
 """
 Environment-based config example with support for optional password files (such as docker secrets)
 
+String values are considered files if they start with '/' or './'
+
 Running with default values:
 
     $ python3 example_env_pwdfile.py
