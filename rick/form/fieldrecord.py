@@ -1,5 +1,6 @@
 from typing import Any, List
 from rick.mixin import Translator
+from rick.util.object import get_attribute_names
 from rick.validator import Validator
 from deprecated import deprecated
 from .field import Field
@@ -140,6 +141,24 @@ class FieldRecord:
         for id, f in self.fields.items():
             result[id] = f.value
         return result
+
+    def get_object(src_object, cls_obj) -> Any:
+        """
+        Retrieve all data as a cls_obj object
+
+        Notes:
+            - if cls_obj is a class, a new instance is created and used as target object
+            - attributes are copied by name; if the attribute doesn't exist in the target object, it is ignored
+            - This method can be use to easily convert form data into RickDB Records
+
+        :param cls_obj: class or object
+        :return: cls_obj object instance
+        """
+        if isclass(cls_obj):
+            cls_obj = cls_obj()
+        for name in get_attribute_names(src_object):
+            setattr(cls_obj, name, src_object.get(name))
+        return cls_obj
 
     def set(self, id: str, value: Any):
         """

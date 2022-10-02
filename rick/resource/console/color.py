@@ -62,8 +62,8 @@ class AnsiColor:
     attrs = {
         'bold': 1,
         'dim': 2,
-        'underline': 4
-
+        'underline': 4,
+        'reversed': 7
     }
 
     def __getattr__(self, item):
