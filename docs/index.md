@@ -21,5 +21,5 @@ MVC and [RickDb](https://github.com/oddbit-project/rick_db) for database operati
 - [Request validator](forms/requests.md);
 - [Form management](forms/index.md)
 - [Validation classes](validators/index.md);
-
+- [Filters](filters/index.md)
 

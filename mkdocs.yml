@@ -10,7 +10,7 @@ theme:
 
 nav:
 - Overview: index.md
-- Requests & fields: requests.md
+- Requests: 'forms/requests.md'
 - Forms:
   - Overview: 'forms/index.md'
   - Form Class: 'forms/form.class.md'
