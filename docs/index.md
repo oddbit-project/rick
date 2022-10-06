@@ -18,7 +18,8 @@ MVC and [RickDb](https://github.com/oddbit-project/rick_db) for database operati
 - REDIS cache client;
 - AES256 crypto functions for cache mechanisms;
 - Event manager;
-- Form component;
-- Validator class;
-- Assorted validators;
+- [Request validator](forms/requests.md);
+- [Form management](forms/index.md)
+- [Validation classes](validators/index.md);
+
 

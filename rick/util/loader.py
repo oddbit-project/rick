@@ -2,7 +2,8 @@ import functools
 import importlib
 from typing import Optional
 
-def load_class(path:str) -> Optional[object]:
+
+def load_class(path: str) -> Optional[object]:
     """
     Loads a class by string path
     :param path: string path

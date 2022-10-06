@@ -4,7 +4,7 @@
 
 import re
 import iso8601
-
+from collections.abc import Mapping
 from rick.mixin import Translator
 from rick.util.cast import cast_str, cast_int
 
@@ -144,7 +144,7 @@ class ISO8601(Rule):
         return True, ""
 
 @registry.register_cls(name='list')
-class List(Rule):
+class RuleList(Rule):
     MSG_ERROR = "value is not a list"
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
@@ -152,9 +152,18 @@ class List(Rule):
             return False, self.error_message(error_msg, translator)
         return True, ""
 
+@registry.register_cls(name='dict')
+class RuleDict(Rule):
+    MSG_ERROR = "value is not dictionary"
+
+    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+        if not isinstance(value, Mapping):
+            return False, self.error_message(error_msg, translator)
+        return True, ""
+
 
 @registry.register_cls(name='listlen')
-class List(Rule):
+class ListLen(Rule):
     MSG_ERROR = "item count must be betweem {0} and {1}"
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):

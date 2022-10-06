@@ -1,9 +1,9 @@
 import decimal
 import iso8601
 from rick.base import Registry
-from rick.mixin import Translator
 from typing import Any
 from rick.util.cast import cast_str, cast_int, cast_float
+
 
 class Filter:
 
@@ -30,6 +30,7 @@ class Decimal(Filter):
             return decimal.Decimal(src)
         except decimal.DecimalException:
             return None
+
 
 @registry.register_cls(name='float')
 class Float(Filter):

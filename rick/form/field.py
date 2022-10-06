@@ -1,22 +1,102 @@
 from rick.filter import registry as filter_registry, Filter
 import inspect
 
-class Field:
-    type = ""
-    label = ""
-    value = None
-    required = False
-    readonly = False
-    validators = ""
-    messages = None
-    select = []
-    filter = None
-    attributes = {}
-    options = {}
+TYPE_FIELD = 1
+TYPE_RECORD = 2
+TYPE_RECORDSET = 3
 
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+
+def field(**kwargs):
+    """
+    Spec wrapper for Field
+
+    :param type: str field type
+    :param label: str field label
+    :param value: optional predefined value
+    :param required: bool required
+    :param readonly: bool readonly
+    :param validators: string|dict validators
+    :param error: optional custom error message
+    :param select: optional select value list
+    :param filter: optional filter
+    :param attributes: dict optional attributes
+    :param options: dict extra options
+    :return: dict
+    """
+    kwargs['cls'] = Field
+    kwargs['_type'] = TYPE_FIELD
+    return kwargs
+
+
+def record(cls, required=False, error=None):
+    """
+    Spec wrapper for a record
+    :param cls: record class
+    :param required: if the field is mandatory
+    :return: dict
+    """
+    return {'_type': TYPE_RECORD, 'cls': cls, 'validators': "required|dict" if required else "dict", 'error': error}
+
+
+def recordset(cls, required=False, error=None):
+    """
+    Spec wrapper for a list of records
+    :param cls: record class
+    :param required: if the field is mandatory
+    :return: dict
+    """
+    return {'_type': TYPE_RECORDSET, 'cls': cls, 'validators': "required|list" if required else "list", 'error': error}
+
+
+class Field:
+
+    def __init__(self,
+                 type="",
+                 label="",
+                 value=None,
+                 required=False,
+                 readonly=False,
+                 validators="",
+                 error=None,
+                 select: list = None,
+                 filter=None,
+                 attributes: dict = None,
+                 options: dict = None):
+        """
+        Field Constructor
+        :param type: str field type
+        :param label: str field label
+        :param value: optional predefined value
+        :param required: bool required
+        :param readonly: bool readonly
+        :param validators: string|dict validators
+        :param error: optional custom error message
+        :param select: optional select value list
+        :param filter: optional filter
+        :param attributes: dict optional attributes
+        :param options: dict extra options
+        """
+        if select is None:
+            select = []
+
+        if attributes is None:
+            attributes = {}
+
+        if options is None:
+            options = {}
+
+        # Field attributes
+        self.type = type
+        self.label = label
+        self.value = value
+        self.required = required
+        self.readonly = readonly
+        self.validators = validators
+        self.error_message = error
+        self.select = select
+        self.filter = filter
+        self.attributes = attributes
+        self.options = options
 
         # pass direct read-only mapping to options
         if self.readonly:

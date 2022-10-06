@@ -1,3 +1,6 @@
+from typing import List
+
+
 def get_attribute_names(object) -> List:
     fieldmap = getattr(object, '_fieldmap', None)
     if fieldmap:

@@ -2,7 +2,7 @@ from typing import Any, List
 from rick.mixin import Translator
 from rick.validator import Validator
 from deprecated import deprecated
-from .fieldrecord import FieldRecord
+from .requestrecord import RequestRecord
 from .field import Field
 
 
@@ -20,11 +20,11 @@ class Control:
 
 class FieldSet:
 
-    def __init__(self, parent: object, id: str, label: str):
+    def __init__(self, parent: RequestRecord, id: str, label: str):
         self.id = id
         self.label = label
         self.form = parent
-        self._translator = self.form.get_translator()
+        self.translator = parent.get_translator()
         self.fields = {}
 
     def field(self, field_type: str, field_id: str, label: str, **kwargs):
@@ -50,14 +50,14 @@ class FieldSet:
             raise RuntimeError("duplicated field id '%s'" % (id,))
 
         kwargs['type'] = field_type
-        kwargs['label'] = self._translator.t(label)
+        kwargs['label'] = self.translator.t(label)
         field = Field(**kwargs)
         self.fields[field_id] = field
         self.form.add_field(field_id, field)
         return self
 
 
-class Form(FieldRecord):
+class Form(RequestRecord):
     DEFAULT_FIELDSET = '__default__'
     METHOD_POST = 'POST'
     METHOD_PUT = 'PUT'
@@ -177,7 +177,7 @@ class Form(FieldRecord):
         """
         self.fields[id] = field
         if len(field.validators) > 0:
-            self.validator.add_field(id, field.validators, field.messages)
+            self.validator.add_field(id, field.validators, field.error_message)
         return self
 
     def add_error(self, id: str, error_message: str):

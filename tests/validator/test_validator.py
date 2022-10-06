@@ -2,37 +2,209 @@ import pytest
 from rick.mixin import Translator
 from rick.validator import Validator
 
-validator_case1 = [
-    {
-        'field1': {
-            'required': None,
-            'maxlen': 3,
-        },
-        'field2': {
-            'minlen': 4,
-        },
-        'field3': {
-            'required': None,
-            'bail': None,
-            'numeric': None,
-            'len': [2, 4],
-        }
+# field validators in dict format
+dict_validators = {
+    'field1': {
+        'required': None,
+        'maxlen': 3,
     },
-    {
-        'field1': 'required|maxlen:3',
-        'field2': 'minlen:4',
-        'field3': 'bail|required|numeric|len:2,4',
+    'field2': {
+        'minlen': 4,
+    },
+    'field3': {
+        'required': None,
+        'bail': None,
+        'numeric': None,
+        'len': [2, 4],
     }
+}
+
+# field validators in str format
+str_validators = {
+    'field1': 'required|maxlen:3',
+    'field2': 'minlen:4',
+    'field3': 'bail|required|numeric|len:2,4',
+}
+
+#
+# Fixtures for validator format
+fixtures_formats = [
+    [
+        # ==== dict format - no error
+        dict_validators,
+        {
+            'field1': '123',
+            'field2': 'abcdef',
+            'field3': '123'
+        },
+        {}
+    ],
+    [
+        # ==== dict format - error
+        dict_validators,
+        {
+            'field2': 'abcdef',
+            'field3': '13'
+        },
+        {
+            'field1': {'required': 'value required'}
+        }
+    ],
+    [
+        # ==== dict format - all error
+        dict_validators,
+        {
+            'field2': '',
+            'field3': 'a'
+        },
+        {
+            'field1': {'required': 'value required'},
+            'field2': {'minlen': 'minimum allowed length is 4'},
+            'field3': {'numeric': 'only digits allowed'}
+        }
+    ],
+    [
+        # ==== string format - no error
+        str_validators,
+        {
+            'field1': '123',
+            'field2': 'abcdef',
+            'field3': '123'
+        },
+        {}
+    ],
+    [
+        # ==== str format - error
+        str_validators,
+        {
+            'field2': 'abcdef',
+            'field3': '13'
+        },
+        {
+            'field1': {'required': 'value required'}
+        }
+    ],
+    [
+        # ==== str format - all error
+        str_validators,
+        {
+            'field2': '',
+            'field3': 'a'
+        },
+        {
+            'field1': {'required': 'value required'},
+            'field2': {'minlen': 'minimum allowed length is 4'},
+            'field3': {'numeric': 'only digits allowed'}
+        }
+    ],
 ]
 
 messages_case1 = {
-    'field2': {
-        'minlen': 'custom message for field 2'
-    },
-    'field3': {
-        '*': 'custom message for field 3'
-    }
+    'field2': 'custom message for field 2',
+    'field3': 'custom message for field 3'
 }
+
+fixtures = [
+    [
+        # ==== valid case, no errors
+        str_validators,
+        {
+            'field1': '123',
+            'field2': 'abcdef',
+            'field3': '123'
+        },
+        {},
+    ],
+    [
+        # ==== errors in all fields
+        str_validators,
+        {
+            'field2': 'abc',
+            'field3': '1'
+        },
+        {
+            'field1': {'required': 'value required'},
+            'field2': {'minlen': 'minimum allowed length is 4'},
+            'field3': {'len': 'length must be between [2, 4]'}
+        }
+    ],
+    [
+        # ==== errors, len of numeric
+        str_validators,
+        {
+            'field1': 'abc',
+            'field2': 'abcd',
+            'field3': 1
+        },
+        {
+            'field3': {'len': 'length must be between [2, 4]'}
+        }
+    ],
+    [
+        # ==== errors, bail test
+        str_validators,
+        {
+            'field1': 'abc',
+            'field2': 'abcd',
+            'field3': 'a'  # fail numeric and length, only numeric is reported due to bail
+        },
+        {
+            'field3': {'numeric': 'only digits allowed'}
+        }
+    ]
+]
+
+#
+# Fixtures for translator test
+fixtures_translator = [
+    [
+        # ==== valid case, no errors
+        str_validators,
+        {
+            'field1': '123',
+            'field2': 'abcdef',
+            'field3': '123'
+        },
+        {},
+    ],
+    [
+        # ==== errors in all fields
+        str_validators,
+        {
+            'field2': 'abc',
+            'field3': '1'
+        },
+        {
+            'field1': {'required': 'mana mana'},
+            'field2': {'minlen': 'mana mana'},
+            'field3': {'len': 'mana mana'}
+        }
+    ],
+    [
+        # ==== errors, len of numeric
+        str_validators,
+        {
+            'field1': 'abc',
+            'field2': 'abcd',
+            'field3': 1
+        },
+        {
+            'field3': {'len': 'mana mana'}
+        }
+    ],
+    [
+        # ==== errors, bail test
+        str_validators,
+        {
+            'field1': 'abc',
+            'field2': 'abcd',
+            'field3': 'a'  # fail numeric and length, only numeric is reported due to bail
+        },
+        {
+            'field3': {'numeric': 'mana mana'}
+        }
+    ]
+]
 
 
 class ManaManaTranslator(Translator):
@@ -41,11 +213,11 @@ class ManaManaTranslator(Translator):
         return "mana mana"
 
 
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator(data):
-    v = Validator(data)
+@pytest.mark.parametrize("validators,values,result", fixtures_formats)
+def test_validator(validators, values, result):
+    v = Validator(validators)
 
-    for field, opts in data.items():
+    for field, opts in validators.items():
         r = v.field_rules(field)
         if type(opts) is dict:
             assert len(r) == len(opts)
@@ -53,130 +225,34 @@ def test_validator(data):
     with pytest.raises(ValueError):
         v.field_rules('non-existing-field')
 
-    values = {}
-    # simple test - required
     valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors()
-    assert len(errors) == 2
-    for field in ['field1', 'field3']:
-        assert field in errors.keys()
+    assert valid == (len(result) == 0)
+    assert v.get_errors() == result
 
 
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator_field1(data):
-    v = Validator(data)
+@pytest.mark.parametrize("validators,values,result", fixtures)
+def test_fixtures(validators, values, result):
+    v = Validator(validators)
+    for field, opts in values.items():
+        r = v.field_rules(field)
+        assert type(r) is dict
+        assert len(r) > 0
 
-    values = {
-        'field1': 'abcd'  # error maxlen
-    }
     valid = v.is_valid(values)
-    assert valid is False
-
-    errors = v.get_errors('field1')
-    assert len(errors) == 1
-    assert 'maxlen' in errors.keys()
-    values = {
-        'field1': 'abc'  # no error
-    }
-    assert v.is_valid(values) is False  # field1 is ok, but other fields fail
-    errors = v.get_errors('field1')
-    assert len(errors) == 0  # no error
+    assert valid == (len(result) == 0)
+    assert v.get_errors() == result
 
 
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator_field2(data):
-    v = Validator(data)
-
-    values = {
-        'field2': 'ab'  # error minlen
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-
-    errors = v.get_errors('field2')
-    assert len(errors) == 1
-    assert 'minlen' in errors.keys()
-    values = {
-        'field2': 'abcd'  # no error
-    }
-    assert v.is_valid(values) is False  # field1 is ok, but other fields fail
-    errors = v.get_errors('field2')
-    assert len(errors) == 0  # no error
-
-
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator_field3(data):
-    v = Validator(data)
-
-    # test bail
-    values = {
-        'field3': 'a'  # fails 2 validation rules
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors('field3')
-    assert len(errors) == 1  # because bail, only 1 rule should appear
-    assert 'numeric' in errors.keys()
-
-    # test len
-    values = {
-        'field3': '1'  # fails 1 validation rule
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors('field3')
-    assert len(errors) == 1  # because bail, only 1 rule should appear
-    assert 'len' in errors.keys()
-
-
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator_messages(data):
-    v = Validator(data, messages_case1)
-
-    # wildcard custom message for field 3
-    field3_error = messages_case1['field3']['*']
-    values = {
-        'field3': 'a'  # fails 2 validation rules
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors('field3')
-    assert len(errors) == 1  # because bail, only 1 rule should appear
-    assert 'numeric' in errors.keys()
-    assert errors['numeric'] == field3_error
-
-    # test len
-    values = {
-        'field3': '1'  # fails 1 validation rule
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors('field3')
-    assert len(errors) == 1  # because bail, only 1 rule should appear
-    assert errors['len'] == field3_error
-
-    # custom message for field2
-    field2_error = messages_case1['field2']['minlen']
-    values = {
-        'field2': 'abc'  # fails validation
-    }
-    valid = v.is_valid(values)
-    assert valid is False
-    errors = v.get_errors('field2')
-    assert len(errors) == 1
-    assert 'minlen' in errors.keys()
-    assert errors['minlen'] == field2_error
-
-
-@pytest.mark.parametrize("data", validator_case1)
-def test_validator_translation(data):
-    v = Validator(data)
+@pytest.mark.parametrize("validators,values,result", fixtures_translator)
+def test_translator(validators, values, result):
+    v = Validator(validators)
     t = ManaManaTranslator()
-    values = {}
-    assert v.is_valid(values, translator=t) is False
-    errors = v.get_errors()
-    assert len(errors) == 2
-    for field, err_dict in errors.items():
-        for validator, error in err_dict.items():
-            assert error == "mana mana"
+
+    for field, opts in values.items():
+        r = v.field_rules(field)
+        assert type(r) is dict
+        assert len(r) > 0
+
+    valid = v.is_valid(values, translator=t)
+    assert valid == (len(result) == 0)
+    assert v.get_errors() == result

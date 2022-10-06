@@ -59,6 +59,8 @@ class Len(Rule):
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
         options = self.parse_options(options)
 
+        if isinstance(value, int):
+            value = cast_str(value)
         if hasattr(value, '__len__') and (int(options[1]) >= len(value) >= int(options[0])):
             return True, ""
         return False, self.error_message(error_msg, translator, *options)
@@ -79,8 +81,13 @@ class MinLen(Rule):
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
         options = self.parse_options(options)
+
+        if isinstance(value, int):
+            value = cast_str(value)
+
         if hasattr(value, '__len__') and (len(value) >= options[0]):
             return True, ""
+
         return False, self.error_message(error_msg, translator, *options)
 
     def parse_options(self, options):
@@ -97,6 +104,10 @@ class MaxLen(MinLen):
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
         options = self.parse_options(options)
+
+        if isinstance(value, int):
+            value = cast_str(value)
+
         if hasattr(value, '__len__') and (len(value) <= options[0]):
             return True, ""
         return False, self.error_message(error_msg, translator, *options)
