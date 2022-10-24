@@ -15,6 +15,9 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     description = f.read()
 
+with open(os.path.join(this_directory, 'requirements.txt'), encoding='utf-8') as f:
+    dependencies = f.readlines()
+
 setup(
     name='rick',
     version=version,
@@ -45,7 +48,7 @@ setup(
         "bcrypt": ["bcrypt >= 3.2.0"],
         "minio": ["minio >= 7.1.11"]
     },
-    install_requires=[],
+    install_requires=dependencies,
     zip_safe=False,
     tests_require=[
     ],
