@@ -7,4 +7,4 @@ flake8
 bcrypt >= 3.2.0
 cryptography~=3.3.1
 iso8601~=0.1.13
-Deprecated
+Deprecated==1.2.13
