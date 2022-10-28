@@ -61,7 +61,9 @@ class Field:
                  select: list = None,
                  filter=None,
                  attributes: dict = None,
-                 options: dict = None):
+                 options: dict = None,
+                 bind: str = None
+                 ):
         """
         Field Constructor
         :param type: str field type
@@ -75,6 +77,7 @@ class Field:
         :param filter: optional filter
         :param attributes: dict optional attributes
         :param options: dict extra options
+        :param bind: optional bind name for data elements
         """
         if select is None:
             select = []
@@ -97,6 +100,7 @@ class Field:
         self.filter = filter
         self.attributes = attributes
         self.options = options
+        self.bind = bind
 
         # pass direct read-only mapping to options
         if self.readonly:

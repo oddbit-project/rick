@@ -33,6 +33,15 @@ class RequestRecord_B(RequestRecord):
             return False
         return True
 
+# RequestRecord variant with bind names
+# bind names are used instead of the field name, for object mapping purposes
+class RequestRecord_C(RequestRecord_B):
+    fields = {
+        'my_name': field(validators="required|minlen:4|maxlen:8", bind='name'),
+        'age': field(validators="required|numeric|between:9,125"),
+        'my_phone': field(validators="numeric|minlen:8|maxlen:16", bind='phone')
+    }
+
 
 class ObjectRecord:
     name = None
@@ -80,6 +89,17 @@ rr_to_obj_output = [
     {'name': 'anthony', 'age': 60, 'phone': '92000000'},
 ]
 
+bind_input = [
+    {'my_name': 'john', 'age': 32},
+    {'my_name': 'gary', 'age': 60, 'my_phone': '91000000'},
+    {'my_name': 'anthony', 'age': 60, 'my_phone': '92000000'},
+]
+bind_output = [
+    {'name': 'john', 'age': 32, 'phone': None},
+    {'name': 'gary', 'age': 60, 'phone': '91000000'},
+    {'name': 'anthony', 'age': 60, 'phone': '92000000'},
+]
+
 
 @pytest.mark.parametrize("form_data, result", [(requestrecord_simple_fixture, requestrecord_simple_result)])
 def test_requestrecord_a_validator(form_data, result):
@@ -107,12 +127,24 @@ def test_requestrecord_to_object(form_data, result):
         frm = RequestRecord_B()
         assert frm.is_valid(data)
         # transform to ObjectRecord
-        obj = frm.get_object(ObjectRecord)
+        obj = frm.bind(ObjectRecord)
         assert obj is not None
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i]
         i += 1
 
+@pytest.mark.parametrize("form_data, result", [(bind_input, bind_output)])
+def test_requestrecord_to_object_bind(form_data, result):
+    i = 0
+    for data in form_data:
+        frm = RequestRecord_C()
+        assert frm.is_valid(data)
+        # transform to ObjectRecord
+        obj = frm.bind(ObjectRecord)
+        assert obj is not None
+        assert isinstance(obj, ObjectRecord)
+        assert obj.asdict() == result[i]
+        i += 1
 
 def test_requestrecord():
     frm = RequestRecord_A().init()
