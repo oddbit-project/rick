@@ -143,6 +143,7 @@ class ISO8601(Rule):
             return False, self.error_message(error_msg, translator)
         return True, ""
 
+
 @registry.register_cls(name='list')
 class RuleList(Rule):
     MSG_ERROR = "value is not a list"
@@ -151,6 +152,7 @@ class RuleList(Rule):
         if type(value) not in (tuple, list):
             return False, self.error_message(error_msg, translator)
         return True, ""
+
 
 @registry.register_cls(name='dict')
 class RuleDict(Rule):
@@ -167,7 +169,7 @@ class ListLen(Rule):
     MSG_ERROR = "item count must be betweem {0} and {1}"
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
-        value_len=0
+        value_len = 0
         if type(value) in (list, tuple):
             value_len = len(value)
 
@@ -182,4 +184,3 @@ class ListLen(Rule):
                 _args = [min, str(u"\u221E")]
                 return False, self.error_message(error_msg, translator, *_args)
         return True, ""
-
