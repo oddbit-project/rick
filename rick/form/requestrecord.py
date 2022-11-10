@@ -244,11 +244,12 @@ class RequestRecord:
         Retrieve all data as a cls_obj object
 
         Notes:
+            - only non-None values are binded!!! (this is required to prevent eg. primary keys becoming null on insert)
             - if cls_obj is a class, a new instance is created and used as target object
             - attribute name can be specified via bind=name parameter in the Field class; if bind name is specified,
             it is used instead of id for binding purposes
             - attributes are copied by name; if the attribute doesn't exist in the target object, it is ignored
-            - This method can be use to easily convert form data into RickDB Records
+            - This method can be used to easily convert form data into RickDB Records
 
         :param cls_obj: class or object
         :return: cls_obj object instance
@@ -259,10 +260,11 @@ class RequestRecord:
         # create field map based on optional bind fields
         bind_fields = {}
         for name, field in self.fields.items():
-            if field.bind is None:
-                bind_fields[name] = field
-            else:
-                bind_fields[field.bind] = field
+            if field.value is not None:
+                if field.bind is None:
+                    bind_fields[name] = field
+                else:
+                    bind_fields[field.bind] = field
 
         for name in get_attribute_names(cls_obj):
             if name in bind_fields.keys():
