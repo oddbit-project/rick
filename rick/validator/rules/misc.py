@@ -166,7 +166,7 @@ class RuleDict(Rule):
 
 @registry.register_cls(name='listlen')
 class ListLen(Rule):
-    MSG_ERROR = "item count must be betweem {0} and {1}"
+    MSG_ERROR = "item count must be between {0} and {1}"
 
     def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
         value_len = 0

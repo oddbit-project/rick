@@ -1,5 +1,4 @@
 import pytest
-from rick.mixin import Translator
 from rick.validator import Validator
 
 FIELD_NAME = 'list'
