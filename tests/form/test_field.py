@@ -1,6 +1,3 @@
-import pytest
-from rick.mixin import Translator
-from rick.validator import Validator
 from rick.form import Field
 
 

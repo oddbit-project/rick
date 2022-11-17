@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from rick.base.container import ContainerBase, Container, ShallowContainer, MutableContainer
