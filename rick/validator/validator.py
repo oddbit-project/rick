@@ -74,7 +74,7 @@ class Validator:
             result[rule_name] = params
         return result
 
-    def add_field(self, field_name: str, field_rules: Union[dict, str], error_message:str=None):
+    def add_field(self, field_name: str, field_rules: Union[dict, str], error_message: str = None):
         """
         Adds a field to be validated
 
@@ -255,4 +255,3 @@ class Validator:
                 if bail:
                     return result
         return result
-

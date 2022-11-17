@@ -16,6 +16,7 @@ def test_filter_registry_int():
     # invalid values should return None
     assert filter.transform('abc') is None
 
+
 def test_filter_registry_decimal():
     assert 'decimal' in filter_registry.names()
 
@@ -24,6 +25,7 @@ def test_filter_registry_decimal():
     assert filter.transform('-2.00000000009') == decimal.Decimal('-2.00000000009')
     assert filter.transform('') is None
     assert filter.transform('a2b') is None
+
 
 def test_filter_registry_float():
     assert 'float' in filter_registry.names()
@@ -36,6 +38,7 @@ def test_filter_registry_float():
     assert filter.transform('') is None
     assert filter.transform('a2b') is None
 
+
 def test_filter_registry_datetime():
     assert 'datetime' in filter_registry.names()
 
@@ -43,6 +46,7 @@ def test_filter_registry_datetime():
     assert filter.transform('2022-05-31T15:11Z') == iso8601.parse_date('2022-05-31T15:11Z')
     assert filter.transform('20-20-2020') is None
     assert filter.transform('3500-14-15') is None
+
 
 def test_filter_registry_bool():
     assert 'bool' in filter_registry.names()

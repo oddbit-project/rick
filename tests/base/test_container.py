@@ -53,7 +53,7 @@ def test_containerbase(data):
 
     # __getitem__()
     with pytest.raises(RuntimeError):
-        v = container["key1"]
+        _ = container["key1"]
 
     # contains()
     for k in data.keys():

@@ -3,6 +3,7 @@ from rick.mixin import Translator
 from rick.validator import Validator
 from rick.form import Field
 
+
 def test_field_class():
     # simple field test
     f = Field(type='abc', label='def', value=123)
@@ -26,5 +27,5 @@ def test_field_class():
     # test required with dict validators
     f = Field(required=True)
     assert f.validators == {'required': None}
-    f = Field(required=True, validators={'minlen':[3], 'maxlen': [45]})
-    assert f.validators == {'required':None, 'minlen':[3], 'maxlen': [45]}
+    f = Field(required=True, validators={'minlen': [3], 'maxlen': [45]})
+    assert f.validators == {'required': None, 'minlen': [3], 'maxlen': [45]}

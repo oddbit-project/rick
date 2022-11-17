@@ -14,7 +14,7 @@ class SampleForm_Simple(Form):
             .control('reset', 'clear', 'Clear Form')
         return self
 
-    def validator_name(self, data, t:Translator):
+    def validator_name(self, data, t: Translator):
         # this validator is only run if standard form validation is successful
         if data['name'] == 'dave':
             self.add_error('name', 'Dave is not here, man')

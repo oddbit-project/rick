@@ -156,9 +156,9 @@ class Form(RequestRecord):
     def control(self, control_type: str, control_id: str, label: str, **kwargs):
         """
         Adds a control element to the form
-        :param control_type: 
-        :param control_id: 
-        :param label: 
+        :param control_type:
+        :param control_id:
+        :param label:
         :param kwargs:
         :return: self
         """

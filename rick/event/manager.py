@@ -119,7 +119,6 @@ class EventManager:
         :return:
         """
         with self._handler_lock:
-            result = False
             if event_name not in self._handlers.keys():
                 # event not found
                 return False
@@ -160,7 +159,7 @@ class EventManager:
         with self._handler_lock:
             return list(self._handlers.keys())
 
-    def dispatch(self,di:Di, event_name: str, **kwargs):
+    def dispatch(self, di: Di, event_name: str, **kwargs):
         """
         Dispatches an Event by name
         :param di: Di instance
@@ -192,7 +191,7 @@ class EventManager:
                             raise RuntimeError("dispatch(): cannot find class or function '%s' in module '%s'" % (
                                 cls_name, module_path))
 
-                    except ModuleNotFoundError as e:
+                    except ModuleNotFoundError:
                         self._stack_remove(event_name)
                         raise RuntimeError("dispatch(): mapped module '%s' not found when discovering path '%s'" % (
                             module_path, handler))

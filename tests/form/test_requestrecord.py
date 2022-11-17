@@ -33,6 +33,7 @@ class RequestRecord_B(RequestRecord):
             return False
         return True
 
+
 # RequestRecord variant with bind names
 # bind names are used instead of the field name, for object mapping purposes
 class RequestRecord_C(RequestRecord_B):
@@ -133,6 +134,7 @@ def test_requestrecord_to_object(form_data, result):
         assert obj.asdict() == result[i]
         i += 1
 
+
 @pytest.mark.parametrize("form_data, result", [(bind_input, bind_output)])
 def test_requestrecord_to_object_bind(form_data, result):
     i = 0
@@ -145,6 +147,7 @@ def test_requestrecord_to_object_bind(form_data, result):
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i]
         i += 1
+
 
 def test_requestrecord():
     frm = RequestRecord_A().init()

@@ -80,7 +80,7 @@ class MapLoader:
             if cls is None:
                 raise RuntimeError("get(): cannot find class '%s' in module '%s'" % (cls_name, module_path))
 
-        except ModuleNotFoundError as e:
+        except ModuleNotFoundError:
             with self._lock:
                 self._stack.remove(name)
             raise RuntimeError("get(): mapped module '%s' not found when discovering path %s" % (module_path, path))

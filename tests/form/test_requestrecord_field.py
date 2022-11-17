@@ -18,6 +18,7 @@ class RequestCustomError(RequestRecord):
         'phone': field(validators="numeric|minlen:8|maxlen:16", error="invalid phone")
     }
 
+
 class RequestCustomValidator(UserRequest):
 
     def validator_name(self, data, t: Translator):

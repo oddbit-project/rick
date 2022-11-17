@@ -3,6 +3,7 @@ import pytest
 from rick.base import Di
 from rick.event import EventHandler, EventManager
 
+
 class Handler_0:
 
     def event_one(self, **kwargs):
@@ -56,6 +57,7 @@ invalid_mgr_cfg = {
     },
 }
 
+
 def test_manager():
     di = Di()
     mgr = EventManager()
@@ -73,6 +75,7 @@ def test_manager():
     mgr.dispatch(di, 'event_two', out=out_list)
     assert out_list == [3, -2, -1]
 
+
 def test_manager_invalid():
     di = Di()
     mgr = EventManager()
@@ -85,6 +88,7 @@ def test_manager_invalid():
         # EventHandler
         mgr.dispatch(di, 'event_one', out=out_list)
         assert out_list == [3, 2, 1]
+
 
 def test_manager_sleep():
     di = Di()

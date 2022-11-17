@@ -1,4 +1,3 @@
-import functools
 import importlib
 from typing import Optional
 
@@ -16,5 +15,5 @@ def load_class(path: str) -> Optional[object]:
         if cls is None:
             return None
         return cls
-    except ModuleNotFoundError as e:
+    except ModuleNotFoundError:
         return None
