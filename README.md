@@ -1,4 +1,9 @@
 # rick
+
+[![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
+[![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
+
 Python plumbing for micro-framework based applications
 
 **Note**: This library is still under development; things may change place or be rewritten with a different spec between
