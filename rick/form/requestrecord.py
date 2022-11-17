@@ -285,7 +285,7 @@ class RequestRecord:
     def get_translator(self) -> Translator:
         return self._translator
 
-    def _add_record_error(self, id: str, errors: Union[List | dict]):
+    def _add_record_error(self, id: str, errors: Union[List, dict]):
         """
         Adds or overrides record validation errors
         if the record field already has errors, they are removed and replaced by  the specified ones
