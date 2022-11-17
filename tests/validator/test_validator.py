@@ -219,7 +219,7 @@ def test_validator(validators, values, result):
 
     for field, opts in validators.items():
         r = v.field_rules(field)
-        if type(opts) is dict:
+        if isinstance(opts, dict):
             assert len(r) == len(opts)
 
     with pytest.raises(ValueError):
@@ -235,7 +235,7 @@ def test_fixtures(validators, values, result):
     v = Validator(validators)
     for field, opts in values.items():
         r = v.field_rules(field)
-        assert type(r) is dict
+        assert isinstance(r, dict)
         assert len(r) > 0
 
     valid = v.is_valid(values)
@@ -250,7 +250,7 @@ def test_translator(validators, values, result):
 
     for field, opts in values.items():
         r = v.field_rules(field)
-        assert type(r) is dict
+        assert isinstance(r, dict)
         assert len(r) > 0
 
     valid = v.is_valid(values, translator=t)
