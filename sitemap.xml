@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://github.com/oddbit-project/rick/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/filters/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/forms/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/forms/errors/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/forms/field.class/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/forms/form.class/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/forms/requests/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/mixins/translator.class/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/validators/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://github.com/oddbit-project/rick/validators/validator_list/</loc>
-         <lastmod>2022-10-06</lastmod>
+         <lastmod>2022-11-25</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
