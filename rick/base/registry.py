@@ -1,38 +1,12 @@
 from threading import Lock
 
 
-class Registry:
+class BaseRegistry:
 
     def __init__(self, cls):
         self._prototype = cls
         self._registry = {}
         self._lock = Lock()
-
-    def register_cls(self, name: str = None, override: bool = False):
-        """
-        Class registration decorator
-        The object is created and added to the registry dict
-        :param name: entry name
-        :param override: True to override existing entries
-        :return: class
-        """
-        if not name:
-            raise ValueError("Registry.register(): missing name parameter")
-
-        def _register(cls):
-            self.register_obj(name, cls(), override)
-            return cls
-
-        return _register
-
-    def register_obj(self, name: str, obj, override: bool = False):
-        if not isinstance(obj, self._prototype):
-            raise TypeError("Registry.register_obj(): object or class does not extend the required interface")
-
-        with self._lock:
-            if name in self._registry.keys() and not override:
-                raise ValueError("Registry.register_obj(): name already exists")
-            self._registry[name] = obj
 
     def get(self, name: str):
         """
@@ -93,3 +67,61 @@ class Registry:
 
     def __repr__(self):
         return repr(self._registry)
+
+
+class Registry(BaseRegistry):
+
+    def register_cls(self, name: str = None, override: bool = False):
+        """
+        Class registration decorator
+        The object is created and added to the registry dict
+        :param name: entry name
+        :param override: True to override existing entries
+        :return: class
+        """
+        if not name:
+            raise ValueError("Registry.register(): missing name parameter")
+
+        def _register(cls):
+            self.register_obj(name, cls(), override)
+            return cls
+
+        return _register
+
+    def register_obj(self, name: str, obj, override: bool = False):
+        if not isinstance(obj, self._prototype):
+            raise TypeError("Registry.register_obj(): object or class does not extend the required interface")
+
+        with self._lock:
+            if name in self._registry.keys() and not override:
+                raise ValueError("Registry.register_obj(): name already exists")
+            self._registry[name] = obj
+
+
+class ClassRegistry(BaseRegistry):
+
+    def register(self, name: str = None, override: bool = False):
+        """
+        Class registration decorator
+        The object is created and added to the registry dict
+        :param name: entry name
+        :param override: True to override existing entries
+        :return: class
+        """
+        if not name:
+            raise ValueError("Registry.register(): missing name parameter")
+
+        def _register(cls):
+            self.register_cls(name, cls, override)
+            return cls
+
+        return _register
+
+    def register_cls(self, name: str, cls, override: bool = False):
+        if not issubclass(cls, self._prototype):
+            raise TypeError("Registry.register_cls(): object or class does not extend the required interface")
+
+        with self._lock:
+            if name in self._registry.keys() and not override:
+                raise ValueError("Registry.register_cls(): name already exists")
+            self._registry[name] = cls
