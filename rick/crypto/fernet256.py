@@ -15,7 +15,7 @@ import time
 
 from cryptography import utils
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.backends import _get_backend
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.hmac import HMAC
@@ -30,7 +30,8 @@ _MAX_CLOCK_SKEW = 60
 
 class Fernet256(object):
     def __init__(self, key, backend=None):
-        backend = _get_backend(backend)
+        if backend is None:
+            backend = default_backend()
 
         key = base64.urlsafe_b64decode(key)
         if len(key) != 64:
