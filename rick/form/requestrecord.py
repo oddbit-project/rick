@@ -271,6 +271,42 @@ class RequestRecord:
                 setattr(cls_obj, name, bind_fields[name].value)
         return cls_obj
 
+    def bindx(self, cls_obj) -> Any:
+        """
+        Retrieve all data as a cls_obj object, and all non-mapped attributes as a dict
+
+        Notes:
+            - only non-None values are binded!!! (this is required to prevent eg. primary keys becoming null on insert)
+            - if cls_obj is a class, a new instance is created and used as target object
+            - attribute name can be specified via bind=name parameter in the Field class; if bind name is specified,
+            it is used instead of id for binding purposes
+            - attributes are copied by name; if the attribute doesn't exist in the target object, it is returned as unmapped value
+            - This method can be used to easily convert form data into RickDB Records
+
+        :param cls_obj: class or object
+        :return: (cls_obj object instance, dict of unmapped values)
+        """
+        if isclass(cls_obj):
+            cls_obj = cls_obj()
+
+        result = {}
+        # create field map based on optional bind fields
+        bind_fields = {}
+        for name, field in self.fields.items():
+            if field.value is not None:
+                if field.bind is None:
+                    bind_fields[name] = field
+                else:
+                    bind_fields[field.bind] = field
+
+        obj_attrs = get_attribute_names(cls_obj)
+        for name, field in bind_fields.items():
+            if name in obj_attrs:
+                setattr(cls_obj, name, bind_fields[name].value)
+            else:
+                result[name] = bind_fields[name].value
+        return cls_obj, result
+
     def set(self, id: str, value: Any):
         """
         Set field value

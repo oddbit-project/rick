@@ -44,6 +44,19 @@ class RequestRecord_C(RequestRecord_B):
     }
 
 
+# RequestRecord variant with bindx names
+# bindx is a bind() variant that also returns unmapped values
+class RequestRecord_D(RequestRecord_B):
+    fields = {
+        'my_name': field(validators="required|minlen:4|maxlen:8", bind='name'),
+        'age': field(validators="required|numeric|between:9,125"),
+        'my_phone': field(validators="numeric|minlen:8|maxlen:16", bind='phone'),
+        'unmapped_1': field(validators="maxlen:16"),
+        'unmapped_2': field(validators="maxlen:16"),
+        'unmapped_3': field(validators="maxlen:16"),
+    }
+
+
 class ObjectRecord:
     name = None
     age = None
@@ -101,6 +114,17 @@ bind_output = [
     {'name': 'anthony', 'age': 60, 'phone': '92000000'},
 ]
 
+bindx_input = [
+    {'my_name': 'john', 'age': 32},
+    {'my_name': 'gary', 'age': 60, 'my_phone': '91000000', 'unmapped_1': 'field1'},
+    {'my_name': 'anthony', 'age': 60, 'my_phone': '92000000', 'unmapped_1': 'field1', 'unmapped_2': 'field2'},
+]
+bindx_output = [
+    [{'name': 'john', 'age': 32, 'phone': None}, {}],
+    [{'name': 'gary', 'age': 60, 'phone': '91000000'}, {'unmapped_1': 'field1'}],
+    [{'name': 'anthony', 'age': 60, 'phone': '92000000'}, {'unmapped_1': 'field1', 'unmapped_2': 'field2'}],
+]
+
 
 @pytest.mark.parametrize("form_data, result", [(requestrecord_simple_fixture, requestrecord_simple_result)])
 def test_requestrecord_a_validator(form_data, result):
@@ -146,6 +170,21 @@ def test_requestrecord_to_object_bind(form_data, result):
         assert obj is not None
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i]
+        i += 1
+
+
+@pytest.mark.parametrize("form_data, result", [(bindx_input, bindx_output)])
+def test_requestrecord_to_object_bindx(form_data, result):
+    i = 0
+    for data in form_data:
+        frm = RequestRecord_D()
+        assert frm.is_valid(data)
+        # transform to ObjectRecord
+        obj, data = frm.bindx(ObjectRecord)
+        assert obj is not None
+        assert isinstance(obj, ObjectRecord)
+        assert obj.asdict() == result[i][0]
+        assert data == result[i][1]
         i += 1
 
 
