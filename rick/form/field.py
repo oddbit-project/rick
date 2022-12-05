@@ -23,8 +23,8 @@ def field(**kwargs):
     :param options: dict extra options
     :return: dict
     """
-    kwargs['cls'] = Field
-    kwargs['_type'] = TYPE_FIELD
+    kwargs["cls"] = Field
+    kwargs["_type"] = TYPE_FIELD
     return kwargs
 
 
@@ -35,7 +35,12 @@ def record(cls, required=False, error=None):
     :param required: if the field is mandatory
     :return: dict
     """
-    return {'_type': TYPE_RECORD, 'cls': cls, 'validators': "required|dict" if required else "dict", 'error': error}
+    return {
+        "_type": TYPE_RECORD,
+        "cls": cls,
+        "validators": "required|dict" if required else "dict",
+        "error": error,
+    }
 
 
 def recordset(cls, required=False, error=None):
@@ -45,25 +50,30 @@ def recordset(cls, required=False, error=None):
     :param required: if the field is mandatory
     :return: dict
     """
-    return {'_type': TYPE_RECORDSET, 'cls': cls, 'validators': "required|list" if required else "list", 'error': error}
+    return {
+        "_type": TYPE_RECORDSET,
+        "cls": cls,
+        "validators": "required|list" if required else "list",
+        "error": error,
+    }
 
 
 class Field:
-
-    def __init__(self,
-                 type="",
-                 label="",
-                 value=None,
-                 required=False,
-                 readonly=False,
-                 validators="",
-                 error=None,
-                 select: list = None,
-                 filter=None,
-                 attributes: dict = None,
-                 options: dict = None,
-                 bind: str = None
-                 ):
+    def __init__(
+        self,
+        type="",
+        label="",
+        value=None,
+        required=False,
+        readonly=False,
+        validators="",
+        error=None,
+        select: list = None,
+        filter=None,
+        attributes: dict = None,
+        options: dict = None,
+        bind: str = None,
+    ):
         """
         Field Constructor
         :param type: str field type
@@ -104,11 +114,11 @@ class Field:
 
         # pass direct read-only mapping to options
         if self.readonly:
-            self.options['readonly'] = True
+            self.options["readonly"] = True
 
         # pass direct options read-only to main scope
-        if 'readonly' in self.options.keys():
-            self.readonly = self.options['readonly']
+        if "readonly" in self.options.keys():
+            self.readonly = self.options["readonly"]
 
         # fetch/build filter object if any
         if self.filter is not None:
@@ -126,9 +136,9 @@ class Field:
         if self.required:
             # add required validator
             if len(self.validators) == 0:
-                self.validators = {'required': None}
+                self.validators = {"required": None}
             else:
                 if isinstance(self.validators, str):
                     self.validators = "required|" + self.validators
                 elif isinstance(self.validators, dict):
-                    self.validators['required'] = None
+                    self.validators["required"] = None

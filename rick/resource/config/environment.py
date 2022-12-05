@@ -48,7 +48,11 @@ class StrOrFile(WrapType):
                     with open(path) as f:
                         return f.read().strip()
                 except Exception as e:
-                    raise ValueError("StrOrFile: error reading file '{}' - {}".format(self.value, str(e)))
+                    raise ValueError(
+                        "StrOrFile: error reading file '{}' - {}".format(
+                            self.value, str(e)
+                        )
+                    )
             else:
                 if self.silent:
                     # return value as-is, raise no exception
@@ -78,9 +82,10 @@ class EnvironmentConfig:
         assert cfg['db_host'] == 'abc'
         assert cfg['db_username'] == 'abc'
     """
-    list_separator = ','
 
-    def build(self, prefix='') -> ShallowContainer:
+    list_separator = ","
+
+    def build(self, prefix="") -> ShallowContainer:
         """
         Assemble a final ShallowContainer based on the env vars
         Note: The env vars also override the object values
@@ -118,7 +123,11 @@ class EnvironmentConfig:
 
         mapper = getattr(self, "_{}_conv".format(type(existing_value).__name__))
         if not mapper:
-            raise ValueError("Invalid data type detected when parsing environment variable '{}'".format(env_var_name))
+            raise ValueError(
+                "Invalid data type detected when parsing environment variable '{}'".format(
+                    env_var_name
+                )
+            )
         return mapper(value)
 
     def _str_conv(self, v) -> str:
@@ -144,7 +153,11 @@ class EnvironmentConfig:
         :return: List
         """
         if not type(v) is str:
-            raise ValueError("Invalid data type to extract list: expecting str, got '{}'".format(type(v).__name__))
+            raise ValueError(
+                "Invalid data type to extract list: expecting str, got '{}'".format(
+                    type(v).__name__
+                )
+            )
         return str(v).split(self.list_separator)
 
     def _dict_conv(self, v) -> dict:
@@ -154,7 +167,11 @@ class EnvironmentConfig:
         :return: dict
         """
         if not type(v) is str:
-            raise ValueError("Invalid data type to extract dict: expecting str, got '{}'".format(type(v).__name__))
+            raise ValueError(
+                "Invalid data type to extract dict: expecting str, got '{}'".format(
+                    type(v).__name__
+                )
+            )
         try:
             return json.loads(v)
         except Exception as e:
@@ -167,5 +184,9 @@ class EnvironmentConfig:
         :return: StrOrFile
         """
         if not type(v) is str:
-            raise ValueError("StrOrFile requires a str to be wrapped; found '{}'  instead".format(type(v).__name__))
+            raise ValueError(
+                "StrOrFile requires a str to be wrapped; found '{}'  instead".format(
+                    type(v).__name__
+                )
+            )
         return StrOrFile(v)

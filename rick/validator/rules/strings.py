@@ -11,12 +11,14 @@ from rick.util.cast import cast_str
 from .rule import Rule, registry
 
 
-@registry.register_cls(name='alpha')
+@registry.register_cls(name="alpha")
 class Alpha(Rule):
     MSG_ERROR = "only alphabetic characters allowed"
-    RE_ALPHA = re.compile(r'^[a-zA-Z]+$')
+    RE_ALPHA = re.compile(r"^[a-zA-Z]+$")
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         value = cast_str(value)
         if value is not None:
             if re.match(self.RE_ALPHA, value):
@@ -24,12 +26,14 @@ class Alpha(Rule):
         return False, self.error_message(error_msg, translator)
 
 
-@registry.register_cls(name='alphanum')
+@registry.register_cls(name="alphanum")
 class AlphaNum(Rule):
     MSG_ERROR = "only alphanumeric characters allowed"
-    RE_ALPHANUM = re.compile(r'^[a-zA-Z0-9]+$')
+    RE_ALPHANUM = re.compile(r"^[a-zA-Z0-9]+$")
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         value = cast_str(value)
         if value is not None:
             if re.match(self.RE_ALPHANUM, value):
@@ -37,12 +41,14 @@ class AlphaNum(Rule):
         return False, self.error_message(error_msg, translator)
 
 
-@registry.register_cls(name='slug')
+@registry.register_cls(name="slug")
 class Slug(Rule):
     MSG_ERROR = "only alphabetic characters or dash (-,_) allowed"
-    RE_SLUG = re.compile(r'^[-a-zA-Z0-9_]+$')
+    RE_SLUG = re.compile(r"^[-a-zA-Z0-9_]+$")
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         value = cast_str(value)
         if value is not None:
             if re.match(self.RE_SLUG, value):
@@ -50,18 +56,22 @@ class Slug(Rule):
         return False, self.error_message(error_msg, translator)
 
 
-@registry.register_cls(name='len')
+@registry.register_cls(name="len")
 class Len(Rule):
     MSG_ERROR = "length must be between [{0}, {1}]"
     DEFAULT_LEN_MIN = 0
     DEFAULT_LEN_MAX = 255
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         options = self.parse_options(options)
 
         if isinstance(value, int):
             value = cast_str(value)
-        if hasattr(value, '__len__') and (int(options[1]) >= len(value) >= int(options[0])):
+        if hasattr(value, "__len__") and (
+            int(options[1]) >= len(value) >= int(options[0])
+        ):
             return True, ""
         return False, self.error_message(error_msg, translator, *options)
 
@@ -74,18 +84,20 @@ class Len(Rule):
         raise ValueError("Len.validate(): invalid options parameter length")
 
 
-@registry.register_cls(name='minlen')
+@registry.register_cls(name="minlen")
 class MinLen(Rule):
     MSG_ERROR = "minimum allowed length is {0}"
     DEFAULT_LEN = 0
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         options = self.parse_options(options)
 
         if isinstance(value, int):
             value = cast_str(value)
 
-        if hasattr(value, '__len__') and (len(value) >= options[0]):
+        if hasattr(value, "__len__") and (len(value) >= options[0]):
             return True, ""
 
         return False, self.error_message(error_msg, translator, *options)
@@ -97,17 +109,19 @@ class MinLen(Rule):
         return [self.DEFAULT_LEN]
 
 
-@registry.register_cls(name='maxlen')
+@registry.register_cls(name="maxlen")
 class MaxLen(MinLen):
     MSG_ERROR = "maximum allowed length is {0}"
     DEFAULT_LEN = 255
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         options = self.parse_options(options)
 
         if isinstance(value, int):
             value = cast_str(value)
 
-        if hasattr(value, '__len__') and (len(value) <= options[0]):
+        if hasattr(value, "__len__") and (len(value) <= options[0]):
             return True, ""
         return False, self.error_message(error_msg, translator, *options)

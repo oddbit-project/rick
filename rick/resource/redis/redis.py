@@ -91,7 +91,6 @@ class RedisCache(CacheInterface):
 
 
 class CryptRedisCache(RedisCache):
-
     def __init__(self, key=None, **kwargs):
         """
         :param key_list: base64-encode key (256 bit)

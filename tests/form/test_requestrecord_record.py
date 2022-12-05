@@ -5,23 +5,23 @@ from rick.mixin import Translator
 
 class UserRequest(RequestRecord):
     fields = {
-        'name': field(validators="required|minlen:4|maxlen:8"),
-        'age': field(validators="required|numeric|between:21,90"),
-        'phone': field(validators="numeric|minlen:8|maxlen:16")
+        "name": field(validators="required|minlen:4|maxlen:8"),
+        "age": field(validators="required|numeric|between:21,90"),
+        "phone": field(validators="numeric|minlen:8|maxlen:16"),
     }
 
 
 class TeamRecord(RequestRecord):
     fields = {
-        'team_name': field(validators="required|minlen:4|maxlen:128"),
-        'members': recordset(UserRequest)
+        "team_name": field(validators="required|minlen:4|maxlen:128"),
+        "members": recordset(UserRequest),
     }
 
 
 class TeamLeaderRecord(RequestRecord):
     fields = {
-        'team_name': field(validators="required|minlen:4|maxlen:128"),
-        'leader': record(UserRequest)
+        "team_name": field(validators="required|minlen:4|maxlen:128"),
+        "leader": record(UserRequest),
     }
 
 
@@ -33,22 +33,14 @@ fixture1_data = [
         TeamRecord,
         # data
         {
-            'team_name': 'some_name',
-            'members': [
-                {
-                    'name': 'john',
-                    'age': 22,
-                    'phone': 212212212
-                },
-                {
-                    'name': 'gary',
-                    'age': 21,
-                    'phone': 12345678
-                }
-            ]
+            "team_name": "some_name",
+            "members": [
+                {"name": "john", "age": 22, "phone": 212212212},
+                {"name": "gary", "age": 21, "phone": 12345678},
+            ],
         },
         # result
-        {}
+        {},
     ],
     # recordlist, errors
     [
@@ -56,42 +48,27 @@ fixture1_data = [
         TeamRecord,
         # data
         {
-            'team_name': 1,
-            'members': [
-                {
-                    'name': 'john',
-                    'age': 22,
-                    'phone': 'a'
-                },
-                {
-                    'name': 'gary',
-                    'age': 16,
-                    'phone': 12345678
-                }
-            ]
+            "team_name": 1,
+            "members": [
+                {"name": "john", "age": 22, "phone": "a"},
+                {"name": "gary", "age": 16, "phone": 12345678},
+            ],
         },
         # result
         {
-            'members': {
-                '_': {
+            "members": {
+                "_": {
                     0: {
-                        'phone': {
-                            'numeric': 'only digits allowed',
-                            'minlen': 'minimum allowed length is 8'
+                        "phone": {
+                            "numeric": "only digits allowed",
+                            "minlen": "minimum allowed length is 8",
                         }
                     },
-                    1: {
-                        'age': {
-                            'between': 'must be between 21 and 90'
-                        }
-                    }
+                    1: {"age": {"between": "must be between 21 and 90"}},
                 }
             },
-            'team_name': {
-                'minlen': 'minimum allowed length is 4'
-            }
-        }
-
+            "team_name": {"minlen": "minimum allowed length is 4"},
+        },
     ],
     # -----------------------------------------------------------------------------------------------------------------
     # record, valid
@@ -100,44 +77,23 @@ fixture1_data = [
         TeamLeaderRecord,
         # data
         {
-            'team_name': 'some_name',
-            'leader': {
-                'name': 'john',
-                'age': 22,
-                'phone': 212212212
-            },
-
+            "team_name": "some_name",
+            "leader": {"name": "john", "age": 22, "phone": 212212212},
         },
         # result
-        {}
+        {},
     ],
     # record, errors
     [
         # class
         TeamLeaderRecord,
         # data
-        {
-            'team_name': 1,
-            'leader': {
-                'name': 'gary',
-                'age': 16,
-                'phone': 12345678
-            }
-        },
+        {"team_name": 1, "leader": {"name": "gary", "age": 16, "phone": 12345678}},
         # result
         {
-            'leader': {
-                '_': {
-                    'age': {
-                        'between': 'must be between 21 and 90'
-                    }
-                }
-            },
-            'team_name': {
-                'minlen': 'minimum allowed length is 4'
-            }
-        }
-
+            "leader": {"_": {"age": {"between": "must be between 21 and 90"}}},
+            "team_name": {"minlen": "minimum allowed length is 4"},
+        },
     ],
 ]
 

@@ -3,14 +3,13 @@ import sys
 
 
 class ConsoleWriter:
-
     def __init__(self, stdout=sys.stdout, stderr=sys.stderr, colorizer=AnsiColor()):
         self.stdout = stdout
         self.stderr = stderr
         self.colorizer = colorizer
 
     def header(self, message, eol=True):
-        self.write(self.colorizer.white(message, attr='bold'), eol)
+        self.write(self.colorizer.white(message, attr="bold"), eol)
 
     def success(self, message, eol=True):
         self.write(self.colorizer.green(message), eol)

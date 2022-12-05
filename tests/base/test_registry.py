@@ -11,13 +11,12 @@ class OtherClass:
 
 
 class TestRegistry:
-
     def test_init(self):
         registry = Registry(SomeClass)
-        registry.register_obj('name', SomeClass())
-        assert registry.has('name') is True
+        registry.register_obj("name", SomeClass())
+        assert registry.has("name") is True
         with pytest.raises(TypeError):
-            registry.register_obj('foo', OtherClass())
+            registry.register_obj("foo", OtherClass())
 
     def test_register_obj(self):
         registry = Registry(SomeClass)

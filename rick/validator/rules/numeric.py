@@ -7,13 +7,15 @@ from rick.util.cast import cast_str, cast_float
 from .rule import Rule, registry
 
 
-@registry.register_cls(name='between')
+@registry.register_cls(name="between")
 class Between(Rule):
     MSG_ERROR = "must be between {0} and {1}"
     DEFAULT_MIN = 0
     DEFAULT_MAX = 255
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         value = cast_float(value)
         if value is not None and float(options[1]) >= value >= float(options[0]):
             return True, ""
@@ -28,11 +30,13 @@ class Between(Rule):
         raise ValueError("Between.validate(): invalid options parameter length")
 
 
-@registry.register_cls(name='numeric')
+@registry.register_cls(name="numeric")
 class Numeric(Rule):
     MSG_ERROR = "only digits allowed"
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         value = cast_str(value)
         if value is not None:
             if value.isnumeric():
@@ -40,11 +44,13 @@ class Numeric(Rule):
         return False, self.error_message(error_msg, translator)
 
 
-@registry.register_cls(name='decimal')
+@registry.register_cls(name="decimal")
 class Decimal(Rule):
     MSG_ERROR = "invalid decimal"
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         if error_msg is None:
             error_msg = self.MSG_ERROR
         try:

@@ -1,5 +1,4 @@
 class CacheInterface:
-
     def get(self, key):
         pass
 
@@ -20,7 +19,6 @@ class CacheInterface:
 
 
 class CacheNull(CacheInterface):
-
     def get(self, key):
         return None
 

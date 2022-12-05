@@ -6,8 +6,8 @@ from rick.base import ShallowContainer
 
 class ConfigTest1(EnvironmentConfig):
     OPTION_1 = None
-    OPTION_2 = 'x'
-    OPTION_3 = 'xyz'
+    OPTION_2 = "x"
+    OPTION_3 = "xyz"
 
 
 class ConfigTest2(EnvironmentConfig):
@@ -17,51 +17,39 @@ class ConfigTest2(EnvironmentConfig):
     FOO_DICT = {}
 
 
-fixture_configtest_prefix = [(ConfigTest1, {'PREFIX_OPTION_1': 'abc', 'PREFIX_OPTION_2': 'def'})]
+fixture_configtest_prefix = [
+    (ConfigTest1, {"PREFIX_OPTION_1": "abc", "PREFIX_OPTION_2": "def"})
+]
 
 fixtures = [
     [  # simple override
         ConfigTest1,
-        {
-            'OPTION_1': 'abc',
-            'OPTION_2': 'def'
-        },
-        {
-            'option_1': 'abc',
-            'option_2': 'def',
-            'option_3': 'xyz'
-        },
-        ''  # no prefix
+        {"OPTION_1": "abc", "OPTION_2": "def"},
+        {"option_1": "abc", "option_2": "def", "option_3": "xyz"},
+        "",  # no prefix
     ],
     [  # simple override
         ConfigTest1,
-        {
-            'PREFIX_OPTION_1': 'abc',
-            'PREFIX_OPTION_2': 'def'
-        },
-        {
-            'option_1': 'abc',
-            'option_2': 'def',
-            'option_3': 'xyz'
-        },
-        'PREFIX_'  # no prefix
+        {"PREFIX_OPTION_1": "abc", "PREFIX_OPTION_2": "def"},
+        {"option_1": "abc", "option_2": "def", "option_3": "xyz"},
+        "PREFIX_",  # no prefix
     ],
     [  # multiple types
         ConfigTest2,
         {  # env vars
-            'FOO_LIST': 'abc,def',
-            'FOO_INT': '5',
-            'FOO_STR': 'joe',
-            'FOO_DICT': '{"key":"value"}'
+            "FOO_LIST": "abc,def",
+            "FOO_INT": "5",
+            "FOO_STR": "joe",
+            "FOO_DICT": '{"key":"value"}',
         },  # expected result
         {
-            'foo_list': ['abc', 'def'],
-            'foo_int': 5,
-            'foo_str': 'joe',
-            'foo_dict': {"key": "value"}
+            "foo_list": ["abc", "def"],
+            "foo_int": 5,
+            "foo_str": "joe",
+            "foo_dict": {"key": "value"},
         },
-        ''  # no prefix
-    ]
+        "",  # no prefix
+    ],
 ]
 
 

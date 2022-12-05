@@ -8,7 +8,6 @@ from .field import Field, TYPE_FIELD, TYPE_RECORD, TYPE_RECORDSET
 
 
 class RequestRecord:
-
     def __init__(self, translator: Translator = None):
         """
         Constructor
@@ -39,18 +38,18 @@ class RequestRecord:
         self.recordsets = {}
 
         fields = {}
-        if hasattr(self, 'fields'):
-            field_spec = getattr(self, 'fields')
+        if hasattr(self, "fields"):
+            field_spec = getattr(self, "fields")
             if isinstance(field_spec, dict):
                 # create objects from existing spec
                 for name, spec in field_spec.items():
                     args = spec.copy()
-                    field_type = args.pop('_type')
+                    field_type = args.pop("_type")
                     if field_type == TYPE_FIELD:
-                        obj = args.pop('cls')(**args)
+                        obj = args.pop("cls")(**args)
 
                     elif field_type in [TYPE_RECORD, TYPE_RECORDSET]:
-                        cls = args.pop('cls')
+                        cls = args.pop("cls")
                         # create dummy field with validators
                         obj = Field(**args)
                         # create record
@@ -64,7 +63,9 @@ class RequestRecord:
 
                     # add validation rules if exist
                     if len(obj.validators) > 0:
-                        self.validator.add_field(name, obj.validators, obj.error_message)
+                        self.validator.add_field(
+                            name, obj.validators, obj.error_message
+                        )
             else:
                 raise ValueError("RequestRecord(): invalid  field spec format")
         self.fields = fields
@@ -159,7 +160,7 @@ class RequestRecord:
             # set values for fields
             for field_name, field in self.fields.items():
                 # attempt to find a method called validator_<field_id>() in the current object
-                method_name = "_".join(['validator', field_name.replace('-', '_')])
+                method_name = "_".join(["validator", field_name.replace("-", "_")])
                 custom_validator = getattr(self, method_name, None)
                 # if exists and is method
                 if custom_validator and callable(custom_validator):
@@ -182,7 +183,7 @@ class RequestRecord:
         self.errors = {**self.errors, **self.validator.get_errors()}
         return False
 
-    @deprecated('replaced by function get_errors()')
+    @deprecated("replaced by function get_errors()")
     def error_messages(self) -> dict:
         """
         Get validation error messages
@@ -216,7 +217,7 @@ class RequestRecord:
             raise ValueError("invalid field id %s" % (id,))
         if self._translator is not None:
             error_message = self._translator.t(error_message)
-        self.errors[id] = {'*': error_message}
+        self.errors[id] = {"*": error_message}
         return self
 
     def get(self, id: str) -> Any:
@@ -331,5 +332,5 @@ class RequestRecord:
         """
         if id not in self.fields.keys():
             raise ValueError("invalid field id %s" % (id,))
-        self.errors[id] = {'_': errors}
+        self.errors[id] = {"_": errors}
         return self

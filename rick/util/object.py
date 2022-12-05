@@ -2,12 +2,12 @@ from typing import List
 
 
 def get_attribute_names(object) -> List:
-    fieldmap = getattr(object, '_fieldmap', None)
+    fieldmap = getattr(object, "_fieldmap", None)
     if fieldmap:
         return list(fieldmap.keys())
     result = []
     for item in dir(object):
-        if not item.startswith('_'):
+        if not item.startswith("_"):
             v = getattr(object, item, None)
             if not callable(v):
                 result.append(item)

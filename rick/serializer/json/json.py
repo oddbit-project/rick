@@ -10,6 +10,7 @@ class ExtendedJsonEncoder(json.JSONEncoder):
     Extended JSON encoder
     Supports UUID, Decimal, HTML, Dataclasses and DateTime objects
     """
+
     def default(self, obj):
         if isinstance(obj, (datetime.date, datetime.datetime)):
             return obj.isoformat()
@@ -19,6 +20,6 @@ class ExtendedJsonEncoder(json.JSONEncoder):
             return dataclasses.asdict(obj)
         if hasattr(obj, "__html__"):
             return str(obj.__html__())
-        if hasattr(obj, 'asdict') and callable(getattr(obj, 'asdict', None)):
+        if hasattr(obj, "asdict") and callable(getattr(obj, "asdict", None)):
             return obj.asdict()
         return obj.__dict__

@@ -2,7 +2,6 @@ from threading import Lock
 
 
 class BaseRegistry:
-
     def __init__(self, cls):
         self._prototype = cls
         self._registry = {}
@@ -51,7 +50,9 @@ class BaseRegistry:
             return self._registry[key]
 
     def __setitem__(self, key, value):
-        raise RuntimeError("Repository.__setitem__(): implicit write operation forbidden")
+        raise RuntimeError(
+            "Repository.__setitem__(): implicit write operation forbidden"
+        )
 
     def __delitem__(self, key):
         with self._lock:
@@ -70,7 +71,6 @@ class BaseRegistry:
 
 
 class Registry(BaseRegistry):
-
     def register_cls(self, name: str = None, override: bool = False):
         """
         Class registration decorator
@@ -90,7 +90,9 @@ class Registry(BaseRegistry):
 
     def register_obj(self, name: str, obj, override: bool = False):
         if not isinstance(obj, self._prototype):
-            raise TypeError("Registry.register_obj(): object or class does not extend the required interface")
+            raise TypeError(
+                "Registry.register_obj(): object or class does not extend the required interface"
+            )
 
         with self._lock:
             if name in self._registry.keys() and not override:
@@ -99,7 +101,6 @@ class Registry(BaseRegistry):
 
 
 class ClassRegistry(BaseRegistry):
-
     def register(self, name: str = None, override: bool = False):
         """
         Class registration decorator
@@ -119,7 +120,9 @@ class ClassRegistry(BaseRegistry):
 
     def register_cls(self, name: str, cls, override: bool = False):
         if not issubclass(cls, self._prototype):
-            raise TypeError("Registry.register_cls(): object or class does not extend the required interface")
+            raise TypeError(
+                "Registry.register_cls(): object or class does not extend the required interface"
+            )
 
         with self._lock:
             if name in self._registry.keys() and not override:

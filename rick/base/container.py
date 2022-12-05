@@ -3,7 +3,6 @@ import copy
 
 
 class ContainerBase:
-
     def __init__(self, data):
         self._data = data
 
@@ -57,7 +56,9 @@ class Container(ContainerBase):
         :param data: dict with data to be made available
         """
         if not isinstance(data, collections.abc.Mapping):
-            raise ValueError("expected dict/Mapping, %s found instead" % str(type(data)))
+            raise ValueError(
+                "expected dict/Mapping, %s found instead" % str(type(data))
+            )
         super(Container, self).__init__(copy.deepcopy(data))
 
     def __getitem__(self, key):
@@ -81,7 +82,9 @@ class MutableContainer(ContainerBase):
             super(MutableContainer, self).__init__({})
         else:
             if not isinstance(data, collections.abc.MutableMapping):
-                raise ValueError("expected dict/MutableMapping, %s found instead" % str(type(data)))
+                raise ValueError(
+                    "expected dict/MutableMapping, %s found instead" % str(type(data))
+                )
             super(MutableContainer, self).__init__(copy.deepcopy(data))
 
     def __getitem__(self, key):
@@ -122,7 +125,9 @@ class ShallowContainer(ContainerBase):
         :param data: dict with data to be made available
         """
         if not isinstance(data, collections.abc.Mapping):
-            raise ValueError("expected dict/Mapping, %s found instead" % str(type(data)))
+            raise ValueError(
+                "expected dict/Mapping, %s found instead" % str(type(data))
+            )
         super(ShallowContainer, self).__init__(data)
 
     def copy(self):

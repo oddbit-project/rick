@@ -16,7 +16,6 @@ class Control:
 
 
 class FieldSet:
-
     def __init__(self, parent: RequestRecord, id: str, label: str):
         self.id = id
         self.label = label
@@ -46,8 +45,8 @@ class FieldSet:
         if field_id in self.fields.keys():
             raise RuntimeError("duplicated field id '%s'" % (id,))
 
-        kwargs['type'] = field_type
-        kwargs['label'] = self.translator.t(label)
+        kwargs["type"] = field_type
+        kwargs["label"] = self.translator.t(label)
         field = Field(**kwargs)
         self.fields[field_id] = field
         self.form.add_field(field_id, field)
@@ -55,11 +54,11 @@ class FieldSet:
 
 
 class Form(RequestRecord):
-    DEFAULT_FIELDSET = '__default__'
-    METHOD_POST = 'POST'
-    METHOD_PUT = 'PUT'
-    METHOD_PATCH = 'PATCH'
-    METHOD_SEARCH = 'SEARCH'
+    DEFAULT_FIELDSET = "__default__"
+    METHOD_POST = "POST"
+    METHOD_PUT = "PUT"
+    METHOD_PATCH = "PATCH"
+    METHOD_SEARCH = "SEARCH"
 
     def __init__(self, translator: Translator = None):
         super().__init__(translator)
@@ -67,7 +66,7 @@ class Form(RequestRecord):
         self.controls = {}
         self.method = self.METHOD_POST
         self.action = ""
-        self.fieldset(self.DEFAULT_FIELDSET, '')
+        self.fieldset(self.DEFAULT_FIELDSET, "")
 
     def set_action(self, url: str):
         """
@@ -148,7 +147,9 @@ class Form(RequestRecord):
         :param kwargs:
         :return: FieldSet
         """
-        return self.fieldset(self.DEFAULT_FIELDSET, '').field(field_type, field_id, self._translator.t(label), **kwargs)
+        return self.fieldset(self.DEFAULT_FIELDSET, "").field(
+            field_type, field_id, self._translator.t(label), **kwargs
+        )
 
     def control(self, control_type: str, control_id: str, label: str, **kwargs):
         """
@@ -159,8 +160,8 @@ class Form(RequestRecord):
         :param kwargs:
         :return: self
         """
-        kwargs['type'] = control_type
-        kwargs['label'] = self._translator.t(label)
+        kwargs["type"] = control_type
+        kwargs["label"] = self._translator.t(label)
         control = Control(**kwargs)
         self.controls[control_id] = control
         return self
@@ -189,7 +190,7 @@ class Form(RequestRecord):
             raise ValueError("invalid field id %s" % (id,))
         if self._translator is not None:
             error_message = self._translator.t(error_message)
-        self.errors[id] = {'*': error_message}
+        self.errors[id] = {"*": error_message}
         return self
 
     def get_fieldsets(self) -> dict:

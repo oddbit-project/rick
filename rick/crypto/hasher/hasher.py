@@ -1,5 +1,4 @@
 class HasherInterface:
-
     def hash(self, password: str) -> str:
         pass
 

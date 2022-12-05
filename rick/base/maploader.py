@@ -7,7 +7,6 @@ from .di import Di
 
 
 class MapLoader:
-
     def __init__(self, di: Di, map_: dict = None):
         self._di = di
         self._map = {}
@@ -73,17 +72,23 @@ class MapLoader:
             self._stack.append(name)
             path = self._map[name]
 
-        module_path, cls_name = path.rsplit('.', 1)
+        module_path, cls_name = path.rsplit(".", 1)
         try:
             module = importlib.import_module(module_path)
             cls = getattr(module, cls_name, None)
             if cls is None:
-                raise RuntimeError("get(): cannot find class '%s' in module '%s'" % (cls_name, module_path))
+                raise RuntimeError(
+                    "get(): cannot find class '%s' in module '%s'"
+                    % (cls_name, module_path)
+                )
 
         except ModuleNotFoundError:
             with self._lock:
                 self._stack.remove(name)
-            raise RuntimeError("get(): mapped module '%s' not found when discovering path %s" % (module_path, path))
+            raise RuntimeError(
+                "get(): mapped module '%s' not found when discovering path %s"
+                % (module_path, path)
+            )
 
         obj = self.build(cls)
         with self._lock:

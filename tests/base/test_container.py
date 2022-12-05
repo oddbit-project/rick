@@ -1,6 +1,11 @@
 import pytest
 
-from rick.base.container import ContainerBase, Container, ShallowContainer, MutableContainer
+from rick.base.container import (
+    ContainerBase,
+    Container,
+    ShallowContainer,
+    MutableContainer,
+)
 
 containerbase_data = [
     {
@@ -8,7 +13,7 @@ containerbase_data = [
         "key2": "value2",
         "key3": {
             "subkey1": "subvalue1",
-        }
+        },
     }
 ]
 
@@ -56,11 +61,11 @@ def test_containerbase(data):
     # contains()
     for k in data.keys():
         assert container.__contains__(k) is True
-    assert container.__contains__('keyX') is False
+    assert container.__contains__("keyX") is False
 
     # test shallow operation
-    data['newkey'] = "newvalue"
-    assert container.has('newkey') is True
+    data["newkey"] = "newvalue"
+    assert container.has("newkey") is True
 
 
 container_data = [
@@ -69,7 +74,7 @@ container_data = [
         "key2": "value2",
         "key3": {
             "subkey1": "subvalue1",
-        }
+        },
     }
 ]
 
@@ -102,13 +107,13 @@ def test_container(data):
 
     # __getitem__()
     v = container["key1"]
-    assert v == data['key1']
-    assert isinstance(container.__getitem__('key3'), Container)
+    assert v == data["key1"]
+    assert isinstance(container.__getitem__("key3"), Container)
 
     # contains()
     for k in data.keys():
         assert container.__contains__(k) is True
-    assert container.__contains__('keyX') is False
+    assert container.__contains__("keyX") is False
 
     # test non-shallow immutability
     data.clear()
@@ -121,7 +126,7 @@ shallowcontainer_data = [
         "key2": "value2",
         "key3": {
             "subkey1": "subvalue1",
-        }
+        },
     }
 ]
 
@@ -139,11 +144,11 @@ def test_shallow_container(data):
     val_key3 = container.get("key3")
     assert isinstance(val_key3, ShallowContainer)
     assert val_key3.asdict() == data["key3"]
-    assert isinstance(container.__getitem__('key3'), ShallowContainer)
+    assert isinstance(container.__getitem__("key3"), ShallowContainer)
 
     # test shallow operation
-    data['newkey'] = "newvalue"
-    assert container.get('newkey') == "newvalue"
+    data["newkey"] = "newvalue"
+    assert container.get("newkey") == "newvalue"
 
 
 mutablecontainer_data = [
@@ -152,7 +157,7 @@ mutablecontainer_data = [
         "key2": "value2",
         "key3": {
             "subkey1": "subvalue1",
-        }
+        },
     }
 ]
 
@@ -167,19 +172,19 @@ def test_mutable_container(data):
     assert container.asdict() == other_c.asdict()
 
     # A MutableContainer is *not* shallow
-    data['newkey'] = "newvalue"
-    assert container.get('newkey') is None
+    data["newkey"] = "newvalue"
+    assert container.get("newkey") is None
 
     # test class cast
     val_key3 = container.get("key3")
     assert isinstance(val_key3, MutableContainer)
     assert val_key3.asdict() == data["key3"]
-    assert isinstance(container.__getitem__('key3'), MutableContainer)
+    assert isinstance(container.__getitem__("key3"), MutableContainer)
 
     # clear()
     clone = container.copy()
     container.clear()
-    assert container.get('key1') is None
+    assert container.get("key1") is None
     assert len(container.keys()) == 0
     container = clone
 
@@ -194,15 +199,15 @@ def test_mutable_container(data):
     # __setitem__()
     # add
     container["key9"] = "value9"
-    assert container.has('key9') is True
-    assert container.get('key9') == 'value9'
+    assert container.has("key9") is True
+    assert container.get("key9") == "value9"
     # replace
     container["key9"] = "other_value9"
-    assert container.has('key9') is True
-    assert container.get('key9') == 'other_value9'
+    assert container.has("key9") is True
+    assert container.get("key9") == "other_value9"
 
     # __delitem__()
 
     # remove()
-    container.remove('key9')
-    assert container.has('key9') is False
+    container.remove("key9")
+    assert container.has("key9") is False

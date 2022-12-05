@@ -6,38 +6,30 @@ from pathlib import Path
 
 
 class Config(EnvironmentConfig):
-    DB_HOST = 'localhost'
-    DB_USER = StrOrFile('username')
-    DB_PASSWORD = StrOrFile('password')
+    DB_HOST = "localhost"
+    DB_USER = StrOrFile("username")
+    DB_PASSWORD = StrOrFile("password")
 
 
 fixture_config_wrap = [
     [  # absolute path
         Config,
         {
-            'DB_USER': 'myuser',
-            'DB_PASSWORD': str(Path(__file__).parent.resolve() / Path('test_password.txt'))
+            "DB_USER": "myuser",
+            "DB_PASSWORD": str(
+                Path(__file__).parent.resolve() / Path("test_password.txt")
+            ),
         },
-        {
-            'db_host': 'localhost',
-            'db_user': 'myuser',
-            'db_password': 'abc123'
-        }
+        {"db_host": "localhost", "db_user": "myuser", "db_password": "abc123"},
     ],
-
     [  # relative path
         Config,
         {
-            'DB_USER': 'myuser',
-            'DB_PASSWORD': './tests/resource/config/test_password.txt'
+            "DB_USER": "myuser",
+            "DB_PASSWORD": "./tests/resource/config/test_password.txt",
         },
-        {
-            'db_host': 'localhost',
-            'db_user': 'myuser',
-            'db_password': 'abc123'
-        }
-    ]
-
+        {"db_host": "localhost", "db_user": "myuser", "db_password": "abc123"},
+    ],
 ]
 
 

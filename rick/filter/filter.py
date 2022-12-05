@@ -6,7 +6,6 @@ from rick.util.cast import cast_str, cast_int, cast_float
 
 
 class Filter:
-
     def transform(self, src: Any) -> Any:
         return src
 
@@ -15,16 +14,14 @@ class Filter:
 registry = Registry(Filter)
 
 
-@registry.register_cls(name='int')
+@registry.register_cls(name="int")
 class Int(Filter):
-
     def transform(self, src: Any) -> Any:
         return cast_int(src)
 
 
-@registry.register_cls(name='decimal')
+@registry.register_cls(name="decimal")
 class Decimal(Filter):
-
     def transform(self, src: Any) -> Any:
         try:
             return decimal.Decimal(src)
@@ -32,16 +29,14 @@ class Decimal(Filter):
             return None
 
 
-@registry.register_cls(name='float')
+@registry.register_cls(name="float")
 class Float(Filter):
-
     def transform(self, src: Any) -> Any:
         return cast_float(src)
 
 
-@registry.register_cls(name='datetime')
+@registry.register_cls(name="datetime")
 class Datetime(Filter):
-
     def transform(self, src: Any) -> Any:
         try:
             return iso8601.parse_date(src)
@@ -49,9 +44,9 @@ class Datetime(Filter):
             return None
 
 
-@registry.register_cls(name='bool')
+@registry.register_cls(name="bool")
 class Bool(Filter):
-    IS_TRUE = ['1', 'y', 't', 'true']
+    IS_TRUE = ["1", "y", "t", "true"]
 
     def transform(self, src: Any) -> Any:
         src = cast_str(src)

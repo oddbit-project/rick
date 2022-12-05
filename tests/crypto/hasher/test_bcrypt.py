@@ -5,20 +5,21 @@ from rick.crypto.hasher.bcrypt import BcryptHasher
 class TestBcryptHasher:
     rounds = 8  # lower round count for testing purposes
     valid_passwords = {
-        '12345678': '$2b$08$Y1nUUzX0ZikQi0hSoGZXlODlQYUnF6SnyZIrFIVUZ2jgnIun/mDOO',
-        'sdktrqjkl4dskl': '$2b$08$5McEp4dvSohJdxnWONX3JOYJ8P6TQK6qosOAz0CSAkOr5T647r5G2',
-        '423FDS$&dYdcWs/dAS5': '$2b$08$WiCcKN2HtPzjH58dNEIcf.o/NoFKCZDJIr0c/Fqy1jKiknpvIuvTC'
-
+        "12345678": "$2b$08$Y1nUUzX0ZikQi0hSoGZXlODlQYUnF6SnyZIrFIVUZ2jgnIun/mDOO",
+        "sdktrqjkl4dskl": "$2b$08$5McEp4dvSohJdxnWONX3JOYJ8P6TQK6qosOAz0CSAkOr5T647r5G2",
+        "423FDS$&dYdcWs/dAS5": "$2b$08$WiCcKN2HtPzjH58dNEIcf.o/NoFKCZDJIr0c/Fqy1jKiknpvIuvTC",
     }
 
-    invalid_passwords = ['', ]
+    invalid_passwords = [
+        "",
+    ]
 
     def test_hash(self):
         bc = BcryptHasher(self.rounds)
         for pw, compat_hash in self.valid_passwords.items():
             pw_hash = bc.hash(pw)
             assert len(pw_hash) > 16
-            tokens = pw_hash[1:].split('$', 2)
+            tokens = pw_hash[1:].split("$", 2)
             assert tokens[0] == bc._prefix
             assert int(tokens[1]) == bc._rounds
             assert bc.is_valid(pw, compat_hash) is True

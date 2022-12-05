@@ -3,12 +3,16 @@ from rick.mixin import Translator
 
 
 class Rule:
-    ERROR_ATTR = 'MSG_ERROR'
+    ERROR_ATTR = "MSG_ERROR"
 
-    def validate(self, value, options: list = None, error_msg=None, translator: Translator = None):
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
         raise NotImplementedError()
 
-    def error_message(self, msg_override=None, translator: Translator = None, *args) -> str:
+    def error_message(
+        self, msg_override=None, translator: Translator = None, *args
+    ) -> str:
         if msg_override:
             msg = msg_override
         else:
@@ -16,7 +20,10 @@ class Rule:
 
         if not msg:
             raise RuntimeError(
-                "missing error message attribute '{0}' on Rule '{1}'".format(self.ERROR_ATTR, str(type(self))))
+                "missing error message attribute '{0}' on Rule '{1}'".format(
+                    self.ERROR_ATTR, str(type(self))
+                )
+            )
 
         if translator:
             msg = translator.t(msg)

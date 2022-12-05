@@ -9,7 +9,7 @@ def load_class(path: str) -> Optional[object]:
     :return: either a class or None if resource is not found
     """
     try:
-        module_path, cls_name = path.rsplit('.', 1)
+        module_path, cls_name = path.rsplit(".", 1)
         module = importlib.import_module(module_path)
         cls = getattr(module, cls_name, None)
         if cls is None:

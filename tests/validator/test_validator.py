@@ -4,26 +4,26 @@ from rick.validator import Validator
 
 # field validators in dict format
 dict_validators = {
-    'field1': {
-        'required': None,
-        'maxlen': 3,
+    "field1": {
+        "required": None,
+        "maxlen": 3,
     },
-    'field2': {
-        'minlen': 4,
+    "field2": {
+        "minlen": 4,
     },
-    'field3': {
-        'required': None,
-        'bail': None,
-        'numeric': None,
-        'len': [2, 4],
-    }
+    "field3": {
+        "required": None,
+        "bail": None,
+        "numeric": None,
+        "len": [2, 4],
+    },
 }
 
 # field validators in str format
 str_validators = {
-    'field1': 'required|maxlen:3',
-    'field2': 'minlen:4',
-    'field3': 'bail|required|numeric|len:2,4',
+    "field1": "required|maxlen:3",
+    "field2": "minlen:4",
+    "field3": "bail|required|numeric|len:2,4",
 }
 
 #
@@ -32,126 +32,87 @@ fixtures_formats = [
     [
         # ==== dict format - no error
         dict_validators,
-        {
-            'field1': '123',
-            'field2': 'abcdef',
-            'field3': '123'
-        },
-        {}
+        {"field1": "123", "field2": "abcdef", "field3": "123"},
+        {},
     ],
     [
         # ==== dict format - error
         dict_validators,
-        {
-            'field2': 'abcdef',
-            'field3': '13'
-        },
-        {
-            'field1': {'required': 'value required'}
-        }
+        {"field2": "abcdef", "field3": "13"},
+        {"field1": {"required": "value required"}},
     ],
     [
         # ==== dict format - all error
         dict_validators,
+        {"field2": "", "field3": "a"},
         {
-            'field2': '',
-            'field3': 'a'
+            "field1": {"required": "value required"},
+            "field2": {"minlen": "minimum allowed length is 4"},
+            "field3": {"numeric": "only digits allowed"},
         },
-        {
-            'field1': {'required': 'value required'},
-            'field2': {'minlen': 'minimum allowed length is 4'},
-            'field3': {'numeric': 'only digits allowed'}
-        }
     ],
     [
         # ==== string format - no error
         str_validators,
-        {
-            'field1': '123',
-            'field2': 'abcdef',
-            'field3': '123'
-        },
-        {}
+        {"field1": "123", "field2": "abcdef", "field3": "123"},
+        {},
     ],
     [
         # ==== str format - error
         str_validators,
-        {
-            'field2': 'abcdef',
-            'field3': '13'
-        },
-        {
-            'field1': {'required': 'value required'}
-        }
+        {"field2": "abcdef", "field3": "13"},
+        {"field1": {"required": "value required"}},
     ],
     [
         # ==== str format - all error
         str_validators,
+        {"field2": "", "field3": "a"},
         {
-            'field2': '',
-            'field3': 'a'
+            "field1": {"required": "value required"},
+            "field2": {"minlen": "minimum allowed length is 4"},
+            "field3": {"numeric": "only digits allowed"},
         },
-        {
-            'field1': {'required': 'value required'},
-            'field2': {'minlen': 'minimum allowed length is 4'},
-            'field3': {'numeric': 'only digits allowed'}
-        }
     ],
 ]
 
 messages_case1 = {
-    'field2': 'custom message for field 2',
-    'field3': 'custom message for field 3'
+    "field2": "custom message for field 2",
+    "field3": "custom message for field 3",
 }
 
 fixtures = [
     [
         # ==== valid case, no errors
         str_validators,
-        {
-            'field1': '123',
-            'field2': 'abcdef',
-            'field3': '123'
-        },
+        {"field1": "123", "field2": "abcdef", "field3": "123"},
         {},
     ],
     [
         # ==== errors in all fields
         str_validators,
+        {"field2": "abc", "field3": "1"},
         {
-            'field2': 'abc',
-            'field3': '1'
+            "field1": {"required": "value required"},
+            "field2": {"minlen": "minimum allowed length is 4"},
+            "field3": {"len": "length must be between [2, 4]"},
         },
-        {
-            'field1': {'required': 'value required'},
-            'field2': {'minlen': 'minimum allowed length is 4'},
-            'field3': {'len': 'length must be between [2, 4]'}
-        }
     ],
     [
         # ==== errors, len of numeric
         str_validators,
-        {
-            'field1': 'abc',
-            'field2': 'abcd',
-            'field3': 1
-        },
-        {
-            'field3': {'len': 'length must be between [2, 4]'}
-        }
+        {"field1": "abc", "field2": "abcd", "field3": 1},
+        {"field3": {"len": "length must be between [2, 4]"}},
     ],
     [
         # ==== errors, bail test
         str_validators,
         {
-            'field1': 'abc',
-            'field2': 'abcd',
-            'field3': 'a'  # fail numeric and length, only numeric is reported due to bail
+            "field1": "abc",
+            "field2": "abcd",
+            "field3": "a",  # fail numeric and length, only numeric is reported due to bail
         },
-        {
-            'field3': {'numeric': 'only digits allowed'}
-        }
-    ]
+        {"field3": {"numeric": "only digits allowed"}},
+    ],
 ]
 
 #
@@ -160,55 +121,39 @@ fixtures_translator = [
     [
         # ==== valid case, no errors
         str_validators,
-        {
-            'field1': '123',
-            'field2': 'abcdef',
-            'field3': '123'
-        },
+        {"field1": "123", "field2": "abcdef", "field3": "123"},
         {},
     ],
     [
         # ==== errors in all fields
         str_validators,
+        {"field2": "abc", "field3": "1"},
         {
-            'field2': 'abc',
-            'field3': '1'
+            "field1": {"required": "mana mana"},
+            "field2": {"minlen": "mana mana"},
+            "field3": {"len": "mana mana"},
         },
-        {
-            'field1': {'required': 'mana mana'},
-            'field2': {'minlen': 'mana mana'},
-            'field3': {'len': 'mana mana'}
-        }
     ],
     [
         # ==== errors, len of numeric
         str_validators,
-        {
-            'field1': 'abc',
-            'field2': 'abcd',
-            'field3': 1
-        },
-        {
-            'field3': {'len': 'mana mana'}
-        }
+        {"field1": "abc", "field2": "abcd", "field3": 1},
+        {"field3": {"len": "mana mana"}},
     ],
     [
         # ==== errors, bail test
         str_validators,
         {
-            'field1': 'abc',
-            'field2': 'abcd',
-            'field3': 'a'  # fail numeric and length, only numeric is reported due to bail
+            "field1": "abc",
+            "field2": "abcd",
+            "field3": "a",  # fail numeric and length, only numeric is reported due to bail
         },
-        {
-            'field3': {'numeric': 'mana mana'}
-        }
-    ]
+        {"field3": {"numeric": "mana mana"}},
+    ],
 ]
 
 
 class ManaManaTranslator(Translator):
-
     def t(self, text: str):
         return "mana mana"
 
@@ -223,7 +168,7 @@ def test_validator(validators, values, result):
             assert len(r) == len(opts)
 
     with pytest.raises(ValueError):
-        v.field_rules('non-existing-field')
+        v.field_rules("non-existing-field")
 
     valid = v.is_valid(values)
     assert valid == (len(result) == 0)

@@ -2,7 +2,6 @@ from rick.base import Di
 
 
 class Injectable:
-
     def __init__(self, di: Di):
         self._di = di
 

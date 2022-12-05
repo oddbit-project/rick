@@ -17,8 +17,8 @@ class ValidatorState:
 
 
 class Validator:
-    RULE_BAIL = 'bail'
-    RULE_REQUIRED = 'required'
+    RULE_BAIL = "bail"
+    RULE_REQUIRED = "required"
 
     def __init__(self, rules: dict = None, messages: dict = None):
         """
@@ -64,17 +64,19 @@ class Validator:
         :return: dict with traditional rules
         """
         result = {}
-        for token in field_rules.split('|'):
-            rule_params = token.split(':')
+        for token in field_rules.split("|"):
+            rule_params = token.split(":")
             rule_name = rule_params.pop(0)
             if len(rule_name) == 0 or len(rule_params) > 1:
                 raise ValueError("invalid rule format for field %s" % (field_name,))
 
-            params = rule_params.pop().split(',') if len(rule_params) > 0 else None
+            params = rule_params.pop().split(",") if len(rule_params) > 0 else None
             result[rule_name] = params
         return result
 
-    def add_field(self, field_name: str, field_rules: Union[dict, str], error_message: str = None):
+    def add_field(
+        self, field_name: str, field_rules: Union[dict, str], error_message: str = None
+    ):
         """
         Adds a field to be validated
 
@@ -92,7 +94,9 @@ class Validator:
         :return: self
         """
         if field_name in self._rules.keys():
-            raise ValueError("Validator.add_field(): field '%s' already exists" % field_name)
+            raise ValueError(
+                "Validator.add_field(): field '%s' already exists" % field_name
+            )
 
         # parse laravel-style rules
         if isinstance(field_rules, str):
@@ -101,7 +105,10 @@ class Validator:
         # check if rules exist
         for rule_name in field_rules.keys():
             if not registry.has(rule_name):
-                raise ValueError("Validator.add_field(): rule '%s' does not exist in registry" % rule_name)
+                raise ValueError(
+                    "Validator.add_field(): rule '%s' does not exist in registry"
+                    % rule_name
+                )
 
         self._rules[field_name] = field_rules
         if error_message is not None:
@@ -196,7 +203,9 @@ class Validator:
 
         return len(self._errors) == 0
 
-    def validate_field(self, field_name: str, value: Any, translator: Translator = None) -> dict:
+    def validate_field(
+        self, field_name: str, value: Any, translator: Translator = None
+    ) -> dict:
         """
         Validate a single field, and returns validation errors, if any;
         If validation passes, result is empty dict
@@ -207,7 +216,9 @@ class Validator:
         :return: dict
         """
         if field_name not in self._rules.keys():
-            raise ValueError("Validator.validate_field(): field '%s' not found" % field_name)
+            raise ValueError(
+                "Validator.validate_field(): field '%s' not found" % field_name
+            )
 
         if translator is None:
             translator = Translator()
@@ -215,7 +226,7 @@ class Validator:
         # optional custom error message
         custom_error = None
         if field_name in self._custom_errors.keys():
-            custom_error = {'*': translator.t(self._custom_errors[field_name])}
+            custom_error = {"*": translator.t(self._custom_errors[field_name])}
 
         field_rules = self._rules[field_name]
         rule_names = list(field_rules.keys())
@@ -240,11 +251,21 @@ class Validator:
 
         for r_name in rule_names:
             rule_opts = field_rules[r_name]
-            if not isinstance(rule_opts, (list, tuple,)):
-                rule_opts = [rule_opts, ]
+            if not isinstance(
+                rule_opts,
+                (
+                    list,
+                    tuple,
+                ),
+            ):
+                rule_opts = [
+                    rule_opts,
+                ]
 
             rule = registry.get(r_name)
-            valid, error = rule.validate(value, options=rule_opts, translator=translator)
+            valid, error = rule.validate(
+                value, options=rule_opts, translator=translator
+            )
             if not valid:
                 if custom_error is not None:
                     # if custom error message, no need to process any more validators; just exit with the

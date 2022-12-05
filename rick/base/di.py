@@ -4,7 +4,6 @@ from inspect import isclass
 
 
 class Di:
-
     def __init__(self, di=None):
         """
         Initialize internal variables
@@ -19,7 +18,9 @@ class Di:
         :return: wrapper function for registered item
         """
 
-        def wrap(fn):  # wrapper function to be detected as callable for the registered class
+        def wrap(
+            fn,
+        ):  # wrapper function to be detected as callable for the registered class
             self.add(name, fn)
 
         return wrap
@@ -31,7 +32,9 @@ class Di:
         :return: wrapper function for registered item
         """
 
-        def wrap(fn):  # wrapper function to be detected as callable for the registered class
+        def wrap(
+            fn,
+        ):  # wrapper function to be detected as callable for the registered class
             self.add(name, fn, True)
 
         return wrap
@@ -48,12 +51,17 @@ class Di:
             raise RuntimeError("Dependency name '{}' already in use".format(name))
 
         if isclass(item):
-            def cls_wrap(_di):  # if it is a class, we'll create a wrap function to instantiate the object
+
+            def cls_wrap(
+                _di,
+            ):  # if it is a class, we'll create a wrap function to instantiate the object
                 return item(_di)
 
             self._registry[name] = cls_wrap  # store the wrapper class
         else:
-            self._registry[name] = item  # or if it is an object or callable, just store it
+            self._registry[
+                name
+            ] = item  # or if it is an object or callable, just store it
         if replace:  # if replacing existing item, clear lru_cache
             self.get.cache_clear()
 
