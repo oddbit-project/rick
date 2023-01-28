@@ -1,9 +1,9 @@
 site_name: Rick
 site_description: Python plumbing for micro-framework based applications
 strict: true
-site_url: https://github.com/oddbit-project/rick/
-repo_name: oddbit-project/rick
-repo_url: https://github.com/oddbit-project/rick/
+site_url: https://git.oddbit.org/OddBit/rick
+repo_name: OddBit/rick
+repo_url: https://git.oddbit.org/OddBit/rick
 
 theme:
   name: material
