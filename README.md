@@ -1,6 +1,6 @@
 # rick
 
-[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
 
 Python plumbing for micro-framework based applications
 
@@ -10,7 +10,7 @@ releases.
 
 ## Documentation
 
-Documentation is a work-in-progress. Please check what is available here: [Documentation](https://oddbit-project.github.io/rick/) 
+Documentation is a work-in-progress. Please check what is available here: [Documentation](https://docs.oddbit.org/rick/) 
 
 Core components:
 - Dependency Injection class;
@@ -19,10 +19,10 @@ Core components:
 - Misc. Container classes;
 
 Request components:
-- Validator registry w/ [validators](https://oddbit-project.github.io/rick/validators/validator_list/);
-- [Validation class](https://oddbit-project.github.io/rick/validators/);
-- [Request validation](https://oddbit-project.github.io/rick/forms/requests/);
-- [Forms](https://oddbit-project.github.io/rick/forms/);
+- Validator registry w/ [validators](https://docs.oddbit.org/rick/validators/validator_list/);
+- [Validation class](https://docs.oddbit.org/rick/validators/);
+- [Request validation](https://docs.oddbit.org/rick/forms/requests/);
+- [Forms](https://docs.oddbit.org/rick/forms/);
 - Filters;
 
 Resource components:

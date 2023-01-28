@@ -1,11 +1,11 @@
 # Welcome to Rick
 
-[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
 
 Rick is a plumbing library for micro framework design. It provides base classes for miscellaneous purposes, ranging from
 dependency injection to validation. However, it does not include any HTTP/{A,W}SGI functionality, nor any database-related 
 functionality; you should instead using other existing projects for that functionality, such as [Flask](https://flask.palletsprojects.com) for
-MVC and [RickDb](https://github.com/oddbit-project/rick_db) for database operations.
+MVC and [RickDb](https://git.oddbit.org/OddBit/rick_db) for database operations.
 
 ## Components
 - Dependency Injection (DI) class;
