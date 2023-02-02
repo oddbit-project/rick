@@ -9,7 +9,7 @@ def optional(name, src: dict, default=None):
 
 def list_duplicates(origin: list) -> List:
     result = []
-    seen = ()
+    seen = set()
     for item in origin:
         if item in seen:
             result.append(item)
