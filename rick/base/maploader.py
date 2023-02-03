@@ -27,11 +27,24 @@ class MapLoader:
             self._map[name] = path
 
     def remove(self, name):
+        """
+        Remove a cached entry by name
+        :param name:
+        :return:
+        """
         with self._lock:
             if name in self._map.keys():
                 del self._map[name]
             if name in self._loaded.keys():
                 del self._loaded[name]
+
+    def clear_loaded(self):
+        """
+        Remove all cached entries
+        :return:
+        """
+        with self._lock:
+            self._loaded = {}
 
     def append(self, map: dict):
         """
