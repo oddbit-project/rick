@@ -14,7 +14,10 @@ def load_class(path: str, raise_exception:bool=False) -> Optional[object]:
         module = importlib.import_module(module_path)
         cls = getattr(module, cls_name, None)
         if cls is None:
-            return None
+            if not raise_exception:
+                return None
+            raise ModuleNotFoundError(path)
+
         return cls
     except ModuleNotFoundError:
         if not raise_exception:
