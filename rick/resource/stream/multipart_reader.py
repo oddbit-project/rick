@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from typing import List
+from io import BytesIO
 
 
 class SliceReader:
@@ -27,6 +28,16 @@ class FileSlice(SliceReader):
             if offset > 0:
                 f.seek(offset)
             return f.read(length)
+
+
+class ByteSlice(SliceReader):
+
+    def __init__(self, buf: BytesIO):
+        super().__init__(buf, size=buf.getbuffer().len)
+
+    def read(self, offset=0, length=-1):
+        self.identifier.seek(offset)
+        return self.identifier.read(length)
 
 
 class MultiPartReader:

@@ -3,7 +3,7 @@ import pytest
 from rick.resource.stream import SliceReader, MultiPartReader
 
 
-class ByteSlice(SliceReader):
+class ByteArraySlice(SliceReader):
 
     def __init__(self, value_list: list):
         """
@@ -93,7 +93,7 @@ offset_results = [
 def test_multipart_stream_fixed(src: list, results: list):
     parts = []
     for l in src:
-        parts.append(ByteSlice(l))
+        parts.append(ByteArraySlice(l))
 
     stream = MultiPartReader(parts=parts)
 
@@ -109,7 +109,7 @@ def test_multipart_stream_fixed(src: list, results: list):
 def test_multipart_stream_variable(src: list, results: list):
     parts = []
     for l in src:
-        parts.append(ByteSlice(l))
+        parts.append(ByteArraySlice(l))
 
     stream = MultiPartReader(parts=parts)
 
