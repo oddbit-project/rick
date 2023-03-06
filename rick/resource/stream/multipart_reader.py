@@ -1,6 +1,4 @@
-import os
 from pathlib import Path
-from typing import List
 from io import BytesIO
 
 
@@ -30,10 +28,10 @@ class FileSlice(SliceReader):
             return f.read(length)
 
 
-class ByteSlice(SliceReader):
+class BytesIOSlice(SliceReader):
 
     def __init__(self, buf: BytesIO):
-        super().__init__(buf, size=buf.getbuffer().len)
+        super().__init__(buf, size=buf.getbuffer().nbytes)
 
     def read(self, offset=0, length=-1):
         self.identifier.seek(offset)
