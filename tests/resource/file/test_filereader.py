@@ -115,6 +115,6 @@ def test_filereader_attrs():
 
         attrs = {'key': 'value'}
         f = FileReader(parts=parts, attributes=attrs, record=folder)
-        assert f.get_attributes() == attrs
+        assert f.attributes == attrs
         assert f.record == folder
 
