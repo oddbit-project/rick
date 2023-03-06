@@ -100,3 +100,21 @@ def test_filereader():
             final_buf.write(buf.read())
 
         assert sha256_hash(final_buf) == fhash
+
+def test_filereader_attrs():
+    total_size = 16384 * 1024
+    with TemporaryDirectory() as folder:
+        # generate temporary file with garbage
+        fname, fhash = create_test_file(folder, total_size)  # 16mb
+        # slice file in chunks
+        chunks = slice_file(fname, 1000 * 1024, folder)  # ~1mb
+
+        parts = []
+        for c in chunks:
+            parts.append(FilePart(c))
+
+        attrs = {'key': 'value'}
+        f = FileReader(parts=parts, attributes=attrs, record=folder)
+        assert f.attributes == attrs
+        assert f.record == folder
+
