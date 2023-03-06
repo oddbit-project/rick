@@ -1,5 +1,5 @@
 from io import BytesIO
-
+from typing import Union
 from rick.resource.stream import MultiPartReader, FileSlice
 
 
@@ -9,14 +9,34 @@ class FilePart(FileSlice):
 
 class FileReader(MultiPartReader):
 
-    def __init__(self, parts: list, name='', content_type='application/unknown', attributes: dict = None):
+    def __init__(self, parts: list, name='', content_type='application/octet-stream',
+                 attributes: Union[dict, object] = None, **kwargs):
+        """
+        Initialize filereader
+
+        Node: undefined named parameters are added as properties of the object
+
+        :param parts: stream part list
+        :param name: file name
+        :param content_type: mime type
+        :param attributes: optional attribute dictionary
+        :param kwargs: optional named parameters to be added as properties of the object
+        """
         if attributes is None:
             attributes = {}
 
         self.name = name
         self.content_type = content_type
         self.attributes = attributes
+        reserved_names = dir(self)
+        for k, v in kwargs.items():
+            if k in reserved_names:
+                raise ValueError("FileReader: invalid custom property name {}; property already exists".format(k))
+            setattr(self, k, v)
         super().__init__(parts=parts)
+
+    def get_attributes(self) -> Union[dict, object]:
+        return self.attributes
 
     def read_block(self, offset=0, limit=-1) -> BytesIO:
         result = BytesIO()
