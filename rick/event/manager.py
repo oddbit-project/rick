@@ -170,13 +170,14 @@ class EventManager:
     def dispatch(self, di: Di, event_name: str, **kwargs):
         """
         Dispatches an Event by name
+        Returns True if dispatched, False if not
         :param di: Di instance
         :param event_name: event name to dispatch
         :param kwargs:
-        :return:
+        :return: bool
         """
         if event_name not in self._handlers.keys():
-            raise RuntimeError("dispatch(): event {} does not exist".format(event_name))
+            return False
 
         if event_name in self._stack:
             raise RuntimeError(
@@ -237,6 +238,7 @@ class EventManager:
                         )
 
         self._stack_remove(event_name)
+        return True
 
     def _stack_remove(self, event_name):
         """
