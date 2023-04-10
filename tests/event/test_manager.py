@@ -82,7 +82,7 @@ def test_manager():
     # test dispatching event 2
     out_list = []
     # dispatch an event, each event changes the out list
-    mgr.dispatch(di, "event_two", out=out_list)
+    assert mgr.dispatch(di, "event_two", out=out_list) is True
     assert out_list == [3, -2, -1]
 
 
@@ -98,6 +98,16 @@ def test_manager_invalid():
         # EventHandler
         mgr.dispatch(di, "event_one", out=out_list)
         assert out_list == [3, 2, 1]
+
+
+def test_manager_noevent():
+    di = Di()
+    mgr = EventManager()
+    mgr.load_handlers(invalid_mgr_cfg)
+
+    # event doesn't exist, it should return False
+    out_list = []
+    assert mgr.dispatch(di, "event_two", out=out_list) is False
 
 
 def test_manager_sleep():

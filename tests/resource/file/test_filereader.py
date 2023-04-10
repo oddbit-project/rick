@@ -101,6 +101,7 @@ def test_filereader():
 
         assert sha256_hash(final_buf) == fhash
 
+
 def test_filereader_attrs():
     total_size = 16384 * 1024
     with TemporaryDirectory() as folder:
@@ -117,4 +118,3 @@ def test_filereader_attrs():
         f = FileReader(parts=parts, attributes=attrs, record=folder)
         assert f.attributes == attrs
         assert f.record == folder
-
