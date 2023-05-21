@@ -1,5 +1,6 @@
 # rick
-
+[![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
+[![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
 
 Python plumbing for micro-framework based applications
@@ -10,7 +11,7 @@ releases.
 
 ## Documentation
 
-Documentation is a work-in-progress. Please check what is available here: [Documentation](https://docs.oddbit.org/rick/) 
+Documentation is a work-in-progress. Please check what is available here: [Documentation](https://oddbit-project.github.io/rick/) 
 
 Core components:
 - Dependency Injection class;

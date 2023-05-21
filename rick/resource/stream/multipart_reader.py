@@ -3,7 +3,6 @@ from io import BytesIO
 
 
 class SliceReader:
-
     def __init__(self, identifier, size: int = 0):
         self.identifier = identifier
         self.size = size
@@ -13,7 +12,6 @@ class SliceReader:
 
 
 class FileSlice(SliceReader):
-
     def __init__(self, file_path: str):
         file = Path(file_path)
         if not file.is_file():
@@ -22,14 +20,13 @@ class FileSlice(SliceReader):
         super().__init__(file, size=stat.st_size)
 
     def read(self, offset=0, length=-1):
-        with open(self.identifier, 'rb') as f:
+        with open(self.identifier, "rb") as f:
             if offset > 0:
                 f.seek(offset)
             return f.read(length)
 
 
 class BytesIOSlice(SliceReader):
-
     def __init__(self, buf: BytesIO):
         super().__init__(buf, size=buf.getbuffer().nbytes)
 
@@ -39,7 +36,6 @@ class BytesIOSlice(SliceReader):
 
 
 class MultiPartReader:
-
     def __init__(self, parts: list = None):
         self.opened = False
         self.offset = -1

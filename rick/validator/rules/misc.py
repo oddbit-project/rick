@@ -1,5 +1,5 @@
 # Note:
-# Regex logic is adapted from django's validators @ https://github.com/django/django/blob/master/django/core/validators.py
+# Regex logic is adapted from django's validators:https://github.com/django/django/blob/master/django/core/validators.py
 #
 
 import re

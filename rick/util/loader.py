@@ -2,7 +2,7 @@ import importlib
 from typing import Optional
 
 
-def load_class(path: str, raise_exception:bool=False) -> Optional[object]:
+def load_class(path: str, raise_exception: bool = False) -> Optional[object]:
     """
     Loads a class by string path
     :param path: string path
