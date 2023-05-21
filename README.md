@@ -36,4 +36,3 @@ Misc components:
 - Event Manager;
 - Misc mixins;
 - Extended json serializer;
-
