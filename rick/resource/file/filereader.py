@@ -8,8 +8,9 @@ class FilePart(FileSlice):
 
 
 class FileReader(MultiPartReader):
-
-    def __init__(self, parts: list, name='', content_type='application/octet-stream', **kwargs):
+    def __init__(
+        self, parts: list, name="", content_type="application/octet-stream", **kwargs
+    ):
         """
         Initialize filereader
 
@@ -25,7 +26,11 @@ class FileReader(MultiPartReader):
         reserved_names = dir(self)
         for k, v in kwargs.items():
             if k in reserved_names:
-                raise ValueError("FileReader: invalid custom property name {}; property already exists".format(k))
+                raise ValueError(
+                    "FileReader: invalid custom property name {}; property already exists".format(
+                        k
+                    )
+                )
             setattr(self, k, v)
         super().__init__(parts=parts)
 

@@ -27,13 +27,14 @@ class RequestRecord:
         #     }
         #     (...)
         # These specs are a dict with the parameters to build the appropriate object (usually Field instances), as well
-        # as the actual class to be used in this build process. Specs can easily be declared by using the field() function
+        # as the actual class to be used in this build process. Specs can easily be declared by
+        # using the field() function
         #
         # When the RequestRecord is initialized, these specs (if any) are automatically converted to fields, and
         # the fields dict is replaced by an instance attribute with the same name, and the proper object list
         #
-        # Records and Recordsets are handled both as fields and as separate structures; The basic field definition is kept
-        # as a field (mostly for validation purposes), but the actual objects are handled in separate collections
+        # Records and Recordsets are handled both as fields and as separate structures; The basic field definition is
+        # kept as a field (mostly for validation purposes), but the actual objects are handled in separate collections
         self.records = {}
         self.recordsets = {}
 
@@ -281,7 +282,8 @@ class RequestRecord:
             - if cls_obj is a class, a new instance is created and used as target object
             - attribute name can be specified via bind=name parameter in the Field class; if bind name is specified,
             it is used instead of id for binding purposes
-            - attributes are copied by name; if the attribute doesn't exist in the target object, it is returned as unmapped value
+            - attributes are copied by name; if the attribute doesn't exist in the target object, it is returned as
+            unmapped value
             - This method can be used to easily convert form data into RickDB Records
 
         :param cls_obj: class or object

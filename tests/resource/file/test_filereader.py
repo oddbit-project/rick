@@ -16,7 +16,7 @@ def create_test_file(folder_name, size):
     :param size:
     :return:
     """
-    fname = Path(folder_name) / Path('filereader_test.bin')
+    fname = Path(folder_name) / Path("filereader_test.bin")
     if fname.exists():
         fname.unlink()
 
@@ -24,14 +24,14 @@ def create_test_file(folder_name, size):
     buf.write(os.urandom(size))
 
     # garbage out
-    with open(fname, 'wb') as dest:
+    with open(fname, "wb") as dest:
         buf.seek(0)
         dest.write(buf.read())
 
     return fname, sha256_hash(buf)
 
 
-def slice_file(src, block_size, folder_name, part_name='part_{}.bin') -> List:
+def slice_file(src, block_size, folder_name, part_name="part_{}.bin") -> List:
     """
     Slice a file into several files with block_size bytes
     :param src:
@@ -47,7 +47,7 @@ def slice_file(src, block_size, folder_name, part_name='part_{}.bin') -> List:
 
     count = 0
     blocks, rem = divmod(fsize, block_size)
-    with open(src_file, 'rb') as f_in:
+    with open(src_file, "rb") as f_in:
         while blocks > 0:
             count += 1
             dest_file = folder / Path(part_name.format(count))
@@ -55,7 +55,7 @@ def slice_file(src, block_size, folder_name, part_name='part_{}.bin') -> List:
                 dest_file.unlink()
 
             result.append(dest_file)
-            with open(dest_file, 'wb') as f_out:
+            with open(dest_file, "wb") as f_out:
                 buf = f_in.read(block_size)
                 f_out.write(buf)
                 blocks -= 1
@@ -67,7 +67,7 @@ def slice_file(src, block_size, folder_name, part_name='part_{}.bin') -> List:
                 dest_file.unlink()
 
             result.append(dest_file)
-            with open(dest_file, 'wb') as f_out:
+            with open(dest_file, "wb") as f_out:
                 buf = f_in.read(rem)
                 f_out.write(buf)
                 blocks -= 1
@@ -114,7 +114,7 @@ def test_filereader_attrs():
         for c in chunks:
             parts.append(FilePart(c))
 
-        attrs = {'key': 'value'}
+        attrs = {"key": "value"}
         f = FileReader(parts=parts, attributes=attrs, record=folder)
         assert f.attributes == attrs
         assert f.record == folder
