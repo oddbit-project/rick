@@ -1,4 +1,5 @@
 # rick
+
 [![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
