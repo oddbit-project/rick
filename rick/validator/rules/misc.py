@@ -196,10 +196,7 @@ class ListLen(Rule):
     def validate(
         self, value, options: list = None, error_msg=None, translator: Translator = None
     ):
-        value_len = 0
-        if type(value) in (list, tuple):
-            value_len = len(value)
-
+        value_len = len(value) if type(value) in (list, tuple) else 0
         if len(options) >= 2:
             min = int(options[0])
             max = int(options[1])
@@ -208,6 +205,6 @@ class ListLen(Rule):
         if len(options) == 1:
             min = int(options[0])
             if value_len < min:
-                _args = [min, str("\u221E")]
+                _args = [min, "\u221E"]
                 return False, self.error_message(error_msg, translator, *_args)
         return True, ""

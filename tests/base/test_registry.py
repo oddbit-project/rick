@@ -40,8 +40,8 @@ class TestRegistry:
         registry = Registry(SomeClass)
         obj1 = SomeClass()
         obj2 = SomeClass()
-        obj1_name = str(type(obj1)) + "1"
-        obj2_name = str(type(obj2)) + "2"
+        obj1_name = f"{str(type(obj1))}1"
+        obj2_name = f"{str(type(obj2))}2"
 
         names = registry.names()
         assert len(names) == 0

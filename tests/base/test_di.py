@@ -26,7 +26,7 @@ class TestDi:
         # check stored items
         for i in range(0, 10):
             item = di.get(self.item_mask.format(i))
-            assert isinstance(item, Dummy) is True
+            assert isinstance(item, Dummy)
 
         # test adding a duplicate name
         with pytest.raises(RuntimeError):
@@ -35,15 +35,15 @@ class TestDi:
         # test replacing a duplicate name
         di.add(self.item_mask.format(0), Dummy2, True)
         item = di.get(self.item_mask.format(0))
-        assert isinstance(item, Dummy2) is True
+        assert isinstance(item, Dummy2)
 
     def test_get(self):
         di = Di()
         # Test get() internal unrapping
         di.add("item1", Dummy)
         di.add("item2", Dummy2)
-        assert isinstance(di.get("item1"), Dummy) is True
-        assert isinstance(di.get("item2"), Dummy2) is True
+        assert isinstance(di.get("item1"), Dummy)
+        assert isinstance(di.get("item2"), Dummy2)
         # test exception raise on unknown item
         with pytest.raises(RuntimeError):
             di.get("non-existing-item")
@@ -54,13 +54,13 @@ class TestDi:
 
         di.add("custom_factory", init_dummy)
         item = di.get("custom_factory")
-        assert isinstance(item, Dummy) is True
+        assert isinstance(item, Dummy)
 
         # test get() with pre-instantiated object
         obj = Dummy(di)
         di.add("pre-instantiated", obj)
         item = di.get("pre-instantiated")
-        assert isinstance(item, Dummy) is True
+        assert isinstance(item, Dummy)
         assert item.__hash__() == obj.__hash__()
 
     def test_register_override(self):
@@ -72,7 +72,7 @@ class TestDi:
             return Dummy(di)
 
         item = di.get("dep-to-be-overridden")
-        assert isinstance(item, Dummy) is True
+        assert isinstance(item, Dummy)
 
         # test override decorator
         @di.override("dep-to-be-overridden")
@@ -80,7 +80,7 @@ class TestDi:
             return Dummy2(di)
 
         item = di.get("dep-to-be-overridden")
-        assert isinstance(item, Dummy2) is True
+        assert isinstance(item, Dummy2)
 
     def test_scope(self):
         di = Di()
@@ -95,8 +95,8 @@ class TestDi:
         local_di.add("global-item-will-be-shadowed", Dummy)
 
         # test get() global via local instance
-        assert isinstance(local_di.get("global-item"), Dummy) is True
+        assert isinstance(local_di.get("global-item"), Dummy)
         # test get() local dependency shadows global one
-        assert isinstance(local_di.get("global-item-will-be-shadowed"), Dummy) is True
+        assert isinstance(local_di.get("global-item-will-be-shadowed"), Dummy)
         # test shadowed global dependency remains unchanged
-        assert isinstance(di.get("global-item-will-be-shadowed"), Dummy2) is True
+        assert isinstance(di.get("global-item-will-be-shadowed"), Dummy2)

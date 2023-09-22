@@ -48,16 +48,12 @@ class StrOrFile(WrapType):
                     with open(path) as f:
                         return f.read().strip()
                 except Exception as e:
-                    raise ValueError(
-                        "StrOrFile: error reading file '{}' - {}".format(
-                            self.value, str(e)
-                        )
-                    )
+                    raise ValueError(f"StrOrFile: error reading file '{self.value}' - {str(e)}")
+            elif self.silent:
+                # return value as-is, raise no exception
+                return self.value
             else:
-                if self.silent:
-                    # return value as-is, raise no exception
-                    return self.value
-                raise ValueError("StrOrFile: invalid file path '{}'".format(self.value))
+                raise ValueError(f"StrOrFile: invalid file path '{self.value}'")
         return self.value
 
 
@@ -99,10 +95,7 @@ class EnvironmentConfig:
                 if not callable(value):
                     value = self._parse_value(prefix + name, value)
                     setattr(self, name, value)
-                    if isinstance(value, WrapType):
-                        data[name.lower()] = value.unwrap()
-                    else:
-                        data[name.lower()] = value
+                    data[name.lower()] = value.unwrap() if isinstance(value, WrapType) else value
         return ShallowContainer(data)
 
     def _parse_value(self, env_var_name, existing_value) -> Any:
@@ -121,14 +114,12 @@ class EnvironmentConfig:
         if existing_value is None:
             return value
 
-        mapper = getattr(self, "_{}_conv".format(type(existing_value).__name__))
-        if not mapper:
+        if mapper := getattr(self, f"_{type(existing_value).__name__}_conv"):
+            return mapper(value)
+        else:
             raise ValueError(
-                "Invalid data type detected when parsing environment variable '{}'".format(
-                    env_var_name
-                )
+                f"Invalid data type detected when parsing environment variable '{env_var_name}'"
             )
-        return mapper(value)
 
     def _str_conv(self, v) -> str:
         """
@@ -152,11 +143,9 @@ class EnvironmentConfig:
         :param v: a string containing multiple string values, separated by self.list_separator
         :return: List
         """
-        if not type(v) is str:
+        if type(v) is not str:
             raise ValueError(
-                "Invalid data type to extract list: expecting str, got '{}'".format(
-                    type(v).__name__
-                )
+                f"Invalid data type to extract list: expecting str, got '{type(v).__name__}'"
             )
         return str(v).split(self.list_separator)
 
@@ -166,16 +155,14 @@ class EnvironmentConfig:
         :param v: a json string containing an object (dict)
         :return: dict
         """
-        if not type(v) is str:
+        if type(v) is not str:
             raise ValueError(
-                "Invalid data type to extract dict: expecting str, got '{}'".format(
-                    type(v).__name__
-                )
+                f"Invalid data type to extract dict: expecting str, got '{type(v).__name__}'"
             )
         try:
             return json.loads(v)
         except Exception as e:
-            raise ValueError("Error when parsing JSON: {}".format(e))
+            raise ValueError(f"Error when parsing JSON: {e}")
 
     def _StrOrFile_conv(self, v) -> StrOrFile:
         """
@@ -183,10 +170,8 @@ class EnvironmentConfig:
         :param v: a string
         :return: StrOrFile
         """
-        if not type(v) is str:
+        if type(v) is not str:
             raise ValueError(
-                "StrOrFile requires a str to be wrapped; found '{}'  instead".format(
-                    type(v).__name__
-                )
+                f"StrOrFile requires a str to be wrapped; found '{type(v).__name__}'  instead"
             )
         return StrOrFile(v)

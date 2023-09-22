@@ -61,14 +61,12 @@ class EventManager:
         for event_name, priorities in src.items():
             if not isinstance(priorities, dict):
                 raise RuntimeError(
-                    "load_handlers(): priority list for '%s' must be of dict type"
-                    % (event_name,)
+                    f"load_handlers(): priority list for '{event_name}' must be of dict type"
                 )
             for pri, handlers in priorities.items():
                 if not isinstance(handlers, (list, tuple)):
                     raise RuntimeError(
-                        "load_handlers(): handler list for '%s':%s must be of list type"
-                        % (event_name, pri)
+                        f"load_handlers(): handler list for '{event_name}':{pri} must be of list type"
                     )
 
                 for h in handlers:
@@ -103,9 +101,7 @@ class EventManager:
                 existing_handlers = evt["handlers"]
                 if handler in existing_handlers:
                     raise RuntimeError(
-                        "add_handler(): duplicated handler {} for event {}".format(
-                            handler, event_name
-                        )
+                        f"add_handler(): duplicated handler {handler} for event {event_name}"
                     )
                 existing_handlers.append(handler)
 
@@ -181,9 +177,7 @@ class EventManager:
 
         if event_name in self._stack:
             raise RuntimeError(
-                "dispatch(): circular event dependency when performing '{}'".format(
-                    event_name
-                )
+                f"dispatch(): circular event dependency when performing '{event_name}'"
             )
         self._stack.append(event_name)
 
@@ -202,15 +196,13 @@ class EventManager:
                         if cls is None:
                             self._stack_remove(event_name)
                             raise RuntimeError(
-                                "dispatch(): cannot find class or function '%s' in module '%s'"
-                                % (cls_name, module_path)
+                                f"dispatch(): cannot find class or function '{cls_name}' in module '{module_path}'"
                             )
 
                     except ModuleNotFoundError:
                         self._stack_remove(event_name)
                         raise RuntimeError(
-                            "dispatch(): mapped module '%s' not found when discovering path '%s'"
-                            % (module_path, handler)
+                            f"dispatch(): mapped module '{module_path}' not found when discovering path '{handler}'"
                         )
 
                     if isclass(cls) and issubclass(cls, EventHandler):
@@ -221,8 +213,7 @@ class EventManager:
                         obj_handler = getattr(obj, event_name, None)
                         if obj_handler is None:
                             raise RuntimeError(
-                                "dispatch(): event handler for '%s' not found in '%s'"
-                                % (event_name, handler)
+                                f"dispatch(): event handler for '{event_name}' not found in '{handler}'"
                             )
                         obj_handler(**kwargs)
 
@@ -233,8 +224,7 @@ class EventManager:
 
                     else:
                         raise RuntimeError(
-                            "dispatch(): handler '%s' for event '%s' invalid or incompatible"
-                            % (handler, event_name)
+                            f"dispatch(): handler '{handler}' for event '{event_name}' invalid or incompatible"
                         )
 
         self._stack_remove(event_name)

@@ -50,6 +50,4 @@ class Bool(Filter):
 
     def transform(self, src: Any) -> Any:
         src = cast_str(src)
-        if not src:
-            return False
-        return src.lower() in self.IS_TRUE
+        return False if not src else src.lower() in self.IS_TRUE

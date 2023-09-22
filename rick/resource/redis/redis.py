@@ -52,9 +52,7 @@ class RedisCache(CacheInterface):
         if self._prefix is not None:
             key = key + self._prefix
         v = self._redis.get(key)
-        if v is None:
-            return None
-        return self._deserialize(v)
+        return None if v is None else self._deserialize(v)
 
     def set(self, key, value, ttl=None):
         if self._prefix is not None:
@@ -130,11 +128,7 @@ class CryptRedisCache(RedisCache):
         self._deserialize = self._deserializer
 
     def _serializer(self, data):
-        if data is not None:
-            return self._crypt.encrypt(pickle.dumps(data))
-        return data
+        return self._crypt.encrypt(pickle.dumps(data)) if data is not None else data
 
     def _deserializer(self, data):
-        if data is not None:
-            return pickle.loads(self._crypt.decrypt(data))
-        return data
+        return pickle.loads(self._crypt.decrypt(data)) if data is not None else data

@@ -6,11 +6,11 @@ from rick.event import EventHandler, EventManager
 
 class Handler_0:
     def event_one(self, **kwargs):
-        if "out" in kwargs.keys():
+        if "out" in kwargs:
             kwargs["out"].append(1)
 
     def event_two(self, **kwargs):
-        if "out" in kwargs.keys():
+        if "out" in kwargs:
             kwargs["out"].append(-1)
 
 
@@ -20,17 +20,17 @@ class Handler_1(Handler_0, EventHandler):
 
 class Handler_2(EventHandler):
     def event_one(self, **kwargs):
-        if "out" in kwargs.keys():
+        if "out" in kwargs:
             kwargs["out"].append(2)
 
     def event_two(self, **kwargs):
-        if "out" in kwargs.keys():
+        if "out" in kwargs:
             kwargs["out"].append(-2)
 
 
 def handler_3(**kwargs):
-    assert "event_name" in kwargs.keys()
-    if "out" in kwargs.keys():
+    assert "event_name" in kwargs
+    if "out" in kwargs:
         kwargs["out"].append(3)
 
 

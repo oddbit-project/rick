@@ -27,9 +27,7 @@ class FileReader(MultiPartReader):
         for k, v in kwargs.items():
             if k in reserved_names:
                 raise ValueError(
-                    "FileReader: invalid custom property name {}; property already exists".format(
-                        k
-                    )
+                    f"FileReader: invalid custom property name {k}; property already exists"
                 )
             setattr(self, k, v)
         super().__init__(parts=parts)

@@ -5,9 +5,7 @@ from io import BytesIO
 def hash_buffer(method, buf: BytesIO) -> str:
     fn = getattr(hashlib, method)
     if not callable(fn):
-        raise RuntimeError(
-            "hash_buffer(): invalid hashing method:  '{}'".format(method)
-        )
+        raise RuntimeError(f"hash_buffer(): invalid hashing method:  '{method}'")
     buf.seek(0)
     return fn(buf.read()).hexdigest()
 

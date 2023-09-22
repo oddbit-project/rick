@@ -33,7 +33,7 @@ class Validator:
             messages = {}
         if rules:
             for field_name, rules in rules.items():
-                if field_name in messages.keys():
+                if field_name in messages:
                     self.add_field(field_name, rules, messages[field_name])
                 else:
                     self.add_field(field_name, rules)
@@ -68,7 +68,7 @@ class Validator:
             rule_params = token.split(":")
             rule_name = rule_params.pop(0)
             if len(rule_name) == 0 or len(rule_params) > 1:
-                raise ValueError("invalid rule format for field %s" % (field_name,))
+                raise ValueError(f"invalid rule format for field {field_name}")
 
             params = rule_params.pop().split(",") if len(rule_params) > 0 else None
             result[rule_name] = params
@@ -94,9 +94,7 @@ class Validator:
         :return: self
         """
         if field_name in self._rules.keys():
-            raise ValueError(
-                "Validator.add_field(): field '%s' already exists" % field_name
-            )
+            raise ValueError(f"Validator.add_field(): field '{field_name}' already exists")
 
         # parse laravel-style rules
         if isinstance(field_rules, str):
@@ -106,8 +104,7 @@ class Validator:
         for rule_name in field_rules.keys():
             if not registry.has(rule_name):
                 raise ValueError(
-                    "Validator.add_field(): rule '%s' does not exist in registry"
-                    % rule_name
+                    f"Validator.add_field(): rule '{rule_name}' does not exist in registry"
                 )
 
         self._rules[field_name] = field_rules
@@ -133,7 +130,7 @@ class Validator:
         """
         if name in self._rules.keys():
             return self._rules[name]
-        raise ValueError("Validator.field_rules(): field '%s' does not exist" % name)
+        raise ValueError(f"Validator.field_rules(): field '{name}' does not exist")
 
     def clear(self):
         """
@@ -174,9 +171,7 @@ class Validator:
         """
         if field_name is None:
             return self._errors
-        if field_name in self._errors.keys():
-            return self._errors[field_name]
-        return {}
+        return self._errors[field_name] if field_name in self._errors.keys() else {}
 
     def is_valid(self, fields_values: dict, translator: Translator = None) -> bool:
         """
@@ -193,7 +188,7 @@ class Validator:
         self.reset()
         for field_name in self._rules.keys():
             value = None
-            if field_name in fields_values.keys():
+            if field_name in fields_values:
                 value = fields_values[field_name]
 
             field_errors = self.validate_field(field_name, value, translator)
@@ -216,9 +211,7 @@ class Validator:
         :return: dict
         """
         if field_name not in self._rules.keys():
-            raise ValueError(
-                "Validator.validate_field(): field '%s' not found" % field_name
-            )
+            raise ValueError(f"Validator.validate_field(): field '{field_name}' not found")
 
         if translator is None:
             translator = Translator()

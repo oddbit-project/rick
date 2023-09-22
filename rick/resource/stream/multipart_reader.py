@@ -15,7 +15,7 @@ class FileSlice(SliceReader):
     def __init__(self, file_path: str):
         file = Path(file_path)
         if not file.is_file():
-            raise ValueError("FileSlice: Invalid file object: {}".format(file))
+            raise ValueError(f"FileSlice: Invalid file object: {file}")
         stat = file.stat()
         super().__init__(file, size=stat.st_size)
 
@@ -43,11 +43,7 @@ class MultiPartReader:
         if not parts:
             parts = []
 
-        # compute size
-        size = 0
-        for p in parts:
-            size += p.size
-
+        size = sum(p.size for p in parts)
         self.parts = parts
         self.size = size
 

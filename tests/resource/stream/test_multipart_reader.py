@@ -217,10 +217,7 @@ offset_results = [
 
 @pytest.mark.parametrize("src,results", [(fixed_dataset, offset_results)])
 def test_multipart_stream_fixed(src: list, results: list):
-    parts = []
-    for element in src:
-        parts.append(ByteArraySlice(element))
-
+    parts = [ByteArraySlice(element) for element in src]
     stream = MultiPartReader(parts=parts)
 
     for record in offset_results:
@@ -233,10 +230,7 @@ def test_multipart_stream_fixed(src: list, results: list):
 
 @pytest.mark.parametrize("src,results", [(variable_dataset, offset_results)])
 def test_multipart_stream_variable(src: list, results: list):
-    parts = []
-    for element in src:
-        parts.append(ByteArraySlice(element))
-
+    parts = [ByteArraySlice(element) for element in src]
     stream = MultiPartReader(parts=parts)
 
     for record in offset_results:

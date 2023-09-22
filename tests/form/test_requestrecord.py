@@ -159,8 +159,7 @@ def test_requestrecord_b_validator(form_data, result):
 
 @pytest.mark.parametrize("form_data, result", [(rr_to_obj_input, rr_to_obj_output)])
 def test_requestrecord_to_object(form_data, result):
-    i = 0
-    for data in form_data:
+    for i, data in enumerate(form_data):
         frm = RequestRecord_B()
         assert frm.is_valid(data)
         # transform to ObjectRecord
@@ -168,13 +167,11 @@ def test_requestrecord_to_object(form_data, result):
         assert obj is not None
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i]
-        i += 1
 
 
 @pytest.mark.parametrize("form_data, result", [(bind_input, bind_output)])
 def test_requestrecord_to_object_bind(form_data, result):
-    i = 0
-    for data in form_data:
+    for i, data in enumerate(form_data):
         frm = RequestRecord_C()
         assert frm.is_valid(data)
         # transform to ObjectRecord
@@ -182,13 +179,11 @@ def test_requestrecord_to_object_bind(form_data, result):
         assert obj is not None
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i]
-        i += 1
 
 
 @pytest.mark.parametrize("form_data, result", [(bindx_input, bindx_output)])
 def test_requestrecord_to_object_bindx(form_data, result):
-    i = 0
-    for data in form_data:
+    for i, data in enumerate(form_data):
         frm = RequestRecord_D()
         assert frm.is_valid(data)
         # transform to ObjectRecord
@@ -197,7 +192,6 @@ def test_requestrecord_to_object_bindx(form_data, result):
         assert isinstance(obj, ObjectRecord)
         assert obj.asdict() == result[i][0]
         assert data == result[i][1]
-        i += 1
 
 
 def test_requestrecord():

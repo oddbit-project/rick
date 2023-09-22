@@ -16,7 +16,7 @@ class BaseRegistry:
         with self._lock:
             if name in self._registry.keys():
                 return self._registry[name]
-            raise ValueError("Registry.get(): name '%s' not found in registry" % name)
+            raise ValueError(f"Registry.get(): name '{name}' not found in registry")
 
     def has(self, name: str):
         """

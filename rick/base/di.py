@@ -76,7 +76,7 @@ class Di:
         if not self.has(name):
             if self._parent is not None:
                 return self._parent.get(name)
-            raise RuntimeError("Key '{}' not found in the registry".format(name))
+            raise RuntimeError(f"Key '{name}' not found in the registry")
 
         item = self._registry[name]
 

@@ -20,7 +20,7 @@ class BcryptHasher(HasherInterface):
         :param password: clear password to hash
         :return: hash string
         """
-        if len(password) == 0:
+        if not password:
             raise ValueError("hash(): empty password")
 
         password = hashlib.sha256(password.encode("utf-8")).hexdigest().encode("utf-8")

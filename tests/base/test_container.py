@@ -25,7 +25,7 @@ def test_containerbase(data):
     # has()
     for key in data.keys():
         assert container.has(key)
-        assert container.has(key + "_") is False
+        assert container.has(f"{key}_") is False
 
     # asdict()
     assert container.asdict() == data

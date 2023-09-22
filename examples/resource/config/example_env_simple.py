@@ -16,6 +16,7 @@ Overriding default values with env vars
       app_name : MyApp
 """
 
+
 from rick.resource.config import EnvironmentConfig
 
 class MyConfig(EnvironmentConfig):
@@ -26,5 +27,5 @@ class MyConfig(EnvironmentConfig):
 cfg = MyConfig().build()
 print("Dump configuration keys => values:")
 for name in cfg.keys():
-    print("  {} : {}".format(name, str(cfg.get(name))))
+    print(f"  {name} : {str(cfg.get(name))}")
 

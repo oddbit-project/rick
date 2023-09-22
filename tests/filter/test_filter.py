@@ -12,7 +12,7 @@ def test_filter_registry_int():
     assert "int" in filter_registry.names()
 
     filter = filter_registry.get("int")
-    assert filter.transform("100") == int(100)
+    assert filter.transform("100") == 100
     # invalid values should return None
     assert filter.transform("abc") is None
 

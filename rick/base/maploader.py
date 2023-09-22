@@ -72,14 +72,14 @@ class MapLoader:
         :return: object
         """
         if name in self._stack:
-            raise RuntimeError("get(): circular dependency on object %s" % name)
+            raise RuntimeError(f"get(): circular dependency on object {name}")
 
         with self._lock:
             if name in self._loaded.keys():
                 return self._loaded[name]
 
         if name not in self._map.keys():
-            raise ValueError("get(): name '%s' does not exist in map" % name)
+            raise ValueError(f"get(): name '{name}' does not exist in map")
 
         with self._lock:
             self._stack.append(name)
@@ -91,16 +91,14 @@ class MapLoader:
             cls = getattr(module, cls_name, None)
             if cls is None:
                 raise RuntimeError(
-                    "get(): cannot find class '%s' in module '%s'"
-                    % (cls_name, module_path)
+                    f"get(): cannot find class '{cls_name}' in module '{module_path}'"
                 )
 
         except ModuleNotFoundError:
             with self._lock:
                 self._stack.remove(name)
             raise RuntimeError(
-                "get(): mapped module '%s' not found when discovering path %s"
-                % (module_path, path)
+                f"get(): mapped module '{module_path}' not found when discovering path {path}"
             )
 
         obj = self.build(cls)

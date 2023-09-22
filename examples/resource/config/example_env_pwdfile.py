@@ -23,6 +23,7 @@ Using db_password.txt as a password file:
       db_password : drwtwtgdfgew52efvzsdc
 """
 
+
 from rick.resource.config import EnvironmentConfig, StrOrFile
 
 class MyConfig(EnvironmentConfig):
@@ -33,5 +34,5 @@ class MyConfig(EnvironmentConfig):
 cfg = MyConfig().build()
 print("Dump configuration keys => values:")
 for name in cfg.keys():
-    print("  {} : {}".format(name, str(cfg.get(name))))
+    print(f"  {name} : {str(cfg.get(name))}")
 

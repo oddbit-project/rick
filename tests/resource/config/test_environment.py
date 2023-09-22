@@ -74,7 +74,7 @@ def test_EnvConfig_types(cls, env_vars: dict, expected_result: dict, prefix: str
     # re-build cfg with overriden values
     cfg = obj.build()
     # verify overriden values match expected values
-    for name in expected_result.keys():
+    for name in expected_result:
         value = cfg.get(name)
         if isinstance(value, ShallowContainer):
             value = value.asdict()

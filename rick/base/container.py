@@ -13,9 +13,7 @@ class ContainerBase:
         return self._data
 
     def get(self, key, default=None):
-        if key in self._data:
-            return self.__getitem__(key)
-        return default
+        return self.__getitem__(key) if key in self._data else default
 
     def copy(self):
         raise RuntimeError("ContainerBase.copy(): abstract method")
@@ -28,10 +26,7 @@ class ContainerBase:
         Retrieve raw value list
         :return: list of values
         """
-        result = []
-        for k in self._data.keys():
-            result.append(self.__getitem__(k))
-        return result
+        return [self.__getitem__(k) for k in self._data.keys()]
 
     def __len__(self):
         return len(self._data)
@@ -56,16 +51,12 @@ class Container(ContainerBase):
         :param data: dict with data to be made available
         """
         if not isinstance(data, collections.abc.Mapping):
-            raise ValueError(
-                "expected dict/Mapping, %s found instead" % str(type(data))
-            )
+            raise ValueError(f"expected dict/Mapping, {str(type(data))} found instead")
         super(Container, self).__init__(copy.deepcopy(data))
 
     def __getitem__(self, key):
         v = self._data[key]
-        if isinstance(v, collections.abc.Mapping):
-            return Container(v)
-        return v
+        return Container(v) if isinstance(v, collections.abc.Mapping) else v
 
     def copy(self):
         return Container(self._data)
@@ -80,12 +71,12 @@ class MutableContainer(ContainerBase):
     def __init__(self, data: dict = None):
         if data is None:
             super(MutableContainer, self).__init__({})
-        else:
-            if not isinstance(data, collections.abc.MutableMapping):
-                raise ValueError(
-                    "expected dict/MutableMapping, %s found instead" % str(type(data))
-                )
+        elif isinstance(data, collections.abc.MutableMapping):
             super(MutableContainer, self).__init__(copy.deepcopy(data))
+        else:
+            raise ValueError(
+                f"expected dict/MutableMapping, {str(type(data))} found instead"
+            )
 
     def __getitem__(self, key):
         v = self._data[key]
@@ -125,9 +116,7 @@ class ShallowContainer(ContainerBase):
         :param data: dict with data to be made available
         """
         if not isinstance(data, collections.abc.Mapping):
-            raise ValueError(
-                "expected dict/Mapping, %s found instead" % str(type(data))
-            )
+            raise ValueError(f"expected dict/Mapping, {str(type(data))} found instead")
         super(ShallowContainer, self).__init__(data)
 
     def copy(self):
@@ -135,6 +124,4 @@ class ShallowContainer(ContainerBase):
 
     def __getitem__(self, key):
         v = self._data[key]
-        if isinstance(v, collections.abc.Mapping):
-            return ShallowContainer(v)
-        return v
+        return ShallowContainer(v) if isinstance(v, collections.abc.Mapping) else v

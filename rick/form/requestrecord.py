@@ -41,34 +41,33 @@ class RequestRecord:
         fields = {}
         if hasattr(self, "fields"):
             field_spec = getattr(self, "fields")
-            if isinstance(field_spec, dict):
-                # create objects from existing spec
-                for name, spec in field_spec.items():
-                    args = spec.copy()
-                    field_type = args.pop("_type")
-                    if field_type == TYPE_FIELD:
-                        obj = args.pop("cls")(**args)
-
-                    elif field_type in [TYPE_RECORD, TYPE_RECORDSET]:
-                        cls = args.pop("cls")
-                        # create dummy field with validators
-                        obj = Field(**args)
-                        # create record
-                        if field_type == TYPE_RECORD:
-                            self.records[name] = cls(self._translator)
-                        else:
-                            self.recordsets[name] = cls(self._translator)
-
-                    # add field to the collection
-                    fields[name] = obj
-
-                    # add validation rules if exist
-                    if len(obj.validators) > 0:
-                        self.validator.add_field(
-                            name, obj.validators, obj.error_message
-                        )
-            else:
+            if not isinstance(field_spec, dict):
                 raise ValueError("RequestRecord(): invalid  field spec format")
+            # create objects from existing spec
+            for name, spec in field_spec.items():
+                args = spec.copy()
+                field_type = args.pop("_type")
+                if field_type == TYPE_FIELD:
+                    obj = args.pop("cls")(**args)
+
+                elif field_type in [TYPE_RECORD, TYPE_RECORDSET]:
+                    cls = args.pop("cls")
+                    # create dummy field with validators
+                    obj = Field(**args)
+                    # create record
+                    if field_type == TYPE_RECORD:
+                        self.records[name] = cls(self._translator)
+                    else:
+                        self.recordsets[name] = cls(self._translator)
+
+                # add field to the collection
+                fields[name] = obj
+
+                # add validation rules if exist
+                if len(obj.validators) > 0:
+                    self.validator.add_field(
+                        name, obj.validators, obj.error_message
+                    )
         self.fields = fields
 
     def clear(self):
@@ -91,7 +90,7 @@ class RequestRecord:
         :return: self
         """
         if field_id in self.fields.keys():
-            raise RuntimeError("duplicated field id '%s'" % (id,))
+            raise RuntimeError(f"duplicated field id '{id}'")
 
         field = Field(**kwargs)
         self.add_field(field_id, field)
@@ -128,7 +127,7 @@ class RequestRecord:
         # dict-like records
         for record_name, record in self.records.items():
             # record may or may not be required
-            if record_name in data.keys():
+            if record_name in data:
                 record_data = data[record_name]
                 if record.is_valid(record_data):
                     # copy potentially filtered data to the field
@@ -140,18 +139,15 @@ class RequestRecord:
         # record sets (lists)
         for record_name, record in self.recordsets.items():
             # record may or may not be required
-            if record_name in data.keys():
+            if record_name in data:
                 record_errors = {}
                 record_values = []
-                i = 0
-                for record_data in data[record_name]:
+                for i, record_data in enumerate(data[record_name]):
                     if record.is_valid(record_data):
                         record_values.append(record.get_data())
                     else:
                         record_errors[i] = record.get_errors()
-                    i += 1
-
-                if len(record_errors) > 0:
+                if record_errors:
                     valid_records = False
                     self._add_record_error(record_name, record_errors)
                 else:
@@ -171,7 +167,7 @@ class RequestRecord:
                         # there are no other errors, as valid_fields and valid_records is true
                         return False
 
-                if field_name in data.keys():
+                if field_name in data:
                     if field.filter is None:
                         field.value = data[field_name]
                     else:
@@ -215,7 +211,7 @@ class RequestRecord:
         :return self
         """
         if id not in self.fields.keys():
-            raise ValueError("invalid field id %s" % (id,))
+            raise ValueError(f"invalid field id {id}")
         if self._translator is not None:
             error_message = self._translator.t(error_message)
         self.errors[id] = {"*": error_message}
@@ -227,19 +223,14 @@ class RequestRecord:
         :param id: field id
         :return: Any
         """
-        if id in self.fields.keys():
-            return self.fields[id].value
-        return None
+        return self.fields[id].value if id in self.fields.keys() else None
 
     def get_data(self) -> dict:
         """
         Retrieve all data as a dict
         :return: dict
         """
-        result = {}
-        for id, f in self.fields.items():
-            result[id] = f.value
-        return result
+        return {id: f.value for id, f in self.fields.items()}
 
     def bind(self, cls_obj) -> Any:
         """
@@ -269,7 +260,7 @@ class RequestRecord:
                     bind_fields[field.bind] = field
 
         for name in get_attribute_names(cls_obj):
-            if name in bind_fields.keys():
+            if name in bind_fields:
                 setattr(cls_obj, name, bind_fields[name].value)
         return cls_obj
 
@@ -303,7 +294,7 @@ class RequestRecord:
                     bind_fields[field.bind] = field
 
         obj_attrs = get_attribute_names(cls_obj)
-        for name, field in bind_fields.items():
+        for name in bind_fields:
             if name in obj_attrs:
                 setattr(cls_obj, name, bind_fields[name].value)
             else:
@@ -333,6 +324,6 @@ class RequestRecord:
         :return self
         """
         if id not in self.fields.keys():
-            raise ValueError("invalid field id %s" % (id,))
+            raise ValueError(f"invalid field id {id}")
         self.errors[id] = {"_": errors}
         return self

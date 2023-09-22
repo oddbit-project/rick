@@ -142,10 +142,10 @@ class Fernet256(object):
 
 class MultiFernet256(object):
     def __init__(self, fernets):
-        fernets = list(fernets)
-        if not fernets:
+        if fernets := list(fernets):
+            self._fernets = fernets
+        else:
             raise ValueError("MultiFernet requires at least one Fernet instance")
-        self._fernets = fernets
 
     def encrypt(self, msg):
         return self.encrypt_at_time(msg, int(time.time()))

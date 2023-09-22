@@ -43,7 +43,7 @@ class FieldSet:
         """
 
         if field_id in self.fields.keys():
-            raise RuntimeError("duplicated field id '%s'" % (id,))
+            raise RuntimeError(f"duplicated field id '{id}'")
 
         kwargs["type"] = field_type
         kwargs["label"] = self.translator.t(label)
@@ -121,7 +121,7 @@ class Form(RequestRecord):
         :param label: fieldset legend
         :return: FieldSet
         """
-        if len(label) > 0:
+        if label != "":
             label = self._translator.t(label)
         # if its existing, update label and return
 
@@ -187,7 +187,7 @@ class Form(RequestRecord):
         :return self
         """
         if id not in self.fields.keys():
-            raise ValueError("invalid field id %s" % (id,))
+            raise ValueError(f"invalid field id {id}")
         if self._translator is not None:
             error_message = self._translator.t(error_message)
         self.errors[id] = {"*": error_message}

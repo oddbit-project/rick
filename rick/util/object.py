@@ -2,8 +2,7 @@ from typing import List
 
 
 def get_attribute_names(object) -> List:
-    fieldmap = getattr(object, "_fieldmap", None)
-    if fieldmap:
+    if fieldmap := getattr(object, "_fieldmap", None):
         return list(fieldmap.keys())
     result = []
     for item in dir(object):

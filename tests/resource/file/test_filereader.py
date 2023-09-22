@@ -83,10 +83,7 @@ def test_filereader():
         # slice file in chunks
         chunks = slice_file(fname, 1000 * 1024, folder)  # ~1mb
 
-        parts = []
-        for c in chunks:
-            parts.append(FilePart(c))
-
+        parts = [FilePart(c) for c in chunks]
         f = FileReader(parts=parts)
 
         # read chunked as a single block
@@ -110,10 +107,7 @@ def test_filereader_attrs():
         # slice file in chunks
         chunks = slice_file(fname, 1000 * 1024, folder)  # ~1mb
 
-        parts = []
-        for c in chunks:
-            parts.append(FilePart(c))
-
+        parts = [FilePart(c) for c in chunks]
         attrs = {"key": "value"}
         f = FileReader(parts=parts, attributes=attrs, record=folder)
         assert f.attributes == attrs

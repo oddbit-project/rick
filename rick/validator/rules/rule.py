@@ -13,11 +13,7 @@ class Rule:
     def error_message(
         self, msg_override=None, translator: Translator = None, *args
     ) -> str:
-        if msg_override:
-            msg = msg_override
-        else:
-            msg = getattr(self, self.ERROR_ATTR, None)
-
+        msg = msg_override if msg_override else getattr(self, self.ERROR_ATTR, None)
         if not msg:
             raise RuntimeError(
                 "missing error message attribute '{0}' on Rule '{1}'".format(
@@ -28,10 +24,7 @@ class Rule:
         if translator:
             msg = translator.t(msg)
 
-        if len(args) > 0:
-            return msg.format(*args)
-
-        return msg
+        return msg.format(*args) if args else msg
 
 
 # Validator registry

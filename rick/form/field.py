@@ -117,7 +117,7 @@ class Field:
             self.options["readonly"] = True
 
         # pass direct options read-only to main scope
-        if "readonly" in self.options.keys():
+        if "readonly" in self.options:
             self.readonly = self.options["readonly"]
 
         # fetch/build filter object if any
@@ -125,7 +125,7 @@ class Field:
             if isinstance(self.filter, str):
                 # self.filter has a filter name, use it to fetch the object
                 if not filter_registry.has(self.filter):
-                    raise ValueError("Invalid filter name '{}'".format(self.filter))
+                    raise ValueError(f"Invalid filter name '{self.filter}'")
                 self.filter = filter_registry.get(self.filter)
             elif inspect.isclass(self.filter):
                 # build object
@@ -137,8 +137,7 @@ class Field:
             # add required validator
             if len(self.validators) == 0:
                 self.validators = {"required": None}
-            else:
-                if isinstance(self.validators, str):
-                    self.validators = "required|" + self.validators
-                elif isinstance(self.validators, dict):
-                    self.validators["required"] = None
+            elif isinstance(self.validators, str):
+                self.validators = f"required|{self.validators}"
+            elif isinstance(self.validators, dict):
+                self.validators["required"] = None
