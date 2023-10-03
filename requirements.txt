@@ -5,3 +5,4 @@ setuptools>=60.0.0
 Deprecated~=1.2.13
 redis>=3.3.11
 wheel
+pyhumps==3.8.0
