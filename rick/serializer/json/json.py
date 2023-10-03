@@ -5,6 +5,7 @@ import datetime
 import uuid
 import humps
 
+
 class ExtendedJsonEncoder(json.JSONEncoder):
     """
     Extended JSON encoder
@@ -23,7 +24,6 @@ class ExtendedJsonEncoder(json.JSONEncoder):
         if hasattr(obj, "asdict") and callable(getattr(obj, "asdict", None)):
             return obj.asdict()
         return obj.__dict__
-
 
 
 class CamelCaseJsonEncoder(json.JSONEncoder):
