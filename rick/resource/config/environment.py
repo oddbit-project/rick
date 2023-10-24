@@ -177,6 +177,14 @@ class EnvironmentConfig:
         except Exception as e:
             raise ValueError("Error when parsing JSON: {}".format(e))
 
+    def _bool_conv(self, v) -> bool:
+        """
+        Bool converter
+        :param v:
+        :return: bool
+        """
+        return v in [1, "1", "true", "TRUE", "True", "T", "t"]
+
     def _StrOrFile_conv(self, v) -> StrOrFile:
         """
         StrOrFile mapper
