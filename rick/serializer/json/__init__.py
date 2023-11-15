@@ -1,1 +1,1 @@
-from .json import ExtendedJsonEncoder
+from .json import ExtendedJsonEncoder, CamelCaseJsonEncoder

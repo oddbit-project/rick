@@ -25,3 +25,8 @@ def sha1_hash(buf: BytesIO) -> str:
 def sha512_hash(buf: BytesIO) -> str:
     buf.seek(0)
     return hashlib.sha512(buf.read()).hexdigest()
+
+
+def blake2_hash(buf: BytesIO) -> str:
+    buf.seek(0)
+    return hashlib.blake2b(buf.read()).hexdigest()
