@@ -22,3 +22,7 @@ def is_object(param):
         t = t.split("'")[1::2]
         return t[0] not in ["type", "str"]
     return False
+
+
+def full_name(obj):
+    return obj.__class__.__module__ + '.' + obj.__class__.__name__

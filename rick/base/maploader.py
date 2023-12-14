@@ -4,6 +4,7 @@ import importlib
 from threading import Lock
 
 from .di import Di
+from ..util.object import full_name
 
 
 class MapLoader:
@@ -125,10 +126,8 @@ class MapLoader:
         :return:
         """
         with self._lock:
-            if name in self._loaded.keys():
-                raise ValueError("register(): name '%s' already exists in the map" % name)
-
             if name in self._map.keys():
                 raise ValueError("register(): name '%s' already exists in the map" % name)
-
+            # resolve object name
+            self._map[name] = full_name(obj)
             self._loaded[name] = obj
