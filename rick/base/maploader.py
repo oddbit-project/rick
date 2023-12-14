@@ -116,3 +116,19 @@ class MapLoader:
         :return: object
         """
         return cls(self._di)
+
+    def register(self, name: str, obj: object):
+        """
+        Adds an object directly to the internal map
+        :param name:
+        :param obj:
+        :return:
+        """
+        with self._lock:
+            if name in self._loaded.keys():
+                raise ValueError("register(): name '%s' already exists in the map" % name)
+
+            if name in self._map.keys():
+                raise ValueError("register(): name '%s' already exists in the map" % name)
+
+            self._loaded[name] = obj
