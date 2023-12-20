@@ -1,5 +1,6 @@
 import json
-from rick.serializer.json.json import CamelCaseJsonEncoder
+from rick.serializer.json.json import CamelCaseJsonEncoder, ExtendedJsonEncoder
+
 
 class SomeRecord:
 
@@ -8,6 +9,20 @@ class SomeRecord:
             "first_name": "first_name",
             "last_name": "last_name",
         }
+
+
+def test_json_encoder_memoryview():
+    record = {
+        "key1": b'some binary string',
+        "key2": memoryview(b'other binary string'),
+        "key3": b'special "'
+    }
+    serialized = json.dumps(record, cls=ExtendedJsonEncoder)
+    assert serialized == '{"key1": "some binary string", "key2": "other binary string", "key3": "special \\""}'
+    result = json.loads(serialized)
+    assert result["key1"] == "some binary string"
+    assert result["key2"] == "other binary string"
+    assert result["key3"] == "some binary string"
 
 def test_camelcase_json_encoder():
 
