@@ -23,7 +23,14 @@ class ExtendedJsonEncoder(json.JSONEncoder):
             return str(obj.__html__())
         if hasattr(obj, "asdict") and callable(getattr(obj, "asdict", None)):
             return obj.asdict()
-        return obj.__dict__
+        if isinstance(obj, memoryview):
+            return str(obj.tobytes(), "utf-8")
+        if isinstance(obj, bytes):
+            return str(obj, "utf-8")
+        try:
+            return obj.__dict__
+        except AttributeError:
+            raise RuntimeError("cannot serialize type '{}' to Json".format(type(obj)))
 
 
 class CamelCaseJsonEncoder(json.JSONEncoder):
