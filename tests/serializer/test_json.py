@@ -22,7 +22,7 @@ def test_json_encoder_memoryview():
     result = json.loads(serialized)
     assert result["key1"] == "some binary string"
     assert result["key2"] == "other binary string"
-    assert result["key3"] == "some binary string"
+    assert result["key3"] == 'special "'
 
 def test_camelcase_json_encoder():
 
