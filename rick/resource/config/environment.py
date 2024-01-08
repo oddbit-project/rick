@@ -41,6 +41,9 @@ class StrOrFile(WrapType):
         If file doesnt exist, raise ValueError() to make sure error is noted, unless self.silent==True
         :return: str
         """
+        if self.value is None:
+            return ""
+
         if self.value.startswith(os.sep) or self.value.startswith(os.curdir + os.sep):
             path = Path(self.value)
             if path.exists() and path.is_file():
