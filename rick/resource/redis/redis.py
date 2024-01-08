@@ -1,3 +1,4 @@
+import base64
 import pickle
 
 import redis
@@ -65,12 +66,12 @@ class RedisCache(CacheInterface):
     def has(self, key):
         if self._prefix is not None:
             key = key + self._prefix
-        return self._redis.exists(key)
+        return self._redis.exists(key) == 1
 
     def remove(self, key):
         if self._prefix is not None:
             key = key + self._prefix
-        return self._redis.unlink(key)
+        return self._redis.unlink(key) == 1
 
     def purge(self):
         return self._redis.flushdb()
@@ -91,7 +92,7 @@ class RedisCache(CacheInterface):
 
 
 class CryptRedisCache(RedisCache):
-    def __init__(self, key=None, **kwargs):
+    def __init__(self, key: str = None, **kwargs):
         """
         :param key_list: base64-encode key (256 bit)
         :param kwargs: list of optional parameters
@@ -124,6 +125,11 @@ class CryptRedisCache(RedisCache):
         """
         if key is None:
             raise ValueError("Empty fernet encryption key")
+
+        if len(key) != 64:
+            raise ValueError("CryptRedis: key must be a 64 byte string")
+        key = base64.urlsafe_b64encode(key.encode("utf-8"))
+
         super().__init__(**kwargs)
         self._crypt = Fernet256(key)
         self._serialize = self._serializer

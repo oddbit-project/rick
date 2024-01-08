@@ -25,4 +25,4 @@ def is_object(param):
 
 
 def full_name(obj):
-    return obj.__class__.__module__ + '.' + obj.__class__.__name__
+    return obj.__class__.__module__ + "." + obj.__class__.__name__

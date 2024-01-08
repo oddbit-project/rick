@@ -127,7 +127,9 @@ class MapLoader:
         """
         with self._lock:
             if name in self._map.keys():
-                raise ValueError("register(): name '%s' already exists in the map" % name)
+                raise ValueError(
+                    "register(): name '%s' already exists in the map" % name
+                )
             # resolve object name
             self._map[name] = full_name(obj)
             self._loaded[name] = obj
