@@ -10,3 +10,4 @@ mkdocs==1.4.3
 mkdocs-material
 mkdocs-material-extensions
 
+black>=24.3.0 # not directly required, pinned by Snyk to avoid a vulnerability
