@@ -2,7 +2,7 @@ import decimal
 import typing
 
 from rick.mixin import Translator
-from rick.util.cast import cast_str, cast_float
+from rick.util.cast import cast_str, cast_float, cast_int
 
 from .rule import Rule, registry
 
@@ -60,3 +60,19 @@ class Decimal(Rule):
             return False, self.error_message(error_msg, translator)
         except decimal.DecimalException:
             return False, self.error_message(error_msg, translator)
+
+
+@registry.register_cls(name="int")
+class Numeric(Rule):
+    MSG_ERROR = "only integer values are allowed"
+
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
+        if type(value) is int:
+            return True, ""
+
+        if type(cast_int(value)) is int:
+            return True, ""
+
+        return False, self.error_message(error_msg, translator)

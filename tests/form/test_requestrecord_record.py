@@ -14,14 +14,14 @@ class UserRequest(RequestRecord):
 class TeamRecord(RequestRecord):
     fields = {
         "team_name": field(validators="required|minlen:4|maxlen:128"),
-        "members": recordset(UserRequest),
+        "members": recordset(UserRequest, required=True),
     }
 
 
 class TeamLeaderRecord(RequestRecord):
     fields = {
         "team_name": field(validators="required|minlen:4|maxlen:128"),
-        "leader": record(UserRequest),
+        "leader": record(UserRequest, required=True),
     }
 
 
