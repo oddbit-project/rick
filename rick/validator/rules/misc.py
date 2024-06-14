@@ -177,6 +177,25 @@ class RuleList(Rule):
         return True, ""
 
 
+@registry.register_cls(name="idlist")
+class RuleList(Rule):
+    MSG_ERROR = "value is not a list of ids"
+
+    def validate(
+        self, value, options: list = None, error_msg=None, translator: Translator = None
+    ):
+        if type(value) not in (tuple, list):
+            return False, self.error_message(error_msg, translator)
+
+        for item in value:
+            item = cast_str(item)
+            if item is None or not item.isnumeric():
+                return False, self.error_message(error_msg, translator)
+            if int(item) <= 0:
+                return False, self.error_message(error_msg, translator)
+        return True, ""
+
+
 @registry.register_cls(name="dict")
 class RuleDict(Rule):
     MSG_ERROR = "value is not dictionary"
