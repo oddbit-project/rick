@@ -32,12 +32,12 @@ int_fixture = [
     [
         int_spec,
         {"field1": "1a"},
-        {'field1': {'int': 'only integer values are allowed'}},
+        {"field1": {"int": "only integer values are allowed"}},
     ],
     [
         int_spec,
         {"field1": ""},
-        {'field1': {'int': 'only integer values are allowed'}},
+        {"field1": {"int": "only integer values are allowed"}},
     ],
 ]
 

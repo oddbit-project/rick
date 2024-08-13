@@ -1,5 +1,5 @@
 from pathlib import Path
-from io import BytesIO
+from io import BytesIO, SEEK_SET
 
 
 class SliceReader:
@@ -51,7 +51,28 @@ class MultiPartReader:
         self.parts = parts
         self.size = size
 
-    def read(self, offset=0, length=-1):
+    def seek(self, offset: int, whence: int = 0) -> int:
+        """
+        Implements seeking support on the stream
+        :param offset:
+        :param whence:
+        :return:
+        """
+        if whence != SEEK_SET:
+            raise ValueError("MultiPartReader.seek() only supports SEEK_SET")
+
+        if offset < 0:
+            raise ValueError("MultiPartReader.seek() offset cannot be negative")
+
+        if offset > self.size:
+            self.offset = self.size
+        self.offset = offset
+        return self.offset
+
+    def seekable(self) -> bool:
+        return True
+
+    def read(self, offset: int = None, length=-1):
         """
         Read from stream
 
@@ -66,6 +87,8 @@ class MultiPartReader:
         :param length:
         :return: yielded multiple buffers
         """
+        if offset is None:
+            offset = self.offset
         if offset < 0:
             raise ValueError("MultiPartReader:read(): negative offset is not supported")
         if length < 0:
@@ -102,6 +125,7 @@ class MultiPartReader:
 
             if run > 0:
                 yield p.read(ofs_start, size)
+                self.offset += size
             if run == 3:
                 return
 

@@ -23,7 +23,6 @@ def redis_client(redis_cfg):
 
 
 class TestRedisCache:
-
     def test_get_set_remove(self, redis_cfg, redis_client):
         key = "shallow:cfg"
         obj = ShallowContainer(redis_cfg)
@@ -41,7 +40,7 @@ class TestRedisCache:
         assert redis_client.remove(key) == 0
         assert redis_client.has(key) is False
 
-    def test_ttl(self,redis_cfg, redis_client):
+    def test_ttl(self, redis_cfg, redis_client):
         key = "shallow:cfg"
         obj = ShallowContainer(redis_cfg)
         assert redis_client.has(key) is False
@@ -50,7 +49,7 @@ class TestRedisCache:
         sleep(2)
         assert redis_client.has(key) is False
 
-    def test_purge(self,redis_cfg, redis_client):
+    def test_purge(self, redis_cfg, redis_client):
         key = "shallow:cfg"
         obj = ShallowContainer(redis_cfg)
         assert redis_client.has(key) is False
@@ -58,4 +57,3 @@ class TestRedisCache:
         assert redis_client.has(key) is True
         redis_client.purge()
         assert redis_client.has(key) is False
-
