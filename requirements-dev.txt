@@ -9,4 +9,4 @@ tox-docker==4.1.0
 mkdocs==1.4.3
 mkdocs-material
 mkdocs-material-extensions
-
+requests==2.31.0
