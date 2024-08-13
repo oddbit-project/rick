@@ -245,3 +245,22 @@ def test_multipart_stream_variable(src: list, results: list):
         for r in stream.read(offsets[0], offsets[1]):
             result.extend(r)
         assert result == expected
+
+
+@pytest.mark.parametrize("src,results", [(variable_dataset, offset_results)])
+def test_multipart_stream_seek(src: list, results: list):
+    parts = []
+    for element in src:
+        parts.append(ByteArraySlice(element))
+
+    stream = MultiPartReader(parts=parts)
+
+    # reverse results, force seek
+    offset_results.reverse()
+    for record in offset_results:
+        offsets, expected = record
+        result = []
+        stream.seek(offsets[0])
+        for r in stream.read(offsets[0], offsets[1]):
+            result.extend(r)
+        assert result == expected

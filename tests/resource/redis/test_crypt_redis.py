@@ -12,7 +12,7 @@ def redis_cfg():
         "password": "myRedisPassword",
         "db": 0,
         "ssl": False,
-        "key": "86c5ceb27e1bf441130299c0209e5f35b88089f62c06b2b09d65772274f12057"
+        "key": "86c5ceb27e1bf441130299c0209e5f35b88089f62c06b2b09d65772274f12057",
     }
 
 
@@ -22,7 +22,6 @@ def redis_client(redis_cfg):
 
 
 class TestCryptRedisCache(TestRedisCache):
-
     def test_crypt(self, redis_client):
         key = "test:crypt"
         value = "the quick brown fox jumps over the lazy dog"
