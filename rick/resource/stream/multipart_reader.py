@@ -88,7 +88,10 @@ class MultiPartReader:
         :return: yielded multiple buffers
         """
         if offset is None:
-            offset = self.offset
+            if self.offset == -1:
+                offset = 0
+            else:
+                offset = self.offset
         if offset < 0:
             raise ValueError("MultiPartReader:read(): negative offset is not supported")
         if length < 0:
