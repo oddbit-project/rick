@@ -10,8 +10,8 @@ from rick.resource.redis import RedisCache
 def redis_cfg():
     return {
         "host": "localhost",
-        "port": 63790,
-        "password": "myRedisPassword",
+        "port": 6379,
+        "password": "",
         "db": 0,
         "ssl": False,
     }

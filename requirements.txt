@@ -3,6 +3,6 @@ bcrypt>=3.2.2
 iso8601>=1.1.0
 setuptools>=60.0.0
 Deprecated~=1.2.13
-redis>=3.3.11
+redis>=5.0.0
 wheel
 pyhumps==3.8.0

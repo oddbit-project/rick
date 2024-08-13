@@ -8,8 +8,8 @@ from tests.resource.redis.test_redis import TestRedisCache
 def redis_cfg():
     return {
         "host": "localhost",
-        "port": 63790,
-        "password": "myRedisPassword",
+        "port": 6379,
+        "password": "",
         "db": 0,
         "ssl": False,
         "key": "86c5ceb27e1bf441130299c0209e5f35b88089f62c06b2b09d65772274f12057",
