@@ -7,7 +7,7 @@ def test_load_class():
     # existing class
     cls = load_class("rick.base.Di")
     assert cls is not None
-    assert type(cls) == type(Di)
+    assert type(cls) is type(Di)
 
     # non-existing class
     cls = load_class("rick.base.Dix")
