@@ -63,7 +63,7 @@ class Decimal(Rule):
 
 
 @registry.register_cls(name="int")
-class Numeric(Rule):
+class IntRule(Rule):
     MSG_ERROR = "only integer values are allowed"
 
     def validate(

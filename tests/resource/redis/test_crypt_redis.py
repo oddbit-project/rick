@@ -1,28 +1,26 @@
-import pytest
-
-from rick.resource.redis import CryptRedisCache
 from tests.resource.redis.test_redis import TestRedisCache
 
 
-@pytest.fixture
-def redis_cfg():
-    return {
-        "host": "localhost",
-        "port": 63790,
-        "password": "myRedisPassword",
-        "db": 0,
-        "ssl": False,
-        "key": "86c5ceb27e1bf441130299c0209e5f35b88089f62c06b2b09d65772274f12057",
-    }
-
-
-@pytest.fixture
-def redis_client(redis_cfg):
-    return CryptRedisCache(**redis_cfg)
-
-
 class TestCryptRedisCache(TestRedisCache):
-    def test_crypt(self, redis_client):
+    # Override fixture to use crypt_redis_client
+    def test_get_set_remove(self, crypt_redis_client):
+        super().test_get_set_remove(crypt_redis_client)
+
+    def test_ttl(self, crypt_redis_client):
+        super().test_ttl(crypt_redis_client)
+
+    def test_purge(self, crypt_redis_client):
+        super().test_purge(crypt_redis_client)
+
+    def test_crypt(self, crypt_redis_client):
         key = "test:crypt"
         value = "the quick brown fox jumps over the lazy dog"
-        redis_client.set(key, value)
+        crypt_redis_client.set(key, value)
+        
+        # Verify the value is retrieved correctly
+        retrieved = crypt_redis_client.get(key)
+        assert retrieved == value
+        
+        # Verify the data is encrypted in Redis (would need raw client to check)
+        # For now, just verify it works end-to-end
+        crypt_redis_client.remove(key)

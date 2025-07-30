@@ -21,13 +21,15 @@ class TestHashBuffer:
         assert sha1_hash(buffer) == "16312751ef9307c3fd1afbcb993cdc80464ba0f1"
 
     def test_sha512(self, buffer):
-        assert (
-            sha512_hash(buffer)
-            == "801b90d850f51736249cb33df75e17918c2233d7a083cb9d27561160ae15f1e2cc2c97531fcdaa8426c654ba9c7c3a4b7d97ba770d09f0d839bff3047b2f5ce2"
+        expected = (
+            "801b90d850f51736249cb33df75e17918c2233d7a083cb9d27561160ae15f1e2c"
+            "c2c97531fcdaa8426c654ba9c7c3a4b7d97ba770d09f0d839bff3047b2f5ce2"
         )
+        assert sha512_hash(buffer) == expected
 
     def test_blake2(self, buffer):
-        assert (
-            blake2_hash(buffer)
-            == "b6d864419b922f8857e999f637f0e15449f2437b635e3a35c91799418f1e558d78b0c9071b6ddbf2794d24717046b597b2db114b81d6e79ee181bee9a9329c99"
+        expected = (
+            "b6d864419b922f8857e999f637f0e15449f2437b635e3a35c91799418f1e558d"
+            "78b0c9071b6ddbf2794d24717046b597b2db114b81d6e79ee181bee9a9329c99"
         )
+        assert blake2_hash(buffer) == expected

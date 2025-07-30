@@ -11,7 +11,7 @@ class RedisCache(CacheInterface):
     """
     Implements basic cache operations on a Redis backend
 
-    Data is serialized using pickle. To access actual Redis-specific funcions, the client is available via client()
+    Data is serialized using pickle. To access actual Redis-specific functions, the client is available via client()
     """
 
     def __init__(self, **kwargs):
@@ -43,11 +43,20 @@ class RedisCache(CacheInterface):
             max_connections=None
             single_connection_client=False
             health_check_interval=0
+            backend=None
+
+        Note: if backend is specified, the value is used as redis adapter - this allows the wrapping of a pre-existing
+        redis client instance into a RedisCache object:
+        example:
+            cache = RedisCache(backend=my_existing_redis)
         """
         self._serialize = pickle.dumps
         self._deserialize = pickle.loads
         self._prefix = None
-        self._redis = redis.Redis(**kwargs)
+        if "backend" in kwargs:
+            self._redis = kwargs["backend"]
+        else:
+            self._redis = redis.Redis(**kwargs)
 
     def get(self, key):
         if self._prefix is not None:
@@ -80,15 +89,17 @@ class RedisCache(CacheInterface):
         return self._redis
 
     def close(self):
-        self._redis.close()
-        self._redis = None
+        if hasattr(self, "_redis") and self._redis is not None:
+            self._redis.close()
+            self._redis = None
 
     def set_prefix(self, prefix):
         self._prefix = prefix
 
     def __del__(self):
-        self._redis.close()
-        self._redis = None
+        if hasattr(self, "_redis") and self._redis is not None:
+            self._redis.close()
+            self._redis = None
 
 
 class CryptRedisCache(RedisCache):
@@ -122,6 +133,7 @@ class CryptRedisCache(RedisCache):
             max_connections=None
             single_connection_client=False
             health_check_interval=0
+            backend=None
         """
         if key is None:
             raise ValueError("Empty fernet encryption key")
