@@ -53,12 +53,10 @@ class RedisCache(CacheInterface):
         self._serialize = pickle.dumps
         self._deserialize = pickle.loads
         self._prefix = None
-        if 'backend' in kwargs:
-            self._redis = kwargs['backend']
-            return
-
-        del kwargs['backend']
-        self._redis = redis.Redis(**kwargs)
+        if "backend" in kwargs:
+            self._redis = kwargs["backend"]
+        else:
+            self._redis = redis.Redis(**kwargs)
 
     def get(self, key):
         if self._prefix is not None:
@@ -91,15 +89,17 @@ class RedisCache(CacheInterface):
         return self._redis
 
     def close(self):
-        self._redis.close()
-        self._redis = None
+        if hasattr(self, "_redis") and self._redis is not None:
+            self._redis.close()
+            self._redis = None
 
     def set_prefix(self, prefix):
         self._prefix = prefix
 
     def __del__(self):
-        self._redis.close()
-        self._redis = None
+        if hasattr(self, "_redis") and self._redis is not None:
+            self._redis.close()
+            self._redis = None
 
 
 class CryptRedisCache(RedisCache):

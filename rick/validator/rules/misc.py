@@ -178,7 +178,7 @@ class RuleList(Rule):
 
 
 @registry.register_cls(name="idlist")
-class RuleList(Rule):
+class RuleIdList(Rule):
     MSG_ERROR = "value is not a list of ids"
 
     def validate(
@@ -227,6 +227,6 @@ class ListLen(Rule):
         if len(options) == 1:
             min = int(options[0])
             if value_len < min:
-                _args = [min, str("\u221E")]
+                _args = [min, str("∞")]
                 return False, self.error_message(error_msg, translator, *_args)
         return True, ""

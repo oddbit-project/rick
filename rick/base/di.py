@@ -59,9 +59,8 @@ class Di:
 
             self._registry[name] = cls_wrap  # store the wrapper class
         else:
-            self._registry[
-                name
-            ] = item  # or if it is an object or callable, just store it
+            # or if it is an object or callable, just store it
+            self._registry[name] = item
         if replace:  # if replacing existing item, clear lru_cache
             self.get.cache_clear()
 
