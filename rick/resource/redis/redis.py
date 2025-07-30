@@ -11,7 +11,7 @@ class RedisCache(CacheInterface):
     """
     Implements basic cache operations on a Redis backend
 
-    Data is serialized using pickle. To access actual Redis-specific funcions, the client is available via client()
+    Data is serialized using pickle. To access actual Redis-specific functions, the client is available via client()
     """
 
     def __init__(self, **kwargs):
@@ -43,10 +43,21 @@ class RedisCache(CacheInterface):
             max_connections=None
             single_connection_client=False
             health_check_interval=0
+            backend=None
+
+        Note: if backend is specified, the value is used as redis adapter - this allows the wrapping of a pre-existing
+        redis client instance into a RedisCache object:
+        example:
+            cache = RedisCache(backend=my_existing_redis)
         """
         self._serialize = pickle.dumps
         self._deserialize = pickle.loads
         self._prefix = None
+        if 'backend' in kwargs:
+            self._redis = kwargs['backend']
+            return
+
+        del kwargs['backend']
         self._redis = redis.Redis(**kwargs)
 
     def get(self, key):
@@ -122,6 +133,7 @@ class CryptRedisCache(RedisCache):
             max_connections=None
             single_connection_client=False
             health_check_interval=0
+            backend=None
         """
         if key is None:
             raise ValueError("Empty fernet encryption key")
