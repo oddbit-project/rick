@@ -23,7 +23,10 @@ jobs:
     - name: Run pip-audit
       run: |
         pip install -r requirements.txt
-        pip-audit --desc
+        # Ignore GHSA-4xh5-x5gv-qwph: pip tarfile extraction vulnerability
+        # This affects pip itself (build tool), not runtime dependencies
+        # Fix is planned for pip 25.3 - remove this ignore once available
+        pip-audit --desc --ignore-vuln GHSA-4xh5-x5gv-qwph
 
   build:
 
