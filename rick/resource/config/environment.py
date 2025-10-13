@@ -106,7 +106,27 @@ class EnvironmentConfig:
                         data[name.lower()] = value.unwrap()
                     else:
                         data[name.lower()] = value
+
+        # run optional validators
+        self._run_validators(data)
+
         return ShallowContainer(data)
+
+    def _run_validators(self, data:dict):
+        """
+        Call optional validator functions
+
+        A validator function must have a name starting with validate_ and should raise exceptions if validation fails
+
+        :param data:
+        :return:
+        """
+        for attr_name in dir(self):
+            if attr_name.startswith("validate_"):
+                method = getattr(self, attr_name)
+                if callable(method):
+                    method(data)
+
 
     def _parse_value(self, env_var_name, existing_value) -> Any:
         """

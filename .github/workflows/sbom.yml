@@ -1,0 +1,104 @@
+name: Generate and Publish SBOM
+
+on:
+  push:
+    branches: [ master ]
+  release:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install SBOM tools
+      run: |
+        pip install cyclonedx-bom sbom4python
+
+    - name: Generate CycloneDX SBOM (JSON)
+      run: |
+        cyclonedx-py requirements requirements.txt \
+          --of JSON \
+          --output-reproducible \
+          -o sbom-cyclonedx.json
+
+    - name: Generate CycloneDX SBOM (XML)
+      run: |
+        cyclonedx-py requirements requirements.txt \
+          --of XML \
+          --output-reproducible \
+          -o sbom-cyclonedx.xml
+
+    - name: Generate SPDX SBOM (JSON)
+      run: |
+        sbom4python -r requirements.txt \
+          --sbom spdx \
+          --format json \
+          -o sbom-spdx.json
+
+    - name: Generate SPDX SBOM (Tag-Value)
+      run: |
+        sbom4python -r requirements.txt \
+          --sbom spdx \
+          --format tag \
+          -o sbom-spdx.spdx
+
+    - name: Upload SBOM artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom-files
+        path: |
+          sbom-cyclonedx.json
+          sbom-cyclonedx.xml
+          sbom-spdx.json
+          sbom-spdx.spdx
+        retention-days: 90
+
+    - name: Create SBOM directory
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: mkdir -p sbom
+
+    - name: Move SBOM files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+        mv sbom-cyclonedx.json sbom/
+        mv sbom-cyclonedx.xml sbom/
+        mv sbom-spdx.json sbom/
+        mv sbom-spdx.spdx sbom/
+
+    - name: Commit and push SBOM files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add sbom/
+        git diff --staged --quiet || git commit -m "Update SBOM files [skip ci]"
+        git push
+
+    - name: Attach SBOM to release
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          sbom-cyclonedx.json
+          sbom-cyclonedx.xml
+          sbom-spdx.json
+          sbom-spdx.spdx
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
