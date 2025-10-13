@@ -96,7 +96,7 @@ data = cache.get('user:123')
 ## Development
 
 ### Requirements
-- Python 3.8+
+- Python 3.10+
 - Redis (for cache features)
 - Docker (for running tests with testcontainers)
 
