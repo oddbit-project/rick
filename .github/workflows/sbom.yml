@@ -71,11 +71,11 @@ jobs:
         retention-days: 90
 
     - name: Create SBOM directory
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref_name == 'master')
       run: mkdir -p sbom
 
     - name: Move SBOM files
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref_name == 'master')
       run: |
         mv sbom-cyclonedx.json sbom/
         mv sbom-cyclonedx.xml sbom/
@@ -83,7 +83,7 @@ jobs:
         mv sbom-spdx.spdx sbom/
 
     - name: Commit and push SBOM files
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && (github.ref == 'refs/heads/master' || github.ref_name == 'master')
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
