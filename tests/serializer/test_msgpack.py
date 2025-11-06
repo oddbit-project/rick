@@ -11,9 +11,11 @@ from rick.serializer.msgpack import pack, packb, unpack, unpackb
 
 # Test fixtures and helper classes
 
+
 @dataclass
 class SimpleDataclass:
     """Simple dataclass for testing."""
+
     name: str
     value: int
 
@@ -21,6 +23,7 @@ class SimpleDataclass:
 @dataclass
 class NestedDataclass:
     """Dataclass with nested dataclass."""
+
     title: str
     data: SimpleDataclass
 
@@ -28,6 +31,7 @@ class NestedDataclass:
 @dataclass
 class DataclassWithCustomTypes:
     """Dataclass with custom types."""
+
     id: uuid.UUID
     created: datetime.datetime
     amount: decimal.Decimal
@@ -35,16 +39,20 @@ class DataclassWithCustomTypes:
 
 class SimpleObject:
     """Simple object for testing."""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def __eq__(self, other):
-        return isinstance(other, SimpleObject) and self.x == other.x and self.y == other.y
+        return (
+            isinstance(other, SimpleObject) and self.x == other.x and self.y == other.y
+        )
 
 
 class ObjectWithMethods:
     """Object with methods."""
+
     def __init__(self, value):
         self.value = value
 
@@ -57,15 +65,21 @@ class ObjectWithMethods:
 
 class NestedObject:
     """Object with nested object."""
+
     def __init__(self, name, child):
         self.name = name
         self.child = child
 
     def __eq__(self, other):
-        return isinstance(other, NestedObject) and self.name == other.name and self.child == other.child
+        return (
+            isinstance(other, NestedObject)
+            and self.name == other.name
+            and self.child == other.child
+        )
 
 
 # Basic Type Tests
+
 
 class TestDatetime:
     """Tests for datetime.date and datetime.datetime serialization."""
@@ -184,6 +198,7 @@ class TestMemoryview:
 
 # Dataclass Tests
 
+
 class TestDataclasses:
     """Tests for dataclass serialization."""
 
@@ -201,8 +216,7 @@ class TestDataclasses:
     def test_nested_dataclass(self):
         """Test nested dataclass."""
         original = NestedDataclass(
-            title="parent",
-            data=SimpleDataclass(name="child", value=100)
+            title="parent", data=SimpleDataclass(name="child", value=100)
         )
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -216,7 +230,7 @@ class TestDataclasses:
         original = DataclassWithCustomTypes(
             id=uuid.uuid4(),
             created=datetime.datetime.now(),
-            amount=decimal.Decimal("999.99")
+            amount=decimal.Decimal("999.99"),
         )
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -229,6 +243,7 @@ class TestDataclasses:
 
 
 # Object Tests
+
 
 class TestObjects:
     """Tests for general Python object serialization."""
@@ -256,10 +271,7 @@ class TestObjects:
 
     def test_nested_object(self):
         """Test nested objects."""
-        original = NestedObject(
-            name="parent",
-            child=SimpleObject(5, 10)
-        )
+        original = NestedObject(name="parent", child=SimpleObject(5, 10))
         packed = packb(original)
         unpacked = unpackb(packed)
 
@@ -270,6 +282,7 @@ class TestObjects:
 
 # Container Tests
 
+
 class TestContainers:
     """Tests for containers with custom types."""
 
@@ -278,7 +291,7 @@ class TestContainers:
         original = [
             datetime.date(2025, 1, 1),
             datetime.date(2025, 6, 15),
-            datetime.date(2025, 12, 31)
+            datetime.date(2025, 12, 31),
         ]
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -291,7 +304,7 @@ class TestContainers:
         original = {
             "date": datetime.date.today(),
             "uuid": uuid.uuid4(),
-            "decimal": decimal.Decimal("123.45")
+            "decimal": decimal.Decimal("123.45"),
         }
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -303,11 +316,7 @@ class TestContainers:
 
     def test_list_of_objects(self):
         """Test list of objects."""
-        original = [
-            SimpleObject(1, 2),
-            SimpleObject(3, 4),
-            SimpleObject(5, 6)
-        ]
+        original = [SimpleObject(1, 2), SimpleObject(3, 4), SimpleObject(5, 6)]
         packed = packb(original)
         unpacked = unpackb(packed)
 
@@ -319,7 +328,7 @@ class TestContainers:
         original = [
             SimpleDataclass(name="a", value=1),
             SimpleDataclass(name="b", value=2),
-            SimpleDataclass(name="c", value=3)
+            SimpleDataclass(name="c", value=3),
         ]
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -330,6 +339,7 @@ class TestContainers:
 
 # File I/O Tests
 
+
 class TestFileIO:
     """Tests for file stream operations."""
 
@@ -338,7 +348,7 @@ class TestFileIO:
         original = {
             "date": datetime.date.today(),
             "uuid": uuid.uuid4(),
-            "decimal": decimal.Decimal("999.99")
+            "decimal": decimal.Decimal("999.99"),
         }
 
         # Write to bytes buffer
@@ -362,6 +372,7 @@ class TestFileIO:
 
 
 # Edge Cases and Error Tests
+
 
 class TestEdgeCases:
     """Tests for edge cases and error handling."""
@@ -399,7 +410,7 @@ class TestEdgeCases:
             datetime.date.today(),
             uuid.uuid4(),
             SimpleObject(1, 2),
-            SimpleDataclass(name="test", value=42)
+            SimpleDataclass(name="test", value=42),
         ]
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -415,13 +426,7 @@ class TestEdgeCases:
     def test_nested_containers(self):
         """Test deeply nested containers."""
         original = {
-            "level1": {
-                "level2": {
-                    "level3": [
-                        SimpleDataclass(name="deep", value=999)
-                    ]
-                }
-            }
+            "level1": {"level2": {"level3": [SimpleDataclass(name="deep", value=999)]}}
         }
         packed = packb(original)
         unpacked = unpackb(packed)
@@ -431,6 +436,7 @@ class TestEdgeCases:
 
 
 # Complex Integration Tests
+
 
 class TestComplexScenarios:
     """Tests for complex real-world scenarios."""
@@ -443,9 +449,7 @@ class TestComplexScenarios:
         original = {
             "object": obj,
             "dataclass": dc,
-            "nested": {
-                "more_objects": [obj, dc]
-            }
+            "nested": {"more_objects": [obj, dc]},
         }
 
         packed = packb(original)
@@ -466,7 +470,7 @@ class TestComplexScenarios:
             "uuid": uuid.uuid4(),
             "memview": memoryview(b"data"),
             "dataclass": SimpleDataclass(name="nested", value=100),
-            "object": SimpleObject(1, 2)
+            "object": SimpleObject(1, 2),
         }
 
         packed = packb(original)

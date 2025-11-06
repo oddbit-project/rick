@@ -46,17 +46,17 @@ def default(obj: Any) -> msgpack.ExtType:
     """
     if isinstance(obj, datetime.datetime):
         # Encode datetime as ISO format string
-        data = obj.isoformat().encode('utf-8')
+        data = obj.isoformat().encode("utf-8")
         return msgpack.ExtType(EXT_TYPE_DATETIME, data)
 
     elif isinstance(obj, datetime.date):
         # Encode date as ISO format string
-        data = obj.isoformat().encode('utf-8')
+        data = obj.isoformat().encode("utf-8")
         return msgpack.ExtType(EXT_TYPE_DATE, data)
 
     elif isinstance(obj, decimal.Decimal):
         # Encode Decimal as string to preserve precision
-        data = str(obj).encode('utf-8')
+        data = str(obj).encode("utf-8")
         return msgpack.ExtType(EXT_TYPE_DECIMAL, data)
 
     elif isinstance(obj, uuid.UUID):
@@ -78,26 +78,20 @@ def default(obj: Any) -> msgpack.ExtType:
         for field in fields(obj):
             field_dict[field.name] = getattr(obj, field.name)
 
-        data_dict = {
-            '__class__': class_name,
-            '__data__': field_dict
-        }
+        data_dict = {"__class__": class_name, "__data__": field_dict}
         # Pack the dict and wrap in ExtType
         # Nested dataclasses will be handled by recursive default() calls
         packed = msgpack.packb(data_dict, default=default, use_bin_type=True)
         return msgpack.ExtType(EXT_TYPE_DATACLASS, packed)
 
-    elif hasattr(obj, '__dict__') and not isinstance(obj, type):
+    elif hasattr(obj, "__dict__") and not isinstance(obj, type):
         # Encode general Python objects
         class_name = f"{obj.__class__.__module__}.{obj.__class__.__qualname__}"
 
         # Get object's instance variables
         obj_dict = obj.__dict__.copy()
 
-        data_dict = {
-            '__class__': class_name,
-            '__data__': obj_dict
-        }
+        data_dict = {"__class__": class_name, "__data__": obj_dict}
         # Pack the dict and wrap in ExtType
         packed = msgpack.packb(data_dict, default=default, use_bin_type=True)
         return msgpack.ExtType(EXT_TYPE_OBJECT, packed)
@@ -121,17 +115,17 @@ def ext_hook(code: int, data: bytes) -> Any:
     """
     if code == EXT_TYPE_DATETIME:
         # Decode datetime from ISO format string
-        iso_string = data.decode('utf-8')
+        iso_string = data.decode("utf-8")
         return datetime.datetime.fromisoformat(iso_string)
 
     elif code == EXT_TYPE_DATE:
         # Decode date from ISO format string
-        iso_string = data.decode('utf-8')
+        iso_string = data.decode("utf-8")
         return datetime.date.fromisoformat(iso_string)
 
     elif code == EXT_TYPE_DECIMAL:
         # Decode Decimal from string
-        decimal_string = data.decode('utf-8')
+        decimal_string = data.decode("utf-8")
         return decimal.Decimal(decimal_string)
 
     elif code == EXT_TYPE_UUID:
@@ -145,13 +139,13 @@ def ext_hook(code: int, data: bytes) -> Any:
     elif code == EXT_TYPE_DATACLASS:
         # Decode dataclass from packed dict
         data_dict = msgpack.unpackb(data, ext_hook=ext_hook, raw=False)
-        class_name = data_dict['__class__']
-        class_data = data_dict['__data__']
+        class_name = data_dict["__class__"]
+        class_data = data_dict["__data__"]
 
         # Dynamically import and reconstruct the dataclass
         try:
             # Split module and class name
-            module_name, cls_name = class_name.rsplit('.', 1)
+            module_name, cls_name = class_name.rsplit(".", 1)
 
             # Import the module
             module = importlib.import_module(module_name)
@@ -168,21 +162,21 @@ def ext_hook(code: int, data: bytes) -> Any:
         except (ImportError, AttributeError, TypeError) as e:
             # If reconstruction fails, return dict representation with error info
             return {
-                '__dataclass__': class_name,
-                '__reconstruction_error__': str(e),
-                **class_data
+                "__dataclass__": class_name,
+                "__reconstruction_error__": str(e),
+                **class_data,
             }
 
     elif code == EXT_TYPE_OBJECT:
         # Decode general Python object from packed dict
         data_dict = msgpack.unpackb(data, ext_hook=ext_hook, raw=False)
-        class_name = data_dict['__class__']
-        class_data = data_dict['__data__']
+        class_name = data_dict["__class__"]
+        class_data = data_dict["__data__"]
 
         # Dynamically import and reconstruct the object
         try:
             # Split module and class name
-            module_name, cls_name = class_name.rsplit('.', 1)
+            module_name, cls_name = class_name.rsplit(".", 1)
 
             # Import the module
             module = importlib.import_module(module_name)
@@ -201,9 +195,9 @@ def ext_hook(code: int, data: bytes) -> Any:
         except (ImportError, AttributeError, TypeError) as e:
             # If reconstruction fails, return dict representation with error info
             return {
-                '__object__': class_name,
-                '__reconstruction_error__': str(e),
-                **class_data
+                "__object__": class_name,
+                "__reconstruction_error__": str(e),
+                **class_data,
             }
 
     raise ValueError(f"Unknown extension type code: {code}")

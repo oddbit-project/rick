@@ -16,11 +16,11 @@ class TestCryptRedisCache(TestRedisCache):
         key = "test:crypt"
         value = "the quick brown fox jumps over the lazy dog"
         crypt_redis_client.set(key, value)
-        
+
         # Verify the value is retrieved correctly
         retrieved = crypt_redis_client.get(key)
         assert retrieved == value
-        
+
         # Verify the data is encrypted in Redis (would need raw client to check)
         # For now, just verify it works end-to-end
         crypt_redis_client.remove(key)

@@ -18,32 +18,33 @@ else:
 
 class FileConfigError(Exception):
     """Exception raised for file configuration errors"""
+
     pass
 
 
 class BaseFileConfig(ABC):
     """
     Base class for file-based configuration with validator support
-    
+
     Similar to EnvironmentConfig but loads configuration from files (JSON/TOML)
     instead of environment variables.
-    
+
     Example:
         class MyConfig(JsonFileConfig):
             # Default values
             db_host = 'localhost'
             db_port = 5432
             api_key = None
-            
+
             def validate_database(self, data: dict):
                 if data.get('db_port', 0) <= 0:
                     raise ValueError("Database port must be positive")
-                    
+
             def validate_api_key(self, data: dict):
                 api_key = data.get('api_key')
                 if not api_key or len(api_key) < 10:
                     raise ValueError("API key must be at least 10 characters")
-        
+
         # Usage
         config = MyConfig("config.json").build()
         assert config.db_host == "localhost"  # from file or default
@@ -52,7 +53,7 @@ class BaseFileConfig(ABC):
     def __init__(self, file_path: Union[str, Path]):
         """
         Initialize with config file path
-        
+
         :param file_path: Path to the configuration file
         """
         self.file_path = Path(file_path)
@@ -62,7 +63,7 @@ class BaseFileConfig(ABC):
     def _load_file(self) -> Dict[str, Any]:
         """
         Load and parse the configuration file
-        
+
         :return: Dictionary containing the parsed configuration
         :raises FileConfigError: If file cannot be loaded or parsed
         """
@@ -71,14 +72,14 @@ class BaseFileConfig(ABC):
     def build(self, override_data: Optional[Dict[str, Any]] = None) -> ShallowContainer:
         """
         Build the final configuration by merging defaults, file data, and overrides
-        
+
         :param override_data: Optional dictionary to override specific values
         :return: ShallowContainer with the final configuration
         """
         # Start with default values from class attributes
         data = {}
         for name in dir(self):
-            if not name.startswith('_') and not callable(getattr(self, name)):
+            if not name.startswith("_") and not callable(getattr(self, name)):
                 # Skip methods and private attributes
                 attr_value = getattr(self, name)
                 if not callable(attr_value):
@@ -103,10 +104,10 @@ class BaseFileConfig(ABC):
     def _run_validators(self, data: Dict[str, Any]):
         """
         Call optional validator functions
-        
-        A validator function must have a name starting with validate_ and should 
+
+        A validator function must have a name starting with validate_ and should
         raise exceptions if validation fails
-        
+
         :param data: Configuration data to validate
         """
         for attr_name in dir(self):
@@ -118,7 +119,7 @@ class BaseFileConfig(ABC):
     def reload(self) -> ShallowContainer:
         """
         Reload configuration from file
-        
+
         :return: Fresh ShallowContainer with reloaded configuration
         """
         self._loaded_data = None
@@ -128,10 +129,10 @@ class BaseFileConfig(ABC):
 class JsonFileConfig(BaseFileConfig):
     """
     JSON file-based configuration class
-    
+
     Loads configuration from JSON files with support for default values,
     validation, and runtime overrides.
-    
+
     Example JSON file (config.json):
     {
         "db_host": "production-server",
@@ -142,18 +143,18 @@ class JsonFileConfig(BaseFileConfig):
             "max_connections": 100
         }
     }
-    
+
     Example usage:
         class DatabaseConfig(JsonFileConfig):
             # Defaults
             db_host = "localhost"
             db_port = 5432
             api_key = None
-            
+
             def validate_connection(self, data):
                 if not data.get('db_host'):
                     raise ValueError("Database host is required")
-        
+
         config = DatabaseConfig("config.json").build()
     """
 
@@ -163,7 +164,7 @@ class JsonFileConfig(BaseFileConfig):
             raise FileConfigError(f"JSON config file not found: {self.file_path}")
 
         try:
-            with open(self.file_path, 'r', encoding='utf-8') as f:
+            with open(self.file_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except json.JSONDecodeError as e:
             raise FileConfigError(f"Invalid JSON in config file: {e}")
@@ -174,38 +175,38 @@ class JsonFileConfig(BaseFileConfig):
 class TomlFileConfig(BaseFileConfig):
     """
     TOML file-based configuration class
-    
+
     Loads configuration from TOML files with support for default values,
     validation, and runtime overrides.
-    
+
     Requires Python 3.11+ (built-in tomllib) or tomli package for older versions.
-    
+
     Example TOML file (config.toml):
     db_host = "production-server"
     db_port = 3306
     api_key = "prod_api_key_12345678901234567890"
-    
+
     [features]
     enable_caching = true
     max_connections = 100
-    
+
     [logging]
     level = "INFO"
     format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    
+
     Example usage:
         class AppConfig(TomlFileConfig):
             # Defaults
             db_host = "localhost"
             db_port = 5432
             api_key = None
-            
+
             def validate_logging(self, data):
                 level = data.get('logging', {}).get('level', 'INFO')
                 valid_levels = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
                 if level not in valid_levels:
                     raise ValueError(f"Invalid log level: {level}")
-        
+
         config = AppConfig("config.toml").build()
     """
 
@@ -221,7 +222,7 @@ class TomlFileConfig(BaseFileConfig):
             raise FileConfigError(f"TOML config file not found: {self.file_path}")
 
         try:
-            with open(self.file_path, 'rb') as f:
+            with open(self.file_path, "rb") as f:
                 return tomllib.load(f)
         except Exception as e:
             raise FileConfigError(f"Error reading TOML config file: {e}")
@@ -230,20 +231,20 @@ class TomlFileConfig(BaseFileConfig):
 class HybridFileConfig(BaseFileConfig):
     """
     Hybrid configuration class that auto-detects file format
-    
+
     Automatically determines whether to use JSON or TOML parsing based on file extension.
     Supports .json, .toml, and .tml extensions.
-    
+
     Example usage:
         class MyConfig(HybridFileConfig):
             debug = False
             port = 8000
-            
+
             def validate_port(self, data):
                 port = data.get('port', 0)
                 if not (1 <= port <= 65535):
                     raise ValueError("Port must be between 1 and 65535")
-        
+
         # Works with either format
         config1 = MyConfig("config.json").build()
         config2 = MyConfig("config.toml").build()
@@ -255,10 +256,10 @@ class HybridFileConfig(BaseFileConfig):
             raise FileConfigError(f"Config file not found: {self.file_path}")
 
         suffix = self.file_path.suffix.lower()
-        
-        if suffix == '.json':
+
+        if suffix == ".json":
             return self._load_json()
-        elif suffix in ['.toml', '.tml']:
+        elif suffix in [".toml", ".tml"]:
             return self._load_toml()
         else:
             raise FileConfigError(
@@ -269,7 +270,7 @@ class HybridFileConfig(BaseFileConfig):
     def _load_json(self) -> Dict[str, Any]:
         """Load JSON file"""
         try:
-            with open(self.file_path, 'r', encoding='utf-8') as f:
+            with open(self.file_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except json.JSONDecodeError as e:
             raise FileConfigError(f"Invalid JSON: {e}")
@@ -285,7 +286,7 @@ class HybridFileConfig(BaseFileConfig):
             )
 
         try:
-            with open(self.file_path, 'rb') as f:
+            with open(self.file_path, "rb") as f:
                 return tomllib.load(f)
         except Exception as e:
             raise FileConfigError(f"Error reading TOML file: {e}")
@@ -295,43 +296,43 @@ class HybridFileConfig(BaseFileConfig):
 def json_config_file(filename: Union[str, Path]) -> ShallowContainer:
     """
     Simple JSON config file loader (enhanced version of existing json_file)
-    
+
     :param filename: Path to JSON configuration file
     :return: ShallowContainer with loaded configuration
     :raises FileConfigError: If file cannot be loaded
     """
-    
+
     class SimpleJsonConfig(JsonFileConfig):
         pass
-    
+
     return SimpleJsonConfig(filename).build()
 
 
 def toml_config_file(filename: Union[str, Path]) -> ShallowContainer:
     """
     Simple TOML config file loader
-    
-    :param filename: Path to TOML configuration file  
+
+    :param filename: Path to TOML configuration file
     :return: ShallowContainer with loaded configuration
     :raises FileConfigError: If file cannot be loaded
     """
-    
+
     class SimpleTomlConfig(TomlFileConfig):
         pass
-    
+
     return SimpleTomlConfig(filename).build()
 
 
 def config_file(filename: Union[str, Path]) -> ShallowContainer:
     """
     Auto-detecting config file loader
-    
+
     :param filename: Path to configuration file (JSON or TOML)
-    :return: ShallowContainer with loaded configuration  
+    :return: ShallowContainer with loaded configuration
     :raises FileConfigError: If file cannot be loaded
     """
-    
+
     class SimpleHybridConfig(HybridFileConfig):
         pass
-    
+
     return SimpleHybridConfig(filename).build()
