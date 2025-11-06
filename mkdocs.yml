@@ -7,6 +7,10 @@ repo_url: https://github.com/oddbit-project/rick
 
 theme:
   name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: indigo
 
 nav:
 - Overview: index.md
