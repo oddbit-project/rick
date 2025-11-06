@@ -1,7 +1,7 @@
 site_name: Rick
 site_description: Python plumbing for micro-framework based applications
 strict: true
-site_url: https://github.com/oddbit-project/rick
+site_url: https://oddbit-project.github.io/rick/
 repo_name: oddbit-project/rick
 repo_url: https://github.com/oddbit-project/rick
 
@@ -22,6 +22,8 @@ nav:
 - Validators:
   - Overview: 'validators/index.md'
   - Available Validators: 'validators/validator_list.md'
+- Filters:
+  - Overview: 'filters/index.md'
 - Serializers:
   - Overview: 'serializers/index.md'
   - JSON Serializer: 'serializers/json.md'
