@@ -10,6 +10,10 @@ Python plumbing library for building microframework-based applications.
 Rick provides essential building blocks and utilities for constructing robust, maintainable Python applications without
 imposing architectural constraints. It's lightweight, modular, and battle-tested.
 
+## Documentation
+
+Documentation is available at [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
+
 ## Features
 
 ### Core Components
@@ -223,10 +227,6 @@ color = AnsiColor()
 print(color.red('Error:', attr='bold') + ' Operation failed')
 print(color.green('Success', 'white', ['bold', 'underline']))
 ```
-
-## Documentation
-
-Full documentation is available at [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
 
 ## Use Cases
 
