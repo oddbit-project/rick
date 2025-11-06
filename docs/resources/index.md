@@ -102,11 +102,21 @@ Utilities for common file operations:
 
 ### Stream Processing
 
-**MultiPartReader** - Process multipart streams with seek support:
+Rick provides stream processing utilities for handling multipart data streams:
 
-- Parse multipart/form-data
-- Handle file uploads
-- Stream processing with minimal memory usage
+- **[MultiPartReader](stream.md#multipartreader)** - Combine multiple data sources into a seekable stream
+- **[FileSlice](stream.md#fileslice)** - Read file slices from disk
+- **[BytesIOSlice](stream.md#bytesioslice)** - Read slices from memory buffers
+
+Features:
+
+- Minimal memory usage for large files
+- Seek support for random access
+- Combine files, buffers, and custom sources
+- Stream processing with efficient chunking
+- Custom slice implementations
+
+[Read full Stream Processing documentation](stream.md)
 
 ### Console Output
 

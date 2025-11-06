@@ -58,5 +58,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Links
 - [Repository](https://github.com/oddbit-project/rick)
-- [Documentation](https://docs.oddbit.org/rick/)
+- [Documentation](https://oddbit-project.github.io/rick/)
 - [Security Policy](SECURITY.md)
