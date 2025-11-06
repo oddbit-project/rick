@@ -8,5 +8,5 @@ from .file import (
     HybridFileConfig,
     json_config_file,
     toml_config_file,
-    config_file
+    config_file,
 )

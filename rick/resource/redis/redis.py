@@ -43,44 +43,62 @@ class RedisCache(CacheInterface):
             max_connections=None
             single_connection_client=False
             health_check_interval=0
+
             backend=None
+            serializer=None
+            deserializer=None
+            prefix=None
 
         Note: if backend is specified, the value is used as redis adapter - this allows the wrapping of a pre-existing
         redis client instance into a RedisCache object:
         example:
             cache = RedisCache(backend=my_existing_redis)
         """
-        self._serialize = pickle.dumps
-        self._deserialize = pickle.loads
-        self._prefix = None
+
+        # monitor stats on get()
+        self.hits = 0
+        self.misses = 0
+
+        if "serializer" in kwargs:
+            self._serialize = kwargs["serializer"]
+            del kwargs["serializer"]
+        else:
+            self._serialize = pickle.dumps
+
+        if "deserializer" in kwargs:
+            self._deserialize = kwargs["deserializer"]
+            del kwargs["deserializer"]
+        else:
+            self._deserialize = pickle.loads
+
+        if "prefix" in kwargs:
+            self._prefix = kwargs["prefix"]
+            del kwargs["prefix"]
+        else:
+            self._prefix = ""
+
         if "backend" in kwargs:
             self._redis = kwargs["backend"]
         else:
             self._redis = redis.Redis(**kwargs)
 
     def get(self, key):
-        if self._prefix is not None:
-            key = key + self._prefix
-        v = self._redis.get(key)
+        v = self._redis.get(self._prefix + key)
         if v is None:
+            self.misses += 1
             return None
+
+        self.hits += 1
         return self._deserialize(v)
 
     def set(self, key, value, ttl=None):
-        if self._prefix is not None:
-            key = key + self._prefix
-        value = self._serialize(value)
-        return self._redis.set(key, value, ex=ttl)
+        return self._redis.set(self._prefix + key, self._serialize(value), ex=ttl)
 
     def has(self, key):
-        if self._prefix is not None:
-            key = key + self._prefix
-        return self._redis.exists(key) == 1
+        return self._redis.exists(self._prefix + key) == 1
 
     def remove(self, key):
-        if self._prefix is not None:
-            key = key + self._prefix
-        return self._redis.unlink(key) == 1
+        return self._redis.unlink(self._prefix + key) == 1
 
     def purge(self):
         return self._redis.flushdb()
@@ -95,6 +113,10 @@ class RedisCache(CacheInterface):
 
     def set_prefix(self, prefix):
         self._prefix = prefix
+
+    def hit_rate(self):
+        total = self.hits + self.misses
+        return self.hits / total if total > 0 else 0
 
     def __del__(self):
         if hasattr(self, "_redis") and self._redis is not None:

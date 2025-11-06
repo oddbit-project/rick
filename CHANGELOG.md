@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.8.0]
+
+### Added
+- **Serializers**: New MessagePack serializer with bidirectional encoding/decoding
+  - Full support for datetime, Decimal, UUID, dataclasses, and custom objects
+  - 30-50% smaller than JSON, 2-4x faster serialization
+  - Custom extension types for Python-specific objects
+
+### Documentation
+- **Comprehensive Documentation**: Complete documentation for all components
+  - Serializers documentation (JSON and MessagePack)
+  - Configuration management documentation (Environment, JSON, TOML, Hybrid)
+  - Redis Cache documentation with examples
+  - Console Output documentation (AnsiColor and ConsoleWriter)
+  - Resource management documentation
+- **Improved README**: Enhanced with complete feature overview and examples
+- **Improved Index**: Comprehensive library overview with architecture patterns
+- **Code Examples**: Added practical examples throughout documentation
+
 ## [v0.7.1] - 2025-07-30
 
 ### Added
@@ -38,6 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Links
-- [Repository](https://git.oddbit.org/OddBit/rick)
-- [Documentation](https://docs.oddbit.org/rick/)
+- [Repository](https://github.com/oddbit-project/rick)
+- [Documentation](https://oddbit-project.github.io/rick/)
 - [Security Policy](SECURITY.md)

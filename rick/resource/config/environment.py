@@ -112,7 +112,7 @@ class EnvironmentConfig:
 
         return ShallowContainer(data)
 
-    def _run_validators(self, data:dict):
+    def _run_validators(self, data: dict):
         """
         Call optional validator functions
 
@@ -126,7 +126,6 @@ class EnvironmentConfig:
                 method = getattr(self, attr_name)
                 if callable(method):
                     method(data)
-
 
     def _parse_value(self, env_var_name, existing_value) -> Any:
         """

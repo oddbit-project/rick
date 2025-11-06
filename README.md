@@ -1,38 +1,62 @@
-# rick
+# Rick
 
 [![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![Python](https://img.shields.io/pypi/pyversions/rick.svg)](https://pypi.org/project/rick/)
-[![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
 
-Python plumbing library for building microframework-based applications
+Python plumbing library for building microframework-based applications.
 
-Rick provides essential building blocks and utilities for constructing robust Python applications 
-using your preferred microframework.
-
+Rick provides essential building blocks and utilities for constructing robust, maintainable Python applications without
+imposing architectural constraints. It's lightweight, modular, and battle-tested.
 
 ## Features
 
 ### Core Components
-- **Dependency Injection** - Flexible DI container with singleton/factory patterns
-- **Service Registry** - Dynamic class registration and factory loading
-- **Container Classes** - Type-safe configuration and data containers
+
+- **Dependency Injection** - Service container with singleton and factory patterns, LRU caching
+- **Service Registry** - Thread-safe dynamic class registration and retrieval
+- **Container Classes** - Immutable and mutable data containers for type-safe configuration
 
 ### Validation & Forms
-- **Comprehensive Validators** - 30+ built-in validators including new `int` and `idlist` validators
-- **Form Processing** - Request validation with nested records and custom error messages
+
+- **30+ Validators** - Email, IP, UUID, hash, string, numeric, and more
+- **Form Processing** - Request validation with nested records and fieldsets
+- **Custom Validation** - Easy-to-define custom validation functions
 - **Input Filters** - Transform and sanitize input data
 
-### Security
-- **Cryptography** - Secure password hashing with BCrypt and Fernet256 encryption
-- **Redis Cache Security** - Built-in encryption support for sensitive cached data
-- **Security Policy** - Comprehensive security guidelines and best practices
+### Serialization
+
+- **JSON Serializer** - Extended JSON encoding with support for datetime, Decimal, UUID, dataclasses
+- **MessagePack Serializer** - Binary serialization 30-50% smaller and 2-4x faster than JSON
+- **Type Preservation** - Full bidirectional encoding/decoding with custom object support
+
+### Configuration Management
+
+- **EnvironmentConfig** - Load configuration from environment variables with automatic type conversion
+- **File-Based Config** - Support for JSON, TOML, and hybrid configurations
+- **Validation** - Built-in validation functions for configuration correctness
+- **StrOrFile** - Load sensitive values from files for enhanced security
 
 ### Resource Management
-- **Configuration Loading** - Environment variables and JSON file configuration
-- **Redis Integration** - Full-featured cache facade with optional encryption
-- **Stream Processing** - Multipart stream reader with seek support
-- **Console Utilities** - Colored console output helpers
+
+- **Redis Cache** - Full-featured Redis caching with pickle, JSON, or MessagePack serialization
+- **Encrypted Cache** - CryptRedisCache with Fernet256 encryption for sensitive data
+- **Stream Processing** - MultiPartReader for multipart/form-data with seek support
+- **Console Output** - ANSI colored terminal output with 16 colors and text attributes
+
+### Security & Cryptography
+
+- **Fernet256** - 256-bit encryption for data protection
+- **BCrypt** - Secure password hashing
+- **Encrypted Caching** - Built-in support for encrypting cached sensitive data
+- **Hash Utilities** - SHA1, SHA256, SHA512 implementations
+
+### Additional Features
+
+- **Event System** - Event manager for dispatching and handling events
+- **Mixins** - Injectable, Runnable, and Translator mixins
+- **Console Utilities** - AnsiColor and ConsoleWriter for beautiful CLI applications
 
 ## Installation
 
@@ -40,62 +64,229 @@ using your preferred microframework.
 pip install rick
 ```
 
+For TOML configuration support (Python < 3.11):
+
+```bash
+pip install rick tomli
+```
+
 ## Quick Start
 
-### Basic Dependency Injection
+### Dependency Injection
 
 ```python
 from rick.base import Di
 
-# Register dependencies
+# Create DI container
 di = Di()
-di.add(MyService)
-di.add('config', {'api_key': 'secret'})
 
-# Retrieve instances
-service = di.get(MyService)
+# Register singleton
+config_instance = {'api_url': 'https://api.example.com'}
+di.add('config', config_instance)
+
+# Register factory with lazy loading
+def create_logger(di_instance):
+    return {'name': 'app_logger'}
+
+di.add('logger', create_logger)
+
+# Retrieve services
 config = di.get('config')
+logger = di.get('logger')  # Calls create_logger(di)
 ```
 
 ### Form Validation
 
 ```python
-from rick.form import RequestRecord, Field
+from rick.form import RequestRecord
 
-class UserForm(RequestRecord):
-    fields = {
-        'username': Field(validators='required|string|min:3|max:20'),
-        'email': Field(validators='required|email'),
-        'age': Field(validators='required|int|min:18'),
-        'friend_ids': Field(validators='idlist')  # New validator
-    }
 
-form = UserForm()
+class RegistrationForm(RequestRecord):
+    def __init__(self):
+        super().__init__()
+        self.field('username', validators='required|alphanum|minlen:3')
+        self.field('email', validators='required|email')
+        self.field('password', validators='required|minlen:8')
+        self.field('age', validators='required|int|between:18,120')
+
+
+# Example usage
+request_data = {
+    'username': 'johndoe',
+    'email': 'john@example.com',
+    'password': 'securepass123',
+    'age': 25
+}
+
+form = RegistrationForm()
 if form.is_valid(request_data):
     user_data = form.get_data()
 else:
     errors = form.get_errors()
 ```
 
-### Secure Redis Cache
+### Configuration Management
 
 ```python
-from rick.resource.redis import CryptRedisCache
+from rick.resource.config import EnvironmentConfig, StrOrFile
 
-# Encrypted cache for sensitive data
-cache = CryptRedisCache(
-    key='your-64-char-encryption-key',
+
+class AppConfig(EnvironmentConfig):
+    DB_HOST = 'localhost'
+    DB_PORT = 5432
+    DB_PASSWORD = StrOrFile(None)  # Load from file
+    DEBUG = False
+    MAX_WORKERS = 4
+
+    def validate_database(self, data: dict):
+        if not data.get('db_host'):
+            raise ValueError("Database host is required")
+
+
+# Environment variables override defaults
+config = AppConfig().build()
+print(f"Database: {config['db_host']}:{config['db_port']}")
+print(f"Debug mode: {config['debug']}")
+```
+
+### Redis Caching
+
+```python
+from rick.resource.redis import RedisCache, CryptRedisCache
+from rick.serializer.msgpack import msgpack
+
+# Example data
+user_data = {'username': 'john_doe', 'email': 'john@example.com'}
+
+# Standard cache with MessagePack
+cache = RedisCache(
     host='localhost',
-    port=6379
+    serializer=msgpack.packb,
+    deserializer=msgpack.unpackb,
+    prefix='myapp:'
 )
 
-cache.set('user:123', sensitive_data, ttl=3600)
-data = cache.get('user:123')
+cache.set('user:123', user_data, ttl=3600)
+user = cache.get('user:123')
+
+# Encrypted cache for sensitive data
+secure_cache = CryptRedisCache(
+    key='0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+    host='localhost'
+)
+
+secure_cache.set('api_token', {'token': 'secret123'})
+token = secure_cache.get('api_token')
 ```
+
+### Serialization
+
+```python
+from rick.serializer.json.json import ExtendedJsonEncoder, CamelCaseJsonEncoder
+from rick.serializer.msgpack import msgpack
+import json
+from datetime import datetime
+from decimal import Decimal
+
+# JSON serialization
+data = {
+    'timestamp': datetime.now(),
+    'amount': Decimal('123.45'),
+    'status': 'active'
+}
+
+# Standard JSON
+json_str = json.dumps(data, cls=ExtendedJsonEncoder)
+
+# CamelCase for JavaScript compatibility
+json_str = json.dumps(data, cls=CamelCaseJsonEncoder)
+
+# MessagePack - faster and smaller
+packed = msgpack.packb(data)
+restored = msgpack.unpackb(packed)  # Full type preservation
+```
+
+### Console Output
+
+```python
+from rick.resource.console import ConsoleWriter, AnsiColor
+
+# High-level semantic output
+console = ConsoleWriter()
+console.header('Application Startup')
+console.success('Database connected')
+console.warn('Cache disabled')
+console.error('Plugin failed to load')
+
+# Low-level color formatting
+color = AnsiColor()
+print(color.red('Error:', attr='bold') + ' Operation failed')
+print(color.green('Success', 'white', ['bold', 'underline']))
+```
+
+## Documentation
+
+Full documentation is available at [https://docs.rick.oddbit.org](https://github.com/oddbit-project/rick)
+
+### Key Documentation Sections
+
+- **[Forms & Validation](https://github.com/oddbit-project/rick/blob/master/docs/forms/index.md)** - Request
+  validation and form processing
+- **[Validators](https://github.com/oddbit-project/rick/blob/master/docs/validators/index.md)** - Available validation
+  rules
+- **[Serializers](https://github.com/oddbit-project/rick/blob/master/docs/serializers/index.md)** - JSON and
+  MessagePack serialization
+- **[Configuration](https://github.com/oddbit-project/rick/blob/master/docs/resources/config.md)** - Configuration
+  management
+- **[Redis Cache](https://github.com/oddbit-project/rick/blob/master/docs/resources/redis.md)** - Caching with Redis
+- **[Console Output](https://github.com/oddbit-project/rick/blob/master/docs/resources/console.md)** - Colored console
+  output
+
+## Use Cases
+
+Rick is ideal for:
+
+- **Custom Frameworks** - Build domain-specific frameworks with Rick's components
+- **Microservices** - Lightweight utilities for microservice architecture
+- **CLI Applications** - Console output, configuration, and validation
+- **Background Workers** - Job processing with caching and configuration
+- **API Servers** - Request validation, caching, and serialization
+- **Data Processing** - Validation, transformation, and serialization pipelines
+
+## Architecture
+
+Rick follows a modular architecture where each component is independent:
+
+```
+rick/
+├── base/          # DI, Registry, Containers
+├── form/          # Forms and RequestRecord
+├── validator/     # 30+ validation rules
+├── filter/        # Input filters
+├── serializer/    # JSON and MessagePack
+├── resource/      # External resources
+│   ├── config/    # Configuration loaders
+│   ├── redis/     # Redis caching
+│   ├── console/   # Console output
+│   └── stream/    # Stream processing
+├── crypto/        # Encryption utilities
+├── event/         # Event system
+├── mixin/         # Reusable mixins
+└── util/          # General utilities
+```
+
+## Python Version Support
+
+- Python 3.10
+- Python 3.11
+- Python 3.12
+- Python 3.13
+- Python 3.14
 
 ## Development
 
 ### Requirements
+
 - Python 3.10+
 - Redis (for cache features)
 - Docker (for running tests with testcontainers)
@@ -104,17 +295,22 @@ data = cache.get('user:123')
 
 ```bash
 # Clone the repository
-git clone https://git.oddbit.org/OddBit/rick.git
+git clone https://github.com/oddbit-project/rick.git
 cd rick
 
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
 # Install with development dependencies
-pip install -e ".[dev]"
+pip install -e .
+pip install -r requirements-dev.txt
 
 # Run tests
 pytest
 
 # Run tests with coverage
-pytest --cov=rick
+pytest --cov=rick --cov-report=html
 
 # Run linting
 flake8 rick/ tests/
@@ -122,17 +318,62 @@ flake8 rick/ tests/
 
 ### Running Tests with Tox
 
+Test across multiple Python versions:
+
 ```bash
 # Run all tests
 tox
 
 # Run specific Python version
 tox -e py310
+tox -e py311
+tox -e py312
+tox -e py313
+tox -e py314
 
 # Run linting only
 tox -e flake
 ```
 
+## Related Projects
+
+- **[RickDb](https://github.com/oddbit-project/rick_db)** - Database abstraction layer for Rick
+- **[Flask](https://flask.palletsprojects.com)** - Recommended web framework for HTTP functionality
+
+## Contributing
+
+Contributions are welcome! Rick is maintained by the OddBit organization.
+
+### Guidelines
+
+1. Fork the repository
+2. Create a feature branch
+3. Write tests for new functionality
+4. Ensure all tests pass
+5. Submit a pull request
+
+## Security
+
+For security concerns, please review our security policy or contact the maintainers directly.
+
+### Security Features
+
+- Encrypted caching with Fernet256
+- BCrypt password hashing
+- Secure configuration loading from files
+- Input validation and sanitization
+- Regular security audits with pip-audit
+
 ## License
 
-This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.
+Rick is licensed under the BSD 3-Clause License. See the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/oddbit-project/rick/issues)
+- **Repository**: [GitHub](https://github.com/oddbit-project/rick)
+- **PyPI**: [https://pypi.org/project/rick/](https://pypi.org/project/rick/)
