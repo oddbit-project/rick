@@ -10,10 +10,11 @@ theme:
 
 nav:
 - Overview: index.md
-- Requests: 'forms/requests.md'
 - Forms:
   - Overview: 'forms/index.md'
+  - RequestRecord: 'forms/requests.md'
   - Form Class: 'forms/form.class.md'
+  - Error Format: 'forms/errors.md'
 - Validators:
   - Overview: 'validators/index.md'
   - Available Validators: 'validators/validator_list.md'
