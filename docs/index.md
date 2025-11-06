@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
-[![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
 
 Rick is a comprehensive plumbing library for building microframework-based Python applications. It provides essential building blocks and utilities for constructing robust, maintainable applications without imposing architectural constraints.
 
@@ -14,7 +14,7 @@ Rick is a comprehensive plumbing library for building microframework-based Pytho
 
 **What Rick Is Not:**
 - Not a web framework (no HTTP/WSGI/ASGI functionality)
-- Not a database ORM (use [RickDb](https://git.oddbit.org/OddBit/rick_db) for database operations)
+- Not a database ORM (use [RickDb](https://github.com/oddbit-project/rick_db) for database operations)
 - Not opinionated about application structure
 
 ## Core Philosophy
@@ -327,10 +327,10 @@ rick/
 
 ## Related Projects
 
-- **[RickDb](https://git.oddbit.org/OddBit/rick_db)** - Database abstraction layer
+- **[RickDb](https://github.com/oddbit-project/rick_db)** - Database abstraction layer
 - **[Flask](https://flask.palletsprojects.com)** - Web framework (recommended for HTTP functionality)
 
-Rick is released under an open-source license. See the [LICENSE](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE) file for details.
+Rick is released under an open-source license. See the [LICENSE](https://github.com/oddbit-project/rick/blob/master/LICENSE) file for details.
 
 ## Getting Started
 

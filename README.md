@@ -3,7 +3,7 @@
 [![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![Python](https://img.shields.io/pypi/pyversions/rick.svg)](https://pypi.org/project/rick/)
-[![license](https://img.shields.io/pypi/l/rick.svg)](https://git.oddbit.org/OddBit/rick/src/branch/master/LICENSE)
+[![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
 
 Python plumbing library for building microframework-based applications.
 
@@ -226,20 +226,20 @@ print(color.green('Success', 'white', ['bold', 'underline']))
 
 ## Documentation
 
-Full documentation is available at [https://docs.rick.oddbit.org](https://git.oddbit.org/OddBit/rick)
+Full documentation is available at [https://docs.rick.oddbit.org](https://github.com/oddbit-project/rick)
 
 ### Key Documentation Sections
 
-- **[Forms & Validation](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/forms/index.md)** - Request
+- **[Forms & Validation](https://github.com/oddbit-project/rick/blob/master/docs/forms/index.md)** - Request
   validation and form processing
-- **[Validators](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/validators/index.md)** - Available validation
+- **[Validators](https://github.com/oddbit-project/rick/blob/master/docs/validators/index.md)** - Available validation
   rules
-- **[Serializers](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/serializers/index.md)** - JSON and
+- **[Serializers](https://github.com/oddbit-project/rick/blob/master/docs/serializers/index.md)** - JSON and
   MessagePack serialization
-- **[Configuration](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/resources/config.md)** - Configuration
+- **[Configuration](https://github.com/oddbit-project/rick/blob/master/docs/resources/config.md)** - Configuration
   management
-- **[Redis Cache](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/resources/redis.md)** - Caching with Redis
-- **[Console Output](https://git.oddbit.org/OddBit/rick/src/branch/master/docs/resources/console.md)** - Colored console
+- **[Redis Cache](https://github.com/oddbit-project/rick/blob/master/docs/resources/redis.md)** - Caching with Redis
+- **[Console Output](https://github.com/oddbit-project/rick/blob/master/docs/resources/console.md)** - Colored console
   output
 
 ## Use Cases
@@ -295,7 +295,7 @@ rick/
 
 ```bash
 # Clone the repository
-git clone https://git.oddbit.org/OddBit/rick.git
+git clone https://github.com/oddbit-project/rick.git
 cd rick
 
 # Create virtual environment
@@ -337,7 +337,7 @@ tox -e flake
 
 ## Related Projects
 
-- **[RickDb](https://git.oddbit.org/OddBit/rick_db)** - Database abstraction layer for Rick
+- **[RickDb](https://github.com/oddbit-project/rick_db)** - Database abstraction layer for Rick
 - **[Flask](https://flask.palletsprojects.com)** - Recommended web framework for HTTP functionality
 
 ## Contributing
@@ -375,5 +375,5 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/oddbit-project/rick/issues)
-- **Repository**: [OddBit Git](https://git.oddbit.org/OddBit/rick)
+- **Repository**: [GitHub](https://github.com/oddbit-project/rick)
 - **PyPI**: [https://pypi.org/project/rick/](https://pypi.org/project/rick/)
