@@ -4,5 +4,6 @@ iso8601>=2.1.0
 setuptools>=73.0.1
 Deprecated~=1.2.13
 redis>=5.0.0
+msgpack>=1.1.2
 wheel==0.44.0
 pyhumps==3.8.0
