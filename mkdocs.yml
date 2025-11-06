@@ -17,6 +17,15 @@ nav:
 - Validators:
   - Overview: 'validators/index.md'
   - Available Validators: 'validators/validator_list.md'
+- Serializers:
+  - Overview: 'serializers/index.md'
+  - JSON Serializer: 'serializers/json.md'
+  - MessagePack Serializer: 'serializers/msgpack.md'
+- Resources:
+  - Overview: 'resources/index.md'
+  - Redis Cache: 'resources/redis.md'
+  - Configuration: 'resources/config.md'
+  - Console Output: 'resources/console.md'
 - Mixins:
     - Translation: 'mixins/translator.class.md'
 
