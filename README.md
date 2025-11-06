@@ -1,6 +1,6 @@
 # Rick
 
-[![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
+[![Tests](https://github.com/oddbit-project/rick/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions/workflows/run-tests.yml)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![Python](https://img.shields.io/pypi/pyversions/rick.svg)](https://pypi.org/project/rick/)
 [![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
