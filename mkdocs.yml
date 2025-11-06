@@ -25,6 +25,7 @@ nav:
   - Overview: 'resources/index.md'
   - Redis Cache: 'resources/redis.md'
   - Configuration: 'resources/config.md'
+  - File Operations: 'resources/file.md'
   - Stream Processing: 'resources/stream.md'
   - Console Output: 'resources/console.md'
 - Cryptography:

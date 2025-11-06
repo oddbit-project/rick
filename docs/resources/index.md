@@ -93,12 +93,20 @@ Features:
 
 ### File Operations
 
-Utilities for common file operations:
+Rick provides enhanced file handling utilities:
 
-- File reading and writing
-- Path manipulation
-- Directory traversal
-- File metadata handling
+- **[FileReader](file.md#filereader)** - Enhanced multipart file reader with metadata
+- **[FilePart](file.md#filepart)** - File part representation
+
+Features:
+
+- File metadata (name, content type, custom attributes)
+- Chunked reading for memory efficiency
+- Multipart file handling
+- Process uploaded files or split archives
+- Built on top of stream processing utilities
+
+[Read full File Operations documentation](file.md)
 
 ### Stream Processing
 
