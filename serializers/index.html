@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://github.com/oddbit-project/rick/forms/">
+        <link rel="canonical" href="https://github.com/oddbit-project/rick/serializers/">
       
       
-        <link rel="prev" href="requests/">
+        <link rel="prev" href="../validators/validator_list/">
       
       
-        <link rel="next" href="form.class/">
+        <link rel="next" href="json/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.20">
@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#working-with-forms" class="md-skip">
+        <a href="#serializers" class="md-skip">
           Skip to content
         </a>
       
@@ -225,7 +225,7 @@
   
   
     <li class="md-nav__item">
-      <a href="requests/" class="md-nav__link">
+      <a href="../forms/requests/" class="md-nav__link">
         Requests
       </a>
     </li>
@@ -238,16 +238,14 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
       
       
       
@@ -256,7 +254,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           Forms
@@ -267,52 +265,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Overview
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../forms/" class="md-nav__link">
         Overview
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#custom-validation" class="md-nav__link">
-    Custom Validation
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -324,7 +281,7 @@
   
   
     <li class="md-nav__item">
-      <a href="form.class/" class="md-nav__link">
+      <a href="../forms/form.class/" class="md-nav__link">
         Form Class
       </a>
     </li>
@@ -407,14 +364,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
       
       
       
@@ -423,7 +382,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
           Serializers
@@ -434,11 +393,100 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../serializers/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Overview
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Overview
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-serializers" class="md-nav__link">
+    Available Serializers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    Common Use Cases
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-responses" class="md-nav__link">
+    API Responses
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-caching" class="md-nav__link">
+    Data Caching
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-custom-types" class="md-nav__link">
+    Configuration with Custom Types
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-support" class="md-nav__link">
+    Type Support
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -450,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../serializers/json/" class="md-nav__link">
+      <a href="json/" class="md-nav__link">
         JSON Serializer
       </a>
     </li>
@@ -464,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../serializers/msgpack/" class="md-nav__link">
+      <a href="msgpack/" class="md-nav__link">
         MessagePack Serializer
       </a>
     </li>
@@ -736,8 +784,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#custom-validation" class="md-nav__link">
-    Custom Validation
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-serializers" class="md-nav__link">
+    Available Serializers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    Common Use Cases
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-responses" class="md-nav__link">
+    API Responses
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-caching" class="md-nav__link">
+    Data Caching
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-with-custom-types" class="md-nav__link">
+    Configuration with Custom Types
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-support" class="md-nav__link">
+    Type Support
   </a>
   
 </li>
@@ -760,52 +856,113 @@
   
 
 
-<h1 id="working-with-forms">Working with Forms</h1>
-<p><a href="form.class/#Form">rick.Form</a> is a generic Form component to aid the maintenance of a form or request lifecycle. 
-It supports the declaration of fields, field groups (fieldsets) and perform validation on those fields, including custom validation. Due to its
-agnostic nature, it does not provide any form rendering mechanism.</p>
-<h2 id="custom-validation">Custom Validation</h2>
-<p>It is possible to perform additional custom validation on a given field to be executed automatically - just add a method
-with the name <strong>validate_<field_id>(data, field: Field)</strong> to your class, where <em>data</em> will be the dict with the received
-values to validate, and field is the current field object for the specified field. </p>
-<p><strong>Note:</strong> The custom validator methods are only executed if the initial validation of the form is valid (after all the
-specified field validators on the field definition are run and validated <strong>True</strong>); If the form isn't valid, these methods
-are not executed.</p>
-<p>Custom validation method example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rick.form</span><span class="w"> </span><span class="kn">import</span> <span class="n">Form</span><span class="p">,</span> <span class="n">Field</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<h1 id="serializers">Serializers</h1>
+<p>Rick provides serializers for converting Python objects to and from various data formats. The serializer module offers extended support for complex Python types that standard serializers don't handle natively.</p>
+<h2 id="overview">Overview</h2>
+<p>Serializers in Rick extend standard serialization libraries with support for:</p>
+<ul>
+<li><strong>datetime.date</strong> and <strong>datetime.datetime</strong> objects</li>
+<li><strong>decimal.Decimal</strong> for precise numeric operations</li>
+<li><strong>uuid.UUID</strong> objects</li>
+<li><strong>Dataclasses</strong> with nested support</li>
+<li><strong>Custom Python objects</strong> with <code>__dict__</code> attributes</li>
+<li><strong>Memoryview</strong> and <strong>bytes</strong> objects</li>
+</ul>
+<h2 id="available-serializers">Available Serializers</h2>
+<p>Rick currently provides two serializers:</p>
+<ul>
+<li><strong><a href="json/">JSON Serializer</a></strong> - Extended JSON encoding with support for Python types</li>
+<li><strong><a href="msgpack/">MessagePack Serializer</a></strong> - Binary serialization and deserialization with custom type extensions</li>
+</ul>
+<h2 id="common-use-cases">Common Use Cases</h2>
+<h3 id="api-responses">API Responses</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rick.serializer.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedJsonEncoder</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">ExampleForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="s2">&quot;required|minlen:4|maxlen:8&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="k">return</span> <span class="bp">self</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="s1">&#39;balance&#39;</span><span class="p">:</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;123.45&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validator_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">Field</span><span class="p">):</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        <span class="c1"># this validator is only run if standard form validation is successful</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Dave&#39;</span><span class="p">:</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">add_error</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;Dave is not here, man&#39;</span><span class="p">)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>            <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">frm</span> <span class="o">=</span> <span class="n">ExampleForm</span><span class="p">()</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># trigger a failure on the field validators</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># the additional existing validator method for field &#39;name&#39; won&#39;t be called </span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">valid</span> <span class="o">=</span> <span class="n">frm</span><span class="o">.</span><span class="n">is_valid</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Teo&#39;</span><span class="p">})</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">print</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">frm</span><span class="o">.</span><span class="n">get_errors</span><span class="p">())</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># trigger a failure on the validation method</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># the field validators executed without errors</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">valid</span> <span class="o">=</span> <span class="n">frm</span><span class="o">.</span><span class="n">is_valid</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dave&#39;</span><span class="p">})</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nb">print</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">frm</span><span class="o">.</span><span class="n">get_errors</span><span class="p">())</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Console output:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c1"># False {&#39;name&#39;: {&#39;minlen&#39;: &#39;minimum allowed length is 4&#39;}}</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># False {&#39;name&#39;: {&#39;*&#39;: &#39;Dave is not here, man&#39;}}</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1">#</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Serialize for API response</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ExtendedJsonEncoder</span><span class="p">)</span>
 </code></pre></div>
+<h3 id="data-caching">Data Caching</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rick.serializer.msgpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">msgpack</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Serialize for cache storage</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">cached_data</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">packb</span><span class="p">(</span><span class="n">complex_object</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Deserialize from cache</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">restored_data</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">cached_data</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="configuration-with-custom-types">Configuration with Custom Types</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rick.serializer.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtendedJsonEncoder</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;30.5&#39;</span><span class="p">),</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="s1">&#39;last_updated&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Save configuration</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">ExtendedJsonEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="type-support">Type Support</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>JSON</th>
+<th>MessagePack</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>datetime.date</td>
+<td>ISO string</td>
+<td>Binary extension</td>
+</tr>
+<tr>
+<td>datetime.datetime</td>
+<td>ISO string</td>
+<td>Binary extension</td>
+</tr>
+<tr>
+<td>decimal.Decimal</td>
+<td>String</td>
+<td>String in extension</td>
+</tr>
+<tr>
+<td>uuid.UUID</td>
+<td>String</td>
+<td>16-byte binary</td>
+</tr>
+<tr>
+<td>Dataclass</td>
+<td>Dict</td>
+<td>Dict with class info</td>
+</tr>
+<tr>
+<td>Custom objects</td>
+<td>Dict</td>
+<td>Dict with reconstruction</td>
+</tr>
+<tr>
+<td>Memoryview</td>
+<td>UTF-8 string</td>
+<td>Binary</td>
+</tr>
+<tr>
+<td>bytes</td>
+<td>UTF-8 string</td>
+<td>Binary</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -1,53 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/filters/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/crypto/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/forms/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/crypto/bcrypt/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/forms/errors/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/crypto/buffer/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/forms/field.class/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/crypto/fernet256/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/forms/form.class/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/filters/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/forms/requests/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/forms/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/mixins/translator.class/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/forms/errors/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/validators/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/forms/field.class/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://git.oddbit.org/OddBit/rick/validators/validator_list/</loc>
-         <lastmod>2023-05-21</lastmod>
+         <loc>https://github.com/oddbit-project/rick/forms/form.class/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/forms/requests/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/mixins/translator.class/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/resources/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/resources/config/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/resources/console/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/resources/redis/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/serializers/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/serializers/json/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/serializers/msgpack/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/validators/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/validators/validator_list/</loc>
+         <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
