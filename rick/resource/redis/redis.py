@@ -61,16 +61,19 @@ class RedisCache(CacheInterface):
 
         if "serializer" in kwargs:
             self._serialize = kwargs["serializer"]
+            del kwargs["serializer"]
         else:
             self._serialize = pickle.dumps
 
         if "deserializer" in kwargs:
             self._deserialize = kwargs["deserializer"]
+            del kwargs["deserializer"]
         else:
             self._deserialize = pickle.loads
 
         if "prefix" in kwargs:
             self._prefix = kwargs["prefix"]
+            del kwargs["prefix"]
         else:
             self._prefix = ""
 
