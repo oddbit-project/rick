@@ -226,21 +226,7 @@ print(color.green('Success', 'white', ['bold', 'underline']))
 
 ## Documentation
 
-Full documentation is available at [https://docs.rick.oddbit.org](https://github.com/oddbit-project/rick)
-
-### Key Documentation Sections
-
-- **[Forms & Validation](https://github.com/oddbit-project/rick/blob/master/docs/forms/index.md)** - Request
-  validation and form processing
-- **[Validators](https://github.com/oddbit-project/rick/blob/master/docs/validators/index.md)** - Available validation
-  rules
-- **[Serializers](https://github.com/oddbit-project/rick/blob/master/docs/serializers/index.md)** - JSON and
-  MessagePack serialization
-- **[Configuration](https://github.com/oddbit-project/rick/blob/master/docs/resources/config.md)** - Configuration
-  management
-- **[Redis Cache](https://github.com/oddbit-project/rick/blob/master/docs/resources/redis.md)** - Caching with Redis
-- **[Console Output](https://github.com/oddbit-project/rick/blob/master/docs/resources/console.md)** - Colored console
-  output
+Full documentation is available at [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
 
 ## Use Cases
 
@@ -377,3 +363,4 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 - **Issues**: [GitHub Issues](https://github.com/oddbit-project/rick/issues)
 - **Repository**: [GitHub](https://github.com/oddbit-project/rick)
 - **PyPI**: [https://pypi.org/project/rick/](https://pypi.org/project/rick/)
+- **Documentation**: [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
