@@ -76,7 +76,17 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://github.com/oddbit-project/rick/resources/file/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://github.com/oddbit-project/rick/resources/redis/</loc>
+         <lastmod>2025-11-06</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://github.com/oddbit-project/rick/resources/stream/</loc>
          <lastmod>2025-11-06</lastmod>
          <changefreq>daily</changefreq>
     </url>
