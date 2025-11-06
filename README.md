@@ -1,6 +1,6 @@
 # Rick
 
-[![Tests](https://github.com/oddbit-project/rick/workflows/Tests/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions)
+[![Tests](https://github.com/oddbit-project/rick/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/oddbit-project/rick/actions/workflows/run-tests.yml)
 [![pypi](https://img.shields.io/pypi/v/rick.svg)](https://pypi.org/project/rick/)
 [![Python](https://img.shields.io/pypi/pyversions/rick.svg)](https://pypi.org/project/rick/)
 [![license](https://img.shields.io/pypi/l/rick.svg)](https://github.com/oddbit-project/rick/blob/master/LICENSE)
@@ -9,6 +9,10 @@ Python plumbing library for building microframework-based applications.
 
 Rick provides essential building blocks and utilities for constructing robust, maintainable Python applications without
 imposing architectural constraints. It's lightweight, modular, and battle-tested.
+
+## Documentation
+
+Documentation is available at [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
 
 ## Features
 
@@ -224,24 +228,6 @@ print(color.red('Error:', attr='bold') + ' Operation failed')
 print(color.green('Success', 'white', ['bold', 'underline']))
 ```
 
-## Documentation
-
-Full documentation is available at [https://docs.rick.oddbit.org](https://github.com/oddbit-project/rick)
-
-### Key Documentation Sections
-
-- **[Forms & Validation](https://github.com/oddbit-project/rick/blob/master/docs/forms/index.md)** - Request
-  validation and form processing
-- **[Validators](https://github.com/oddbit-project/rick/blob/master/docs/validators/index.md)** - Available validation
-  rules
-- **[Serializers](https://github.com/oddbit-project/rick/blob/master/docs/serializers/index.md)** - JSON and
-  MessagePack serialization
-- **[Configuration](https://github.com/oddbit-project/rick/blob/master/docs/resources/config.md)** - Configuration
-  management
-- **[Redis Cache](https://github.com/oddbit-project/rick/blob/master/docs/resources/redis.md)** - Caching with Redis
-- **[Console Output](https://github.com/oddbit-project/rick/blob/master/docs/resources/console.md)** - Colored console
-  output
-
 ## Use Cases
 
 Rick is ideal for:
@@ -377,3 +363,4 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
 - **Issues**: [GitHub Issues](https://github.com/oddbit-project/rick/issues)
 - **Repository**: [GitHub](https://github.com/oddbit-project/rick)
 - **PyPI**: [https://pypi.org/project/rick/](https://pypi.org/project/rick/)
+- **Documentation**: [https://oddbit-project.github.io/rick/](https://oddbit-project.github.io/rick/)
