@@ -40,6 +40,8 @@ nav:
   - Fernet256 Encryption: 'crypto/fernet256.md'
   - Bcrypt Password Hashing: 'crypto/bcrypt.md'
   - Buffer Hashing: 'crypto/buffer.md'
+- Event System:
+  - Overview: 'event/index.md'
 - Mixins:
     - Translation: 'mixins/translator.class.md'
 
