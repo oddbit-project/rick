@@ -1,4 +1,4 @@
-cryptography>=45.0.5
+cryptography>=46.0.5
 bcrypt>=4.3.0
 iso8601>=2.1.0
 setuptools>=78.1.1
