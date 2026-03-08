@@ -77,9 +77,11 @@ class BaseFileConfig(ABC):
         :return: ShallowContainer with the final configuration
         """
         # Start with default values from class attributes
+        # Exclude internal attributes defined by BaseFileConfig itself
+        _internal_attrs = {"file_path"}
         data = {}
         for name in dir(self):
-            if not name.startswith("_") and not callable(getattr(self, name)):
+            if not name.startswith("_") and name not in _internal_attrs and not callable(getattr(self, name)):
                 # Skip methods and private attributes
                 attr_value = getattr(self, name)
                 if not callable(attr_value):

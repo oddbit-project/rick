@@ -38,6 +38,7 @@ class MapLoader:
                 del self._map[name]
             if name in self._loaded.keys():
                 del self._loaded[name]
+        self.get.cache_clear()
 
     def clear_loaded(self):
         """
@@ -46,6 +47,7 @@ class MapLoader:
         """
         with self._lock:
             self._loaded = {}
+        self.get.cache_clear()
 
     def append(self, map: dict):
         """

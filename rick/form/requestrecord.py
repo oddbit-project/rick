@@ -91,7 +91,7 @@ class RequestRecord:
         :return: self
         """
         if field_id in self.fields.keys():
-            raise RuntimeError("duplicated field id '%s'" % (id,))
+            raise RuntimeError("duplicated field id '%s'" % (field_id,))
 
         field = Field(**kwargs)
         self.add_field(field_id, field)

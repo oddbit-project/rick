@@ -40,7 +40,7 @@ class Datetime(Filter):
     def transform(self, src: Any) -> Any:
         try:
             return iso8601.parse_date(src)
-        except Exception:
+        except (ValueError, TypeError):
             return None
 
 

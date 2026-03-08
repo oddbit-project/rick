@@ -32,11 +32,11 @@ class Validator:
         if not messages:
             messages = {}
         if rules:
-            for field_name, rules in rules.items():
+            for field_name, field_rules in rules.items():
                 if field_name in messages.keys():
-                    self.add_field(field_name, rules, messages[field_name])
+                    self.add_field(field_name, field_rules, messages[field_name])
                 else:
-                    self.add_field(field_name, rules)
+                    self.add_field(field_name, field_rules)
 
     def sleep(self) -> ValidatorState:
         """

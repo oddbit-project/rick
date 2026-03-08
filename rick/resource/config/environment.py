@@ -143,7 +143,7 @@ class EnvironmentConfig:
         if existing_value is None:
             return value
 
-        mapper = getattr(self, "_{}_conv".format(type(existing_value).__name__))
+        mapper = getattr(self, "_{}_conv".format(type(existing_value).__name__), None)
         if not mapper:
             raise ValueError(
                 "Invalid data type detected when parsing environment variable '{}'".format(
@@ -205,7 +205,7 @@ class EnvironmentConfig:
         :param v:
         :return: bool
         """
-        return v in [1, "1", "true", "TRUE", "True", "T", "t"]
+        return v in ["1", "true", "TRUE", "True", "T", "t"]
 
     def _StrOrFile_conv(self, v) -> StrOrFile:
         """

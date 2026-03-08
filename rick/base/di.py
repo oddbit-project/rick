@@ -22,6 +22,7 @@ class Di:
             fn,
         ):  # wrapper function to be detected as callable for the registered class
             self.add(name, fn)
+            return fn
 
         return wrap
 
@@ -36,6 +37,7 @@ class Di:
             fn,
         ):  # wrapper function to be detected as callable for the registered class
             self.add(name, fn, True)
+            return fn
 
         return wrap
 

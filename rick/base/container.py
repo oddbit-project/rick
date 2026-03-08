@@ -61,6 +61,9 @@ class Container(ContainerBase):
             )
         super(Container, self).__init__(copy.deepcopy(data))
 
+    def asdict(self):
+        return copy.deepcopy(self._data)
+
     def __getitem__(self, key):
         v = self._data[key]
         if isinstance(v, collections.abc.Mapping):
