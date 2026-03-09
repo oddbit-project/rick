@@ -14,10 +14,13 @@ theme:
 
 nav:
 - Overview: index.md
+- Base:
+  - Overview: 'base/index.md'
 - Forms:
   - Overview: 'forms/index.md'
   - RequestRecord: 'forms/requests.md'
   - Form Class: 'forms/form.class.md'
+  - Field Class: 'forms/field.class.md'
   - Error Format: 'forms/errors.md'
 - Validators:
   - Overview: 'validators/index.md'
@@ -44,6 +47,10 @@ nav:
   - Overview: 'event/index.md'
 - Mixins:
     - Translation: 'mixins/translator.class.md'
+    - Injectable: 'mixins/injectable.class.md'
+    - Runnable: 'mixins/runnable.class.md'
+- Utilities:
+  - Overview: 'util/index.md'
 
 plugins:
 - search
@@ -54,5 +61,3 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-
-

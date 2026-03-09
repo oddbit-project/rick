@@ -46,7 +46,7 @@ import datetime
 import decimal
 import uuid
 from dataclasses import dataclass
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 # Create data with complex types
 data = {
@@ -83,7 +83,7 @@ with open('data.json', 'w') as f:
 ```python
 import json
 from dataclasses import dataclass
-from rick.serializer.json.json import CamelCaseJsonEncoder
+from rick.serializer.json import CamelCaseJsonEncoder
 
 
 @dataclass
@@ -129,7 +129,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 
 @dataclass
@@ -169,7 +169,7 @@ The encoder can handle custom objects with `__dict__` attributes:
 ```python
 import json
 from datetime import datetime
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 
 class CustomObject:
@@ -190,7 +190,7 @@ If your object implements an `asdict()` method, the encoder will use it:
 
 ```python
 import json
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 
 class CustomSerializable:
@@ -218,7 +218,7 @@ Objects with `__html__()` method are serialized via their HTML representation:
 
 ```python
 import json
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 
 class HTMLWidget:
@@ -241,7 +241,7 @@ Both encoders can handle binary data types:
 
 ```python
 import json
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 data = {
     'binary': b'Hello, World!',
@@ -263,7 +263,7 @@ from datetime import datetime
 from decimal import Decimal
 from dataclasses import dataclass
 from uuid import uuid4
-from rick.serializer.json.json import CamelCaseJsonEncoder
+from rick.serializer.json import CamelCaseJsonEncoder
 
 
 @dataclass
@@ -315,7 +315,7 @@ If an object cannot be serialized, the encoder raises a `RuntimeError`:
 
 ```python
 import json
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 
 
 class UnserializableObject:

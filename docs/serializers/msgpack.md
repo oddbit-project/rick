@@ -435,7 +435,7 @@ import json
 import time
 from datetime import datetime
 from decimal import Decimal
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 from rick.serializer import msgpack
 
 # Create test data

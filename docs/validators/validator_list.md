@@ -14,6 +14,7 @@
 | strin    | list,of,values... | Value is a string and must be in the specified list of values            |
 | strnotin | list,of,values... | Value is a string and must not be in the specified list of values        |
 | bool     |                   | Value must be a valid bool representation: 0, 1, y, t, true, n, f, false |
+| dict     |                   | Value must be a dictionary (Mapping)                                     |
 | iso8601  |                   | Value must be a valid iso8601 date string                                |
 
 ## String Validators

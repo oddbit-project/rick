@@ -179,13 +179,14 @@ class EventManager:
         if event_name not in self._handlers.keys():
             return False
 
-        if event_name in self._stack:
-            raise RuntimeError(
-                "dispatch(): circular event dependency when performing '{}'".format(
-                    event_name
+        with self._stack_lock:
+            if event_name in self._stack:
+                raise RuntimeError(
+                    "dispatch(): circular event dependency when performing '{}'".format(
+                        event_name
+                    )
                 )
-            )
-        self._stack.append(event_name)
+            self._stack.append(event_name)
 
         with self._handler_lock:
             evt = self._handlers[event_name]
@@ -228,8 +229,8 @@ class EventManager:
 
                     elif callable(cls) and not isclass(cls):
                         # cls is a function
-                        kwargs["event_name"] = event_name
-                        cls(**kwargs)
+                        fn_kwargs = dict(kwargs, event_name=event_name)
+                        cls(**fn_kwargs)
 
                     else:
                         raise RuntimeError(

@@ -81,6 +81,8 @@ class In(Rule):
         value = cast_int(value)
         if not options:
             options = []
+        else:
+            options = [cast_int(o) for o in options]
 
         if value is not None and (value in options):
             return True, ""
@@ -97,6 +99,8 @@ class NotIn(Rule):
         value = cast_int(value)
         if not options:
             options = []
+        else:
+            options = [cast_int(o) for o in options]
         if value is not None and (value not in options):
             return True, ""
         return False, self.error_message(error_msg, translator)

@@ -2,7 +2,7 @@
 
 Rick provides powerful form handling and request validation capabilities through two main classes:
 
-- **[Form](form.class.md#Form)** - Full-featured forms with fieldsets, controls, and HTML form support
+- **[Form](form.class.md)** - Full-featured forms with fieldsets, controls, and HTML form support
 - **[RequestRecord](requests.md)** - Lightweight request validation for APIs and data processing
 
 ## Overview

@@ -66,7 +66,8 @@ class MultiPartReader:
 
         if offset > self.size:
             self.offset = self.size
-        self.offset = offset
+        else:
+            self.offset = offset
         return self.offset
 
     def seekable(self) -> bool:

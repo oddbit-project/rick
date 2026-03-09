@@ -72,7 +72,7 @@ config = AppConfig().build()
 
 ### Core Components
 
-#### [Base Classes](forms/index.md)
+#### [Base Classes](base/index.md)
 - **Dependency Injection (Di)** - Service container with singleton and factory patterns
 - **Container Classes** - Immutable and mutable data containers
 - **Registry** - Thread-safe class registration and retrieval
@@ -130,7 +130,7 @@ config = AppConfig().build()
 
 ### Security and Cryptography
 
-#### [Crypto](resources/redis.md)
+#### [Crypto](crypto/index.md)
 - **Fernet256** - 256-bit encryption (adapted from cryptography library)
 - **MultiFernet256** - Multi-key encryption support
 - **BCrypt** - Password hashing
@@ -252,7 +252,7 @@ secure_cache.set('api_token', {'token': 'secret123'})
 ### Serialization
 
 ```python
-from rick.serializer.json.json import ExtendedJsonEncoder, CamelCaseJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder, CamelCaseJsonEncoder
 from rick.serializer.msgpack import msgpack
 import json
 from datetime import datetime

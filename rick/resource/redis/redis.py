@@ -59,28 +59,11 @@ class RedisCache(CacheInterface):
         self.hits = 0
         self.misses = 0
 
-        if "serializer" in kwargs:
-            self._serialize = kwargs["serializer"]
-            del kwargs["serializer"]
-        else:
-            self._serialize = pickle.dumps
-
-        if "deserializer" in kwargs:
-            self._deserialize = kwargs["deserializer"]
-            del kwargs["deserializer"]
-        else:
-            self._deserialize = pickle.loads
-
-        if "prefix" in kwargs:
-            self._prefix = kwargs["prefix"]
-            del kwargs["prefix"]
-        else:
-            self._prefix = ""
-
-        if "backend" in kwargs:
-            self._redis = kwargs["backend"]
-        else:
-            self._redis = redis.Redis(**kwargs)
+        self._serialize = kwargs.pop("serializer", pickle.dumps)
+        self._deserialize = kwargs.pop("deserializer", pickle.loads)
+        self._prefix = kwargs.pop("prefix", "")
+        backend = kwargs.pop("backend", None)
+        self._redis = backend if backend is not None else redis.Redis(**kwargs)
 
     def get(self, key):
         v = self._redis.get(self._prefix + key)
