@@ -1,11 +1,21 @@
 # Filters
 
-Filter classes are helper classes used to transform a specific source value (tipically a string) into a specific data type, such as
+Filter classes are helper classes used to transform a specific source value (typically a string) into a specific data type, such as
 a string into a datetime object. The lifecycle of filter class objects is usually managed via a Registry, but many
 contexts that accept a filter name will also accept a custom filter class.
 
 These classes don't perform any validation of the passed values; if the conversion operation fails, they will silently
-return None. 
+return None.
+
+## Built-in Filters
+
+| Name       | Output Type        | Description                                                         |
+|------------|--------------------|---------------------------------------------------------------------|
+| `int`      | `int`              | Converts value to integer; returns `None` on failure                |
+| `decimal`  | `decimal.Decimal`  | Converts value to `Decimal`; returns `None` on failure              |
+| `float`    | `float`            | Converts value to float; returns `None` on failure                  |
+| `datetime` | `datetime.datetime`| Parses an ISO 8601 date string; returns `None` on failure           |
+| `bool`     | `bool`             | Converts value to boolean (`1`, `y`, `t`, `true` are `True`)       |
 
 ## Using filters
 

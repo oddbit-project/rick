@@ -170,6 +170,24 @@ cache.set_prefix('myapp:prod:')
 
 - `prefix` (str) - New key prefix
 
+#### hit_rate()
+
+Calculate the cache hit rate based on internal hit/miss counters. Every call to `get()` increments either the
+`hits` or `misses` counter. `hit_rate()` returns the ratio of hits to total requests.
+
+```python
+cache.get('key1')  # miss
+cache.set('key1', 'value')
+cache.get('key1')  # hit
+cache.get('key1')  # hit
+
+print(cache.hit_rate())  # 0.6666... (2 hits / 3 total)
+print(cache.hits)        # 2
+print(cache.misses)      # 1
+```
+
+**Returns:** `float` between 0 and 1 (0 if no requests have been made)
+
 ## CryptRedisCache
 
 Encrypted Redis cache implementation that extends `RedisCache` with automatic encryption/decryption using Fernet256.
@@ -425,7 +443,7 @@ assert isinstance(retrieved['amount'], Decimal)
 
 ```python
 from rick.resource.redis import RedisCache
-from rick.serializer.json.json import ExtendedJsonEncoder
+from rick.serializer.json import ExtendedJsonEncoder
 import json
 from datetime import datetime
 
