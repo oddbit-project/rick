@@ -66,9 +66,7 @@ class IP(Rule):
 @registry.register_cls(name="fqdn")
 class Fqdn(Rule):
     MSG_ERROR = "invalid domain name"
-    WHITELIST = [
-        "localhost",
-    ]
+    WHITELIST = []
     REGEX = re.compile(
         # max length for domain name labels is 63 characters per RFC 1034
         r"((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+)" r"(?:[A-Z0-9-]{2,63}(?<!-))\Z",
@@ -116,8 +114,12 @@ class Email(Rule):
             return False, self.error_message(error_msg, translator)
         user, domain = toks
 
+        # RFC 5321 length limits
+        if len(user) > 64 or len(domain) > 255:
+            return False, self.error_message(error_msg, translator)
+
         # username
-        if not self.REGEX.match(user):
+        if not user or not self.REGEX.match(user):
             return False, self.error_message(error_msg, translator)
 
         # domain

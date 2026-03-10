@@ -160,6 +160,15 @@ class RequestRecord:
         if valid_fields and valid_records:
             # set values for fields
             for field_name, field in self.fields.items():
+                # assign raw value (or filtered value) first
+                if field_name in data.keys():
+                    if field.filter is None:
+                        field.value = data[field_name]
+                    else:
+                        field.value = field.filter.transform(data[field_name])
+                else:
+                    field.value = None
+
                 # attempt to find a method called validator_<field_id>() in the current object
                 method_name = "_".join(["validator", field_name.replace("-", "_")])
                 custom_validator = getattr(self, method_name, None)
@@ -170,18 +179,10 @@ class RequestRecord:
                         # note: errors are added inside the custom validator method; at this point,
                         # there are no other errors, as valid_fields and valid_records is true
                         return False
-
-                if field_name in data.keys():
-                    if field.filter is None:
-                        field.value = data[field_name]
-                    else:
-                        field.value = field.filter.transform(data[field_name])
-                else:
-                    field.value = None
             return True
 
         # concat validation errors with record errors
-        self.errors = {**self.errors, **self.validator.get_errors()}
+        self.errors = {**self.validator.get_errors(), **self.errors}
         return False
 
     @deprecated("replaced by function get_errors()")

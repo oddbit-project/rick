@@ -15,13 +15,13 @@ def get_attribute_names(object) -> List:
 
 
 def is_object(param):
-    if not param:
+    if param is None:
         return False
-    if isinstance(param, object):
-        t = str(getattr(param, "__class__"))
-        t = t.split("'")[1::2]
-        return t[0] not in ["type", "str"]
-    return False
+    if isinstance(param, (str, int, float, bool, bytes, list, tuple, dict, set)):
+        return False
+    if isinstance(param, type):
+        return False
+    return hasattr(param, "__dict__")
 
 
 def full_name(obj):

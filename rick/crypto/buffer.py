@@ -1,13 +1,18 @@
 import hashlib
+import warnings
 from io import BytesIO
+
+APPROVED_ALGORITHMS = {"sha256", "sha384", "sha512", "blake2b", "blake2s"}
 
 
 def hash_buffer(method, buf: BytesIO) -> str:
-    fn = getattr(hashlib, method)
-    if not callable(fn):
-        raise RuntimeError(
-            "hash_buffer(): invalid hashing method:  '{}'".format(method)
+    if method not in APPROVED_ALGORITHMS:
+        raise ValueError(
+            "hash_buffer(): algorithm '{}' not approved; use one of: {}".format(
+                method, ", ".join(sorted(APPROVED_ALGORITHMS))
+            )
         )
+    fn = getattr(hashlib, method)
     buf.seek(0)
     return fn(buf.read()).hexdigest()
 
@@ -18,6 +23,11 @@ def sha256_hash(buf: BytesIO) -> str:
 
 
 def sha1_hash(buf: BytesIO) -> str:
+    warnings.warn(
+        "sha1_hash() is deprecated: SHA-1 is cryptographically broken; use sha256_hash() or sha512_hash() instead",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     buf.seek(0)
     return hashlib.sha1(buf.read()).hexdigest()
 

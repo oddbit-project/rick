@@ -524,6 +524,9 @@ When deserializing MessagePack data:
 2. **Module Imports:** Dataclass and object reconstruction requires importing the original class. Ensure the module is
    available and safe.
 
+3. **Deserialization Depth Limit:** `unpackb()` enforces a maximum deserialization depth of 32 levels to prevent stack
+   overflow from deeply nested or crafted payloads. A `ValueError` is raised if the limit is exceeded.
+
 ## Limitations
 
 1. **Class Availability:** Custom classes and dataclasses must be importable at deserialization time

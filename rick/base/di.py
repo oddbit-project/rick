@@ -1,6 +1,7 @@
 import functools
 import types
 from inspect import isclass
+from threading import Lock
 
 
 class Di:
@@ -10,6 +11,7 @@ class Di:
         """
         self._parent = di
         self._registry = {}  # internal dependency registry
+        self._lock = Lock()
 
     def register(self, name: str):
         """
@@ -64,7 +66,8 @@ class Di:
             # or if it is an object or callable, just store it
             self._registry[name] = item
         if replace:  # if replacing existing item, clear lru_cache
-            self.get.cache_clear()
+            with self._lock:
+                self.get.cache_clear()
 
     @functools.lru_cache(maxsize=None)
     def get(self, name: str):

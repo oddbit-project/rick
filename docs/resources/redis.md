@@ -204,12 +204,13 @@ CryptRedisCache(key, **kwargs)
 
 | Parameter | Type | Description                                          |
 |-----------|------|------------------------------------------------------|
-| `key`     | str  | 64-character encryption key (will be base64 encoded) |
+| `key`     | str  | Encryption key that must be exactly 64 bytes when UTF-8 encoded (will be base64 encoded) |
 
 **Additional Parameters:** All parameters from `RedisCache` are supported.
 
-**Important:** The encryption key must be exactly 64 characters long. The key is base64-encoded internally to create a
-Fernet256 key.
+**Important:** The encryption key must be exactly 64 bytes long when encoded as UTF-8. The key is base64-encoded
+internally to create a Fernet256 key. For ASCII keys, 64 characters equals 64 bytes; for multi-byte characters, ensure
+the byte length is correct.
 
 ### Generating Encryption Keys
 

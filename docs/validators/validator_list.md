@@ -42,8 +42,8 @@
 |---------|------------|-----------------------------------------------------------------|
 | between | min,max    | Value must be numeric between min and max; Floats are supported |
 | numeric |            | Value must be a numeral (digits only)                           |
-| decimal |            | Value must be a valid decimal numeral                           |
-| int     |            | Value must be a valid integer                                   |
+| decimal |            | Value must be a valid finite decimal numeral (rejects Infinity and NaN) |
+| int     |            | Value must be a valid integer (rejects booleans)                        |
 
 ## Network Validators
 

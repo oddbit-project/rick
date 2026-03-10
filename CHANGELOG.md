@@ -4,6 +4,31 @@ All notable changes to the [Rick](https://github.com/oddbit-project/rick) projec
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.2]
+
+### Fixed
+- RequestRecord: field value assignment now occurs before custom validator execution, ensuring validators have access to the field value
+- RequestRecord: record-level errors now take precedence over validator errors when merging
+- CryptRedisCache: key validation now checks byte length instead of string length for correct multi-byte handling
+- EventManager: dispatch() now uses try/finally to prevent stack leak on handler exceptions
+- EventManager: wakeup() now uses deepcopy to prevent unintended state mutation
+- Di: cache_clear() is now performed inside a lock to prevent race conditions with concurrent access
+- MapLoader: cache_clear() moved inside lock block; get() now uses try/finally to prevent stack leak on import errors
+- BcryptHasher: removed unnecessary SHA-256 pre-hashing; passwords are now hashed directly with bcrypt
+- sha1_hash(): now emits DeprecationWarning; SHA-1 is cryptographically broken
+- hash_buffer(): restricted to approved algorithms (sha256, sha384, sha512, blake2b, blake2s); raises ValueError for unapproved algorithms
+- MultiPartReader: added bounds clamping to prevent reading past stream end
+- Between validator: now properly calls parse_options() for default handling
+- ListLen validator: added null check for missing options
+- Decimal validator: now rejects Infinity and NaN values
+- Email validator: added RFC 5321 length limits (64-char user, 255-char domain) and empty user check
+- IntRule validator: now rejects Python booleans
+- FQDN validator: removed localhost from whitelist
+- is_object(): replaced fragile type detection with explicit isinstance checks
+- msgpack unpackb(): added depth-limited deserialization (max depth 32) to prevent stack overflow from crafted payloads
+- iso8601_now(): now uses explicit datetime.timezone.utc instead of deprecated utcnow()
+- Form Control/FieldSet: fixed shared mutable default attributes and NameError in duplicate field check
+
 ## [0.8.1]
 
 ### Added
@@ -176,7 +201,9 @@ Version bump release.
 - Injectable mixin
 - Validator framework with string, numeric, network, hash, and misc validators
 
-[Unreleased]: https://github.com/oddbit-project/rick/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/oddbit-project/rick/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/oddbit-project/rick/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/oddbit-project/rick/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/oddbit-project/rick/compare/0.7.1...v0.8.0
 [0.7.1]: https://github.com/oddbit-project/rick/compare/0.7.0...0.7.1
 [0.7.0]: https://github.com/oddbit-project/rick/compare/0.6.9...0.7.0

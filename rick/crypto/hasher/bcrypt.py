@@ -1,4 +1,3 @@
-import hashlib
 import hmac
 
 import bcrypt
@@ -23,7 +22,7 @@ class BcryptHasher(HasherInterface):
         if len(password) == 0:
             raise ValueError("hash(): empty password")
 
-        password = hashlib.sha256(password.encode("utf-8")).hexdigest().encode("utf-8")
+        password = password.encode("utf-8")
         salt = bcrypt.gensalt(rounds=self._rounds, prefix=self._prefix.encode("utf-8"))
 
         return bcrypt.hashpw(password, salt).decode("utf-8")
@@ -36,7 +35,7 @@ class BcryptHasher(HasherInterface):
         :return: True if the hash matches the supplied password
         """
         pw_hash = pw_hash.encode("utf-8")
-        password = hashlib.sha256(password.encode("utf-8")).hexdigest().encode("utf-8")
+        password = password.encode("utf-8")
 
         return hmac.compare_digest(bcrypt.hashpw(password, pw_hash), pw_hash)
 

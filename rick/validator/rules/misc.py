@@ -223,6 +223,9 @@ class ListLen(Rule):
         if type(value) in (list, tuple):
             value_len = len(value)
 
+        if not options:
+            return True, ""
+
         if len(options) >= 2:
             min = int(options[0])
             max = int(options[1])

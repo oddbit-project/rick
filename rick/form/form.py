@@ -7,10 +7,10 @@ class Control:
     type = ""
     label = ""
     value = None
-    attributes = {}
-    options = {}
 
     def __init__(self, **kwargs):
+        self.attributes = {}
+        self.options = {}
         for k, v in kwargs.items():
             setattr(self, k, v)
 
@@ -43,7 +43,7 @@ class FieldSet:
         """
 
         if field_id in self.fields.keys():
-            raise RuntimeError("duplicated field id '%s'" % (id,))
+            raise RuntimeError("duplicated field id '%s'" % (field_id,))
 
         kwargs["type"] = field_type
         kwargs["label"] = self.translator.t(label)
