@@ -117,7 +117,7 @@ Hash a password using bcrypt.
 pw_hash = hasher.hash("my_secure_password")
 ```
 
-**Note:** The password is first hashed with SHA-256 before bcrypt to handle passwords longer than 72 bytes.
+**Note:** Passwords longer than 72 bytes are truncated by bcrypt per the algorithm specification.
 
 #### `is_valid(password, pw_hash)`
 

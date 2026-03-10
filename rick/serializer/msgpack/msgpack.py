@@ -217,6 +217,26 @@ def packb(obj: Any, **kwargs) -> bytes:
     return msgpack.packb(obj, default=default, use_bin_type=True, **kwargs)
 
 
+MAX_DESERIALIZATION_DEPTH = 32
+
+_deserialization_depth = 0
+
+
+def _depth_limited_ext_hook(code: int, data: bytes) -> Any:
+    global _deserialization_depth
+    _deserialization_depth += 1
+    try:
+        if _deserialization_depth > MAX_DESERIALIZATION_DEPTH:
+            raise ValueError(
+                "Maximum deserialization depth ({}) exceeded".format(
+                    MAX_DESERIALIZATION_DEPTH
+                )
+            )
+        return ext_hook(code, data)
+    finally:
+        _deserialization_depth -= 1
+
+
 def unpackb(packed: bytes, **kwargs) -> Any:
     """
     Deserialize msgpack bytes to Python object with custom type support.
@@ -228,7 +248,9 @@ def unpackb(packed: bytes, **kwargs) -> Any:
     Returns:
         Deserialized Python object
     """
-    return msgpack.unpackb(packed, ext_hook=ext_hook, raw=False, **kwargs)
+    global _deserialization_depth
+    _deserialization_depth = 0
+    return msgpack.unpackb(packed, ext_hook=_depth_limited_ext_hook, raw=False, **kwargs)
 
 
 def pack(obj: Any, stream, **kwargs) -> None:

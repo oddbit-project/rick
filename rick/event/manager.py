@@ -44,7 +44,7 @@ class EventManager:
         """
         with self._handler_lock:
             with self._stack_lock:
-                self._handlers = src.data
+                self._handlers = copy.deepcopy(src.data)
 
     def load_handlers(self, src: dict):
         """
@@ -188,57 +188,56 @@ class EventManager:
                 )
             self._stack.append(event_name)
 
-        with self._handler_lock:
-            evt = self._handlers[event_name]
-            priorities = list(evt.keys())
-            priorities.remove("handlers")
-            priorities.sort()
-            for p in priorities:
-                for handler in evt[p]:
-                    module_path, cls_name = handler.rsplit(".", 1)
-                    try:
-                        # try to locate function or class
-                        module = importlib.import_module(module_path)
-                        cls = getattr(module, cls_name, None)
-                        if cls is None:
-                            self._stack_remove(event_name)
+        try:
+            with self._handler_lock:
+                evt = self._handlers[event_name]
+                priorities = list(evt.keys())
+                priorities.remove("handlers")
+                priorities.sort()
+                for p in priorities:
+                    for handler in evt[p]:
+                        module_path, cls_name = handler.rsplit(".", 1)
+                        try:
+                            # try to locate function or class
+                            module = importlib.import_module(module_path)
+                            cls = getattr(module, cls_name, None)
+                            if cls is None:
+                                raise RuntimeError(
+                                    "dispatch(): cannot find class or function '%s' in module '%s'"
+                                    % (cls_name, module_path)
+                                )
+
+                        except ModuleNotFoundError:
                             raise RuntimeError(
-                                "dispatch(): cannot find class or function '%s' in module '%s'"
-                                % (cls_name, module_path)
+                                "dispatch(): mapped module '%s' not found when discovering path '%s'"
+                                % (module_path, handler)
                             )
 
-                    except ModuleNotFoundError:
-                        self._stack_remove(event_name)
-                        raise RuntimeError(
-                            "dispatch(): mapped module '%s' not found when discovering path '%s'"
-                            % (module_path, handler)
-                        )
+                        if isclass(cls) and issubclass(cls, EventHandler):
+                            # build object from class
+                            obj = cls(di)
 
-                    if isclass(cls) and issubclass(cls, EventHandler):
-                        # build object from class
-                        obj = cls(di)
+                            # check if event method handler exists
+                            obj_handler = getattr(obj, event_name, None)
+                            if obj_handler is None:
+                                raise RuntimeError(
+                                    "dispatch(): event handler for '%s' not found in '%s'"
+                                    % (event_name, handler)
+                                )
+                            obj_handler(**kwargs)
 
-                        # check if event method handler exists
-                        obj_handler = getattr(obj, event_name, None)
-                        if obj_handler is None:
+                        elif callable(cls) and not isclass(cls):
+                            # cls is a function
+                            fn_kwargs = dict(kwargs, event_name=event_name)
+                            cls(**fn_kwargs)
+
+                        else:
                             raise RuntimeError(
-                                "dispatch(): event handler for '%s' not found in '%s'"
-                                % (event_name, handler)
+                                "dispatch(): handler '%s' for event '%s' invalid or incompatible"
+                                % (handler, event_name)
                             )
-                        obj_handler(**kwargs)
-
-                    elif callable(cls) and not isclass(cls):
-                        # cls is a function
-                        fn_kwargs = dict(kwargs, event_name=event_name)
-                        cls(**fn_kwargs)
-
-                    else:
-                        raise RuntimeError(
-                            "dispatch(): handler '%s' for event '%s' invalid or incompatible"
-                            % (handler, event_name)
-                        )
-
-        self._stack_remove(event_name)
+        finally:
+            self._stack_remove(event_name)
         return True
 
     def _stack_remove(self, event_name):

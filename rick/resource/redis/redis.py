@@ -143,9 +143,10 @@ class CryptRedisCache(RedisCache):
         if key is None:
             raise ValueError("Empty fernet encryption key")
 
-        if len(key) != 64:
+        key_bytes = key.encode("utf-8")
+        if len(key_bytes) != 64:
             raise ValueError("CryptRedis: key must be a 64 byte string")
-        key = base64.urlsafe_b64encode(key.encode("utf-8"))
+        key = base64.urlsafe_b64encode(key_bytes)
 
         super().__init__(**kwargs)
         self._crypt = Fernet256(key)

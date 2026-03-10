@@ -16,6 +16,7 @@ class Between(Rule):
     def validate(
         self, value, options: list = None, error_msg=None, translator: Translator = None
     ):
+        options = self.parse_options(options)
         value = cast_float(value)
         if value is not None and float(options[1]) >= value >= float(options[0]):
             return True, ""
@@ -54,7 +55,9 @@ class Decimal(Rule):
         if error_msg is None:
             error_msg = self.MSG_ERROR
         try:
-            decimal.Decimal(value)
+            d = decimal.Decimal(value)
+            if not d.is_finite():
+                return False, self.error_message(error_msg, translator)
             return True, ""
         except TypeError:
             return False, self.error_message(error_msg, translator)
@@ -69,6 +72,9 @@ class IntRule(Rule):
     def validate(
         self, value, options: list = None, error_msg=None, translator: Translator = None
     ):
+        if isinstance(value, bool):
+            return False, self.error_message(error_msg, translator)
+
         if type(value) is int:
             return True, ""
 

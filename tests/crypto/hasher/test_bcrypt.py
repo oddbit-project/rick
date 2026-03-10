@@ -5,9 +5,9 @@ from rick.crypto.hasher.bcrypt import BcryptHasher
 class TestBcryptHasher:
     rounds = 8  # lower round count for testing purposes
     valid_passwords = {
-        "12345678": "$2b$08$Y1nUUzX0ZikQi0hSoGZXlODlQYUnF6SnyZIrFIVUZ2jgnIun/mDOO",
-        "sdktrqjkl4dskl": "$2b$08$5McEp4dvSohJdxnWONX3JOYJ8P6TQK6qosOAz0CSAkOr5T647r5G2",
-        "423FDS$&dYdcWs/dAS5": "$2b$08$WiCcKN2HtPzjH58dNEIcf.o/NoFKCZDJIr0c/Fqy1jKiknpvIuvTC",
+        "12345678": "$2b$08$Ex7KPIGtDml1hzlpSjlZv.S4F6ToP1DD1L8bylO6i6v8U9OmCU.IG",
+        "sdktrqjkl4dskl": "$2b$08$2A/LDGvtHdhayOEqLXThaOM5jq.IcvGI18JBy/xjQsxlOj8MlsXiO",
+        "423FDS$&dYdcWs/dAS5": "$2b$08$yjsNQsYLFMHrCZXAKbdItObDtMjScF/GViqyGMb4zP3EggvxRAkR2",
     }
 
     invalid_passwords = [

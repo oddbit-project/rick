@@ -98,6 +98,9 @@ class MultiPartReader:
         if length < 0:
             length = self.size
 
+        if offset + length > self.size:
+            length = self.size - offset
+
         ofs_current = 0
         ofs_end = offset + length
         for p in self.parts:

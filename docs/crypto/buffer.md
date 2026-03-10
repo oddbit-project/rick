@@ -118,9 +118,12 @@ data = BytesIO(b"data to hash")
 digest = sha512_hash(data)
 ```
 
-### `sha1_hash(buf)`
+### `sha1_hash(buf)` *(deprecated)*
 
 Compute SHA-1 hash of a buffer.
+
+**Deprecated:** This function emits a `DeprecationWarning` when called. SHA-1 is cryptographically broken. Use
+`sha256_hash()` or `sha512_hash()` instead.
 
 **Parameters:**
 
@@ -137,7 +140,7 @@ from rick.crypto import sha1_hash
 from io import BytesIO
 
 data = BytesIO(b"data to hash")
-digest = sha1_hash(data)
+digest = sha1_hash(data)  # emits DeprecationWarning
 ```
 
 **Security Warning:** SHA-1 is considered cryptographically broken and should not be used for security purposes. Use
@@ -169,11 +172,13 @@ digest = blake2_hash(data)
 
 ### `hash_buffer(method, buf)`
 
-Generic hash function that supports any hashlib algorithm.
+Hash function restricted to approved cryptographic algorithms.
+
+**Approved algorithms:** `sha256`, `sha384`, `sha512`, `blake2b`, `blake2s`
 
 **Parameters:**
 
-- `method` (str): Name of the hash algorithm (e.g., "sha256", "md5", "sha384")
+- `method` (str): Name of the hash algorithm (must be one of the approved algorithms)
 - `buf` (BytesIO): Buffer containing data to hash
 
 **Returns:**
@@ -182,7 +187,7 @@ Generic hash function that supports any hashlib algorithm.
 
 **Raises:**
 
-- `RuntimeError`: If the specified method is not available in hashlib
+- `ValueError`: If the specified method is not in the approved algorithms list
 
 **Example:**
 
@@ -198,8 +203,8 @@ sha256 = hash_buffer("sha256", data)
 # Use SHA-384
 sha384 = hash_buffer("sha384", data)
 
-# Use MD5 (not recommended for security)
-md5 = hash_buffer("md5", data)
+# Use BLAKE2b
+blake2 = hash_buffer("blake2b", data)
 ```
 
 ## File Hashing
@@ -674,10 +679,10 @@ from rick.crypto.buffer import hash_buffer
 from io import BytesIO
 
 try:
-    # Invalid hash method
-    hash_buffer("invalid_method", BytesIO(b"data"))
-except RuntimeError as e:
-    print(f"Invalid hash method: {e}")
+    # Unapproved hash method
+    hash_buffer("md5", BytesIO(b"data"))
+except ValueError as e:
+    print(f"Unapproved algorithm: {e}")
 
 # Ensure buffer is seekable
 data = BytesIO(b"data")
