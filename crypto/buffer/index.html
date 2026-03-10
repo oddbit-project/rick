@@ -1386,10 +1386,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sha1_hashbuf" class="md-nav__link">
+  <a href="#sha1_hashbuf-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sha1_hash(buf)
+        sha1_hash(buf) (deprecated)
       
     </span>
   </a>
@@ -2224,10 +2224,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sha1_hashbuf" class="md-nav__link">
+  <a href="#sha1_hashbuf-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sha1_hash(buf)
+        sha1_hash(buf) (deprecated)
       
     </span>
   </a>
@@ -2722,8 +2722,10 @@ and content addressing.</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">data</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;data to hash&quot;</span><span class="p">)</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">digest</span> <span class="o">=</span> <span class="n">sha512_hash</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="sha1_hashbuf"><code>sha1_hash(buf)</code></h3>
+<h3 id="sha1_hashbuf-deprecated"><code>sha1_hash(buf)</code> <em>(deprecated)</em></h3>
 <p>Compute SHA-1 hash of a buffer.</p>
+<p><strong>Deprecated:</strong> This function emits a <code>DeprecationWarning</code> when called. SHA-1 is cryptographically broken. Use
+<code>sha256_hash()</code> or <code>sha512_hash()</code> instead.</p>
 <p><strong>Parameters:</strong></p>
 <ul>
 <li><code>buf</code> (BytesIO): Buffer containing data to hash</li>
@@ -2737,7 +2739,7 @@ and content addressing.</p>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">data</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;data to hash&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">digest</span> <span class="o">=</span> <span class="n">sha1_hash</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">digest</span> <span class="o">=</span> <span class="n">sha1_hash</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># emits DeprecationWarning</span>
 </code></pre></div>
 <p><strong>Security Warning:</strong> SHA-1 is considered cryptographically broken and should not be used for security purposes. Use
 SHA-256 or higher instead.</p>
@@ -2760,10 +2762,11 @@ SHA-256 or higher instead.</p>
 </code></pre></div>
 <p><strong>Note:</strong> BLAKE2b is faster than SHA-2 and provides excellent security properties.</p>
 <h3 id="hash_buffermethod-buf"><code>hash_buffer(method, buf)</code></h3>
-<p>Generic hash function that supports any hashlib algorithm.</p>
+<p>Hash function restricted to approved cryptographic algorithms.</p>
+<p><strong>Approved algorithms:</strong> <code>sha256</code>, <code>sha384</code>, <code>sha512</code>, <code>blake2b</code>, <code>blake2s</code></p>
 <p><strong>Parameters:</strong></p>
 <ul>
-<li><code>method</code> (str): Name of the hash algorithm (e.g., "sha256", "md5", "sha384")</li>
+<li><code>method</code> (str): Name of the hash algorithm (must be one of the approved algorithms)</li>
 <li><code>buf</code> (BytesIO): Buffer containing data to hash</li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -2772,7 +2775,7 @@ SHA-256 or higher instead.</p>
 </ul>
 <p><strong>Raises:</strong></p>
 <ul>
-<li><code>RuntimeError</code>: If the specified method is not available in hashlib</li>
+<li><code>ValueError</code>: If the specified method is not in the approved algorithms list</li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rick.crypto.buffer</span><span class="w"> </span><span class="kn">import</span> <span class="n">hash_buffer</span>
@@ -2786,8 +2789,8 @@ SHA-256 or higher instead.</p>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Use SHA-384</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">sha384</span> <span class="o">=</span> <span class="n">hash_buffer</span><span class="p">(</span><span class="s2">&quot;sha384&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Use MD5 (not recommended for security)</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">md5</span> <span class="o">=</span> <span class="n">hash_buffer</span><span class="p">(</span><span class="s2">&quot;md5&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Use BLAKE2b</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">blake2</span> <span class="o">=</span> <span class="n">hash_buffer</span><span class="p">(</span><span class="s2">&quot;blake2b&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="file-hashing">File Hashing</h2>
 <h3 id="hashing-files">Hashing Files</h3>
@@ -3202,10 +3205,10 @@ SHA-256 or higher instead.</p>
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
 <a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>
 <a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="c1"># Invalid hash method</span>
-<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="n">hash_buffer</span><span class="p">(</span><span class="s2">&quot;invalid_method&quot;</span><span class="p">,</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;data&quot;</span><span class="p">))</span>
-<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid hash method: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="c1"># Unapproved hash method</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="n">hash_buffer</span><span class="p">(</span><span class="s2">&quot;md5&quot;</span><span class="p">,</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;data&quot;</span><span class="p">))</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unapproved algorithm: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
 <a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="c1"># Ensure buffer is seekable</span>
 <a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="n">data</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>

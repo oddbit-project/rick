@@ -2777,6 +2777,10 @@ information:</p>
 <p><strong>Module Imports:</strong> Dataclass and object reconstruction requires importing the original class. Ensure the module is
    available and safe.</p>
 </li>
+<li>
+<p><strong>Deserialization Depth Limit:</strong> <code>unpackb()</code> enforces a maximum deserialization depth of 32 levels to prevent stack
+   overflow from deeply nested or crafted payloads. A <code>ValueError</code> is raised if the limit is exceeded.</p>
+</li>
 </ol>
 <h2 id="limitations">Limitations</h2>
 <ol>

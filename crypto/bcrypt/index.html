@@ -2319,7 +2319,7 @@ includes automatic salt generation, constant-time comparison, and rehash detecti
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">pw_hash</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="s2">&quot;my_secure_password&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Note:</strong> The password is first hashed with SHA-256 before bcrypt to handle passwords longer than 72 bytes.</p>
+<p><strong>Note:</strong> Passwords longer than 72 bytes are truncated by bcrypt per the algorithm specification.</p>
 <h4 id="is_validpassword-pw_hash"><code>is_valid(password, pw_hash)</code></h4>
 <p>Verify a password against a hash.</p>
 <p><strong>Parameters:</strong></p>

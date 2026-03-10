@@ -3163,13 +3163,14 @@ encrypted caching of sensitive data.</p>
 <tr>
 <td><code>key</code></td>
 <td>str</td>
-<td>64-character encryption key (will be base64 encoded)</td>
+<td>Encryption key that must be exactly 64 bytes when UTF-8 encoded (will be base64 encoded)</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Additional Parameters:</strong> All parameters from <code>RedisCache</code> are supported.</p>
-<p><strong>Important:</strong> The encryption key must be exactly 64 characters long. The key is base64-encoded internally to create a
-Fernet256 key.</p>
+<p><strong>Important:</strong> The encryption key must be exactly 64 bytes long when encoded as UTF-8. The key is base64-encoded
+internally to create a Fernet256 key. For ASCII keys, 64 characters equals 64 bytes; for multi-byte characters, ensure
+the byte length is correct.</p>
 <h3 id="generating-encryption-keys">Generating Encryption Keys</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
