@@ -4,6 +4,20 @@ All notable changes to the [Rick](https://github.com/oddbit-project/rick) projec
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.3] - 2026-06-01
+
+### Security
+- msgpack `unpackb()`/`unpack()`: documented that reconstructing dataclass/object extension types imports arbitrary modules and instantiates arbitrary classes from the payload, making deserialization unsafe on untrusted input (CWE-502); added warnings to the module/function docstrings and serializer documentation
+- RedisCache: documented that the default `pickle` serializer runs `pickle.loads()` on stored values, allowing arbitrary code execution if the Redis keyspace is writable by untrusted parties (CWE-502); recommend `CryptRedisCache` or a non-executing serializer for untrusted backends
+
+### Fixed
+- msgpack: the deserialization depth limit is now enforced for nested dataclass/object extension types (previously bypassed by the nested decode path) and is thread-safe (per-thread depth instead of a shared global); `unpack()` (stream) is now also depth-limited
+- BcryptHasher: `hash()` now raises `ValueError` for passwords longer than 72 bytes instead of relying on bcrypt's version-dependent truncation (bcrypt < 5) or error (bcrypt >= 5); `is_valid()` returns `False` for such passwords, giving consistent behaviour across bcrypt versions
+
+### Changed
+- Dependencies updated to latest: `cryptography>=48.0.0` (fixes CVE-2026-39892 and CVE-2026-34073), `bcrypt>=5.0.0`, `redis>=8.0.0`, `setuptools>=82.0.1`, `wheel==0.47.0`; aligned `deprecated` to `~=1.3.1` and added `msgpack` to the Pipfile `[packages]`
+- CI: adopted a unified `ci.yml` workflow (test matrix py3.10-3.14, Redis integration, lint, build, pip-audit + bandit, success gate) replacing `run-tests.yml`; SBOM workflow now runs on release with Dependency-Track upload, grype scanning, and cosign signing; bumped workflow actions to `checkout@v6`/`setup-python@v6`. Annotated the reviewed bcrypt SHA-1 helper and `CryptRedisCache` pickle call with `# nosec` for the bandit gate
+
 ## [0.8.2]
 
 ### Fixed

@@ -6,6 +6,15 @@ encrypted caching of sensitive data.
 
 **Location:** `rick.resource.redis`
 
+!!! danger "`RedisCache` unpickles whatever is stored in Redis"
+    By default `RedisCache` serializes values with `pickle`, so `get()` runs
+    `pickle.loads()` on the bytes read from Redis. Any party able to write to the
+    Redis keyspace can achieve **arbitrary code execution** in your process
+    (CWE-502). Only use the default `RedisCache` against a Redis instance that is
+    fully trusted and only writable by trusted parties. Otherwise use a
+    non-executing serializer or `CryptRedisCache` — see
+    [Security Considerations](#security-considerations).
+
 ## Overview
 
 Redis caching in Rick provides:
@@ -839,6 +848,60 @@ elif ttl == -2:
 else:
     print(f"Key expires in {ttl} seconds")
 ```
+
+## Security Considerations
+
+### Pickle deserialization (CWE-502)
+
+`RedisCache` defaults to `pickle.dumps`/`pickle.loads`. `get()` therefore calls
+`pickle.loads()` on the raw bytes stored under the key, and **unpickling untrusted
+data allows arbitrary code execution**. The risk is realised whenever an attacker can
+influence what is stored in Redis, for example:
+
+- a shared, multi-tenant, or internet-exposed Redis instance;
+- an instance with no authentication / no network isolation;
+- a separate vulnerability that lets an attacker write arbitrary keys;
+- a compromised or rogue Redis server.
+
+This is not specific to Rick — it is inherent to using `pickle` as a cache codec — but
+it applies to `RedisCache` out of the box.
+
+**Mitigations (in order of preference):**
+
+1. **Use `CryptRedisCache` for any data crossing a trust boundary.** It encrypts and
+   authenticates values with `Fernet256` before they reach Redis, so tampered or
+   forged bytes are rejected before they are ever unpickled (provided the key stays
+   secret). This is the recommended option for sensitive or shared deployments.
+2. **Supply a non-executing serializer** when you only store plain data:
+
+    ```python
+    import json
+    from rick.resource.redis import RedisCache
+
+    cache = RedisCache(
+        host='localhost',
+        serializer=lambda o: json.dumps(o).encode('utf-8'),
+        deserializer=lambda b: json.loads(b.decode('utf-8')),
+    )
+    ```
+
+    Note that JSON does not preserve Python types (datetimes become strings, etc.).
+    Rick's [MessagePack serializer](../serializers/msgpack.md) preserves more types but
+    has its **own** deserialization caveat — `unpackb` reconstructs arbitrary
+    objects/dataclasses, so it is only safe here if your payloads stay limited to plain
+    data types. Do not treat `msgpack.unpackb` as a safe replacement for `pickle` on
+    untrusted Redis.
+3. **Restrict and authenticate Redis.** Require a password, bind to a private
+   interface / Unix socket, enable TLS (`ssl=True`), and never share the database with
+   untrusted workloads.
+
+### Encryption key handling (`CryptRedisCache`)
+
+The encryption key is used as raw `Fernet256` key material, so its strength is exactly
+the entropy of the 64 bytes you provide. Generate it from a CSPRNG (e.g.
+`secrets.token_hex(32)` → 64 hex characters) and never use a guessable passphrase or a
+key shared across environments. Treat the key as a secret: store it outside source
+control and rotate it if exposed.
 
 ## Related Topics
 

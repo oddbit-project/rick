@@ -110,6 +110,7 @@ Hash a password using bcrypt.
 **Raises:**
 
 - `ValueError`: If password is empty
+- `ValueError`: If the UTF-8 encoded password is longer than 72 bytes
 
 **Example:**
 
@@ -117,7 +118,13 @@ Hash a password using bcrypt.
 pw_hash = hasher.hash("my_secure_password")
 ```
 
-**Note:** Passwords longer than 72 bytes are truncated by bcrypt per the algorithm specification.
+**Note:** bcrypt only considers the first 72 bytes of a password. To avoid silently
+ignoring the rest (and the resulting risk of two distinct passwords sharing a 72-byte
+prefix being treated as equal), `hash()` rejects passwords longer than 72 bytes with a
+`ValueError`, and `is_valid()` returns `False` for them. This behaviour is consistent
+regardless of the installed bcrypt version (bcrypt < 5 truncated silently, bcrypt >= 5
+raises). If you need to accept arbitrarily long passwords, pre-hash them yourself (e.g.
+base64-encoded SHA-256) before passing them to `hash()`/`is_valid()`.
 
 #### `is_valid(password, pw_hash)`
 

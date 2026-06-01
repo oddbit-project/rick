@@ -9,11 +9,26 @@ Supports:
 - dataclasses
 - memoryview
 - general Python objects
+
+SECURITY WARNING (CWE-502 - Deserialization of Untrusted Data):
+    The dataclass (EXT_TYPE_DATACLASS) and object (EXT_TYPE_OBJECT) extension
+    types reconstruct arbitrary Python types named in the payload. Decoding
+    them imports the module named in the data (running its import-time code)
+    and instantiates the referenced class with attacker-controlled attributes.
+    This makes unpackb()/unpack() unsafe on untrusted input in the same way as
+    pickle: a crafted payload can trigger arbitrary module imports and object
+    construction.
+
+    Only deserialize data from a trusted source, or data whose integrity you
+    have verified (e.g. wrapped in an authenticated encryption layer such as
+    Fernet256). Never call unpackb()/unpack() directly on attacker-controlled
+    bytes (network requests, uploads, shared caches, etc.).
 """
 
 import datetime
 import decimal
 import importlib
+import threading
 import uuid
 from dataclasses import asdict, fields, is_dataclass
 from typing import Any
@@ -138,7 +153,8 @@ def ext_hook(code: int, data: bytes) -> Any:
 
     elif code == EXT_TYPE_DATACLASS:
         # Decode dataclass from packed dict
-        data_dict = msgpack.unpackb(data, ext_hook=ext_hook, raw=False)
+        # use the depth-limited hook so nested ext types count toward the limit
+        data_dict = msgpack.unpackb(data, ext_hook=_depth_limited_ext_hook, raw=False)
         class_name = data_dict["__class__"]
         class_data = data_dict["__data__"]
 
@@ -169,7 +185,8 @@ def ext_hook(code: int, data: bytes) -> Any:
 
     elif code == EXT_TYPE_OBJECT:
         # Decode general Python object from packed dict
-        data_dict = msgpack.unpackb(data, ext_hook=ext_hook, raw=False)
+        # use the depth-limited hook so nested ext types count toward the limit
+        data_dict = msgpack.unpackb(data, ext_hook=_depth_limited_ext_hook, raw=False)
         class_name = data_dict["__class__"]
         class_data = data_dict["__data__"]
 
@@ -219,14 +236,16 @@ def packb(obj: Any, **kwargs) -> bytes:
 
 MAX_DESERIALIZATION_DEPTH = 32
 
-_deserialization_depth = 0
+# per-thread deserialization depth; module-level state is not safe to share
+# across concurrent unpackb()/unpack() calls
+_local = threading.local()
 
 
 def _depth_limited_ext_hook(code: int, data: bytes) -> Any:
-    global _deserialization_depth
-    _deserialization_depth += 1
+    depth = getattr(_local, "depth", 0) + 1
+    _local.depth = depth
     try:
-        if _deserialization_depth > MAX_DESERIALIZATION_DEPTH:
+        if depth > MAX_DESERIALIZATION_DEPTH:
             raise ValueError(
                 "Maximum deserialization depth ({}) exceeded".format(
                     MAX_DESERIALIZATION_DEPTH
@@ -234,12 +253,17 @@ def _depth_limited_ext_hook(code: int, data: bytes) -> Any:
             )
         return ext_hook(code, data)
     finally:
-        _deserialization_depth -= 1
+        _local.depth = depth - 1
 
 
 def unpackb(packed: bytes, **kwargs) -> Any:
     """
     Deserialize msgpack bytes to Python object with custom type support.
+
+    WARNING: unsafe on untrusted input. Reconstructing dataclass/object
+    extension types imports arbitrary modules and instantiates arbitrary
+    classes from the payload (CWE-502). Only use on trusted or
+    integrity-verified data. See the module docstring for details.
 
     Args:
         packed: Serialized bytes
@@ -248,8 +272,7 @@ def unpackb(packed: bytes, **kwargs) -> Any:
     Returns:
         Deserialized Python object
     """
-    global _deserialization_depth
-    _deserialization_depth = 0
+    _local.depth = 0
     return msgpack.unpackb(packed, ext_hook=_depth_limited_ext_hook, raw=False, **kwargs)
 
 
@@ -269,6 +292,11 @@ def unpack(stream, **kwargs) -> Any:
     """
     Deserialize msgpack from stream to Python object with custom type support.
 
+    WARNING: unsafe on untrusted input. Reconstructing dataclass/object
+    extension types imports arbitrary modules and instantiates arbitrary
+    classes from the payload (CWE-502). Only use on trusted or
+    integrity-verified data. See the module docstring for details.
+
     Args:
         stream: File-like object to read from
         **kwargs: Additional arguments passed to msgpack.unpack
@@ -276,4 +304,5 @@ def unpack(stream, **kwargs) -> Any:
     Returns:
         Deserialized Python object
     """
-    return msgpack.unpack(stream, ext_hook=ext_hook, raw=False, **kwargs)
+    _local.depth = 0
+    return msgpack.unpack(stream, ext_hook=_depth_limited_ext_hook, raw=False, **kwargs)

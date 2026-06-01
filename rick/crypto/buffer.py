@@ -29,7 +29,8 @@ def sha1_hash(buf: BytesIO) -> str:
         stacklevel=2,
     )
     buf.seek(0)
-    return hashlib.sha1(buf.read()).hexdigest()
+    # deprecated legacy checksum helper, not used for security
+    return hashlib.sha1(buf.read()).hexdigest()  # nosec B324
 
 
 def sha512_hash(buf: BytesIO) -> str:

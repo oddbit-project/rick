@@ -6,6 +6,14 @@ preservation.
 
 **Location:** `rick.serializer.msgpack`
 
+!!! danger "Do not deserialize untrusted data"
+    `unpackb()` and `unpack()` reconstruct arbitrary Python objects named in the
+    payload (the `EXT_TYPE_DATACLASS` and `EXT_TYPE_OBJECT` extension types). This
+    imports the module named in the data and instantiates the referenced class,
+    making deserialization **unsafe on untrusted input in the same way as
+    `pickle`** (CWE-502). Only deserialize data from a trusted source or data whose
+    integrity you have verified. See [Security Considerations](#security-considerations).
+
 ## Overview
 
 Rick's MessagePack serializer extends the standard `msgpack` library with custom extension types for Python-specific
@@ -278,6 +286,12 @@ assert isinstance(restored.login_time, datetime)
 2. The class should have a no-argument `__new__()` method (most classes do)
 3. Instance variables are restored via `setattr()`
 
+!!! warning
+    Reconstructing custom objects and dataclasses is what makes `unpackb()`/`unpack()`
+    unsafe on untrusted input — see [Security Considerations](#security-considerations).
+    Only deserialize payloads containing these types when the data comes from a trusted
+    or integrity-verified source.
+
 ## File I/O Operations
 
 ### Writing to Files
@@ -516,16 +530,48 @@ def safe_unpack(packed_data):
 
 ## Security Considerations
 
-When deserializing MessagePack data:
+**`unpackb()` / `unpack()` are unsafe on untrusted input (CWE-502 — Deserialization of
+Untrusted Data).** Treat them with the same caution as `pickle.loads()`.
 
-1. **Code Execution Risk:** The serializer dynamically imports modules and creates objects. Only deserialize data from
-   trusted sources.
+1. **Arbitrary code execution / object construction:** When a payload contains an
+   `EXT_TYPE_DATACLASS` (5) or `EXT_TYPE_OBJECT` (7) extension, the decoder reads a
+   `__class__` string from the data, imports that module (running its import-time
+   code), looks up the class, and instantiates it with attacker-controlled
+   attributes:
 
-2. **Module Imports:** Dataclass and object reconstruction requires importing the original class. Ensure the module is
-   available and safe.
+    - dataclasses are rebuilt with `cls(**data)` (runs `__init__`);
+    - general objects are rebuilt with `cls.__new__(cls)` followed by `setattr` for
+      each field.
 
-3. **Deserialization Depth Limit:** `unpackb()` enforces a maximum deserialization depth of 32 levels to prevent stack
-   overflow from deeply nested or crafted payloads. A `ValueError` is raised if the limit is exceeded.
+    An attacker who controls the bytes passed to `unpackb()`/`unpack()` can therefore
+    cause arbitrary modules to be imported and arbitrary objects to be created (for
+    example, objects whose finalizers or attribute side effects are dangerous). The
+    `try/except` around reconstruction does **not** prevent this — the import and
+    instantiation happen before any exception is raised.
+
+2. **Only deserialize trusted or integrity-verified data.** Safe sources include:
+
+    - data your own process produced and stored somewhere only it can write;
+    - data wrapped in an authenticated layer before transport/storage, so it cannot be
+      tampered with — e.g. encrypt-then-store with
+      [`Fernet256`](../crypto/fernet256.md) (this is what
+      [`CryptRedisCache`](../resources/redis.md) does).
+
+    Never call `unpackb()`/`unpack()` directly on attacker-controlled bytes such as
+    HTTP request bodies, file uploads, message-queue payloads, or values read from a
+    cache that other (untrusted) parties can write to.
+
+3. **Custom types are not "data-only".** MessagePack is often assumed to be a pure
+   data format. Rick's extension types break that assumption by design — keep this in
+   mind when choosing it for an interchange or storage format that crosses a trust
+   boundary. If you only exchange plain data (the basic types, dates, decimals, UUIDs,
+   bytes), avoid serializing dataclasses/custom objects so the payload contains no
+   reconstruction extensions.
+
+4. **Deserialization Depth Limit:** `unpackb()` applies a maximum deserialization
+   depth of 32 levels to limit stack growth from deeply nested payloads, raising a
+   `ValueError` when exceeded. Treat this as a robustness aid, not a security boundary
+   — it does not make untrusted input safe to deserialize.
 
 ## Limitations
 

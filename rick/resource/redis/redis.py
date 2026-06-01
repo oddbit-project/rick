@@ -12,6 +12,20 @@ class RedisCache(CacheInterface):
     Implements basic cache operations on a Redis backend
 
     Data is serialized using pickle. To access actual Redis-specific functions, the client is available via client()
+
+    SECURITY WARNING (CWE-502 - Deserialization of Untrusted Data):
+        By default values are serialized/deserialized with pickle, so get()
+        runs pickle.loads() on whatever bytes are stored under the key. Any
+        party able to write to the Redis keyspace (a shared/multi-tenant or
+        unauthenticated instance, a separate injection, a compromised server)
+        can therefore achieve arbitrary code execution in this process.
+
+        Use this class only against a Redis instance that is fully trusted and
+        that only trusted parties can write to. If the backing store is not
+        trusted, either supply a non-executing serializer/deserializer (e.g.
+        JSON, or rick's msgpack restricted to plain data types) via the
+        serializer=/deserializer= parameters, or use CryptRedisCache, which
+        authenticates the stored bytes with Fernet256 before unpickling.
     """
 
     def __init__(self, **kwargs):
@@ -160,5 +174,7 @@ class CryptRedisCache(RedisCache):
 
     def _deserializer(self, data):
         if data is not None:
-            return pickle.loads(self._crypt.decrypt(data))
+            # data is Fernet256-authenticated by decrypt() before unpickling, so
+            # only bytes this process encrypted can ever reach pickle.loads()
+            return pickle.loads(self._crypt.decrypt(data))  # nosec B301
         return data

@@ -23,6 +23,10 @@ class BcryptHasher(HasherInterface):
             raise ValueError("hash(): empty password")
 
         password = password.encode("utf-8")
+        # bcrypt only uses the first 72 bytes; reject longer passwords explicitly
+        # so they are never silently truncated (bcrypt <5 truncates, >=5 raises)
+        if len(password) > 72:
+            raise ValueError("hash(): password cannot be longer than 72 bytes")
         salt = bcrypt.gensalt(rounds=self._rounds, prefix=self._prefix.encode("utf-8"))
 
         return bcrypt.hashpw(password, salt).decode("utf-8")
@@ -36,6 +40,11 @@ class BcryptHasher(HasherInterface):
         """
         pw_hash = pw_hash.encode("utf-8")
         password = password.encode("utf-8")
+
+        # passwords over 72 bytes cannot have produced a valid hash() output;
+        # return False deterministically instead of truncating or raising
+        if len(password) > 72:
+            return False
 
         return hmac.compare_digest(bcrypt.hashpw(password, pw_hash), pw_hash)
 
