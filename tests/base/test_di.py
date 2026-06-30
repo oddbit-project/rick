@@ -1,3 +1,6 @@
+import threading
+import time
+
 import pytest
 
 from rick.base import Di
@@ -100,3 +103,46 @@ class TestDi:
         assert isinstance(local_di.get("global-item-will-be-shadowed"), Dummy) is True
         # test shadowed global dependency remains unchanged
         assert isinstance(di.get("global-item-will-be-shadowed"), Dummy2) is True
+
+    def test_reentrant_factory(self):
+        # a factory may resolve other dependencies via the di passed to it
+        di = Di()
+        di.add("dep", lambda d: "DEP")
+        di.add("svc", lambda d: "svc+" + d.get("dep"))
+        assert di.get("svc") == "svc+DEP"
+        # memoized: factory result replaces the stored item
+        assert di.get("svc") == "svc+DEP"
+
+    def test_concurrent_factory_single_instance(self):
+        # a factory dependency resolved concurrently must be built exactly once
+        # and hand the same object to every caller
+        di = Di()
+        calls = []
+        calls_lock = threading.Lock()
+
+        def factory(_di):
+            time.sleep(0.05)  # widen the concurrency window
+            obj = Dummy(_di)
+            with calls_lock:
+                calls.append(obj)
+            return obj
+
+        di.add("svc", factory)
+        results = []
+        errors = []
+
+        def worker():
+            try:
+                results.append(di.get("svc"))
+            except Exception as e:
+                errors.append(e)
+
+        threads = [threading.Thread(target=worker) for _ in range(8)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert errors == []
+        assert len(calls) == 1
+        assert all(r is calls[0] for r in results)

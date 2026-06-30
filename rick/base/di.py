@@ -1,7 +1,6 @@
-import functools
 import types
 from inspect import isclass
-from threading import Lock
+from threading import RLock
 
 
 class Di:
@@ -11,7 +10,7 @@ class Di:
         """
         self._parent = di
         self._registry = {}  # internal dependency registry
-        self._lock = Lock()
+        self._lock = RLock()
 
     def register(self, name: str):
         """
@@ -51,25 +50,22 @@ class Di:
         :param replace:
         :return:
         """
-        if self.has(name) and not replace:
-            raise RuntimeError("Dependency name '{}' already in use".format(name))
+        with self._lock:
+            if self.has(name) and not replace:
+                raise RuntimeError("Dependency name '{}' already in use".format(name))
 
-        if isclass(item):
+            if isclass(item):
 
-            def cls_wrap(
-                _di,
-            ):  # if it is a class, we'll create a wrap function to instantiate the object
-                return item(_di)
+                def cls_wrap(
+                    _di,
+                ):  # if it is a class, we'll create a wrap function to instantiate the object
+                    return item(_di)
 
-            self._registry[name] = cls_wrap  # store the wrapper class
-        else:
-            # or if it is an object or callable, just store it
-            self._registry[name] = item
-        if replace:  # if replacing existing item, clear lru_cache
-            with self._lock:
-                self.get.cache_clear()
+                self._registry[name] = cls_wrap  # store the wrapper class
+            else:
+                # or if it is an object or callable, just store it
+                self._registry[name] = item
 
-    @functools.lru_cache(maxsize=None)
     def get(self, name: str):
         """
         Retrieve a dependency from the registry by name
@@ -77,22 +73,22 @@ class Di:
         :param name: dependency name
         :return: dependency object
         """
-        if not self.has(name):
-            if self._parent is not None:
-                return self._parent.get(name)
-            raise RuntimeError("Key '{}' not found in the registry".format(name))
+        with self._lock:
+            if not self.has(name):
+                if self._parent is not None:
+                    return self._parent.get(name)
+                raise RuntimeError("Key '{}' not found in the registry".format(name))
 
-        item = self._registry[name]
+            item = self._registry[name]
 
-        # if callable, lets execute and use the result instead
-        # and replace the stored item with the result of the callable
-        # if class, just instantiate the class
-        if type(item) in [types.LambdaType, types.FunctionType]:
-            item = item(self)
-            self._registry.pop(name)  # remove 'factory' or wrapper reference
-            self._registry[name] = item  # replace it with the actual object
+            # if callable, lets execute and use the result instead
+            # and replace the stored item with the result of the callable
+            # if class, just instantiate the class
+            if type(item) in [types.LambdaType, types.FunctionType]:
+                item = item(self)
+                self._registry[name] = item  # replace it with the actual object
 
-        return item
+            return item
 
     def scoped(self, name: str):
         """

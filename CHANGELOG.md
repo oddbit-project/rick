@@ -4,6 +4,17 @@ All notable changes to the [Rick](https://github.com/oddbit-project/rick) projec
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.4] - 2026-06-30
+
+### Fixed
+- EventManager: the `dispatch()` re-entrancy stack is now thread-local, eliminating false-positive "circular event dependency" errors when the same event is dispatched concurrently from multiple threads (real same-thread cycle detection is preserved)
+- EventManager: `dispatch()` now snapshots the run queue under `_handler_lock` and releases it before invoking handlers, so handler execution is no longer globally serialized across threads
+- MapLoader: the `get()` circular-dependency stack is now thread-local, eliminating false-positive "circular dependency" errors when the same name is resolved concurrently from multiple threads
+- Di: `get()`/`add()` are now guarded by a reentrant lock and memoize the resolved object in the registry, replacing the unsynchronized `functools.lru_cache`; concurrent resolution of a factory dependency now builds exactly once instead of handing out duplicate instances
+
+### Changed
+- CI/tooling: tox now provisions interpreters through `tox-uv` (uv-backed), enabling the full py3.10-3.14 test matrix on hosts without every interpreter pre-installed; pinned `tox-uv>=1.13` in the dev dependencies
+
 ## [0.8.3] - 2026-06-01
 
 ### Security

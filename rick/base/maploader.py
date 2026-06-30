@@ -1,7 +1,7 @@
 import functools
 import importlib
 
-from threading import Lock
+from threading import Lock, local
 
 from .di import Di
 from ..util.object import full_name
@@ -12,10 +12,23 @@ class MapLoader:
         self._di = di
         self._map = {}
         self._loaded = {}
+        self._local = local()
         self._stack = []
         self._lock = Lock()
         if map_:
             self.append(map_)
+
+    @property
+    def _stack(self):
+        try:
+            return self._local.stack
+        except AttributeError:
+            self._local.stack = []
+            return self._local.stack
+
+    @_stack.setter
+    def _stack(self, value):
+        self._local.stack = value
 
     def add(self, name, path):
         """

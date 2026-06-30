@@ -5,5 +5,6 @@ flake8
 flake8_black
 coverage
 tox
+tox-uv>=1.13
 black
 testcontainers[redis]
