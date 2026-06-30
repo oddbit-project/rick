@@ -18,7 +18,7 @@ Documentation is available at [https://oddbit-project.github.io/rick/](https://o
 
 ### Core Components
 
-- **Dependency Injection** - Service container with singleton and factory patterns, LRU caching
+- **Dependency Injection** - Thread-safe service container with singleton and factory patterns
 - **Service Registry** - Thread-safe dynamic class registration and retrieval
 - **Container Classes** - Immutable and mutable data containers for type-safe configuration
 

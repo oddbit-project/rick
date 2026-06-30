@@ -4,6 +4,11 @@ All notable changes to the [Rick](https://github.com/oddbit-project/rick) projec
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.5] - Unreleased
+
+### Fixed
+- MapLoader: `get()` no longer double-constructs an object when the same name is resolved concurrently from multiple threads during a cold start; the loaded-cache check, build, and store now run together under a reentrant lock with a double-checked `_loaded` cache, so each name is built exactly once (previously `build()` ran outside the lock, allowing duplicate instances). The unsynchronized `functools.lru_cache` on `get()` was removed in favour of the existing `_loaded` memoization, mirroring the 0.8.4 `Di` fix
+
 ## [0.8.4] - 2026-06-30
 
 ### Fixed

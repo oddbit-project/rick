@@ -17,6 +17,22 @@ class MapSlow:
         time.sleep(0.05)
 
 
+class MapCounted:
+    builds = 0
+    _lock = threading.Lock()
+
+    def __init__(self, di):
+        # slow build to widen the concurrent cold-start window
+        time.sleep(0.05)
+        with MapCounted._lock:
+            MapCounted.builds += 1
+
+    @classmethod
+    def reset(cls):
+        with cls._lock:
+            cls.builds = 0
+
+
 class MapCyclic:
     def __init__(self, di):
         # re-enter the loader for the same name -> circular dependency
@@ -69,3 +85,55 @@ def test_concurrent_same_name():
 
     assert errors == []
     assert len(results) == 8
+
+
+def test_concurrent_builds_once():
+    # concurrent cold-start must construct the object exactly once and every
+    # caller must observe the same instance (#2b)
+    MapCounted.reset()
+    loader = MapLoader(Di())
+    loader.add("counted", "tests.base.test_maploader.MapCounted")
+    results = []
+    barrier = threading.Barrier(8)
+
+    def worker():
+        barrier.wait()
+        results.append(loader.get("counted"))
+
+    threads = [threading.Thread(target=worker) for _ in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert MapCounted.builds == 1
+    assert len(results) == 8
+    assert all(r is results[0] for r in results)
+
+
+def test_clear_loaded_rebuilds():
+    # clearing the loaded cache must force a fresh build (no stale memoization)
+    MapCounted.reset()
+    loader = MapLoader(Di())
+    loader.add("counted", "tests.base.test_maploader.MapCounted")
+    first = loader.get("counted")
+    assert MapCounted.builds == 1
+    loader.clear_loaded()
+    second = loader.get("counted")
+    assert MapCounted.builds == 2
+    assert second is not first
+
+
+def test_remove_clears_loaded():
+    # removing a name must drop its cached instance so a re-add rebuilds
+    MapCounted.reset()
+    loader = MapLoader(Di())
+    loader.add("counted", "tests.base.test_maploader.MapCounted")
+    first = loader.get("counted")
+    loader.remove("counted")
+    with pytest.raises(ValueError):
+        loader.get("counted")
+    loader.add("counted", "tests.base.test_maploader.MapCounted")
+    second = loader.get("counted")
+    assert MapCounted.builds == 2
+    assert second is not first

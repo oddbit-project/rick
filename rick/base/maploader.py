@@ -1,7 +1,6 @@
-import functools
 import importlib
 
-from threading import Lock, local
+from threading import RLock, local
 
 from .di import Di
 from ..util.object import full_name
@@ -14,7 +13,7 @@ class MapLoader:
         self._loaded = {}
         self._local = local()
         self._stack = []
-        self._lock = Lock()
+        self._lock = RLock()
         if map_:
             self.append(map_)
 
@@ -51,7 +50,6 @@ class MapLoader:
                 del self._map[name]
             if name in self._loaded.keys():
                 del self._loaded[name]
-            self.get.cache_clear()
 
     def clear_loaded(self):
         """
@@ -60,7 +58,6 @@ class MapLoader:
         """
         with self._lock:
             self._loaded = {}
-            self.get.cache_clear()
 
     def append(self, map: dict):
         """
@@ -80,7 +77,6 @@ class MapLoader:
         """
         return name in self._map.keys()
 
-    @functools.lru_cache(maxsize=None)
     def get(self, name: str):
         """
         Retrieve an object from the map
@@ -94,36 +90,32 @@ class MapLoader:
             if name in self._loaded.keys():
                 return self._loaded[name]
 
-        if name not in self._map.keys():
-            raise ValueError("get(): name '%s' does not exist in map" % name)
+            if name not in self._map.keys():
+                raise ValueError("get(): name '%s' does not exist in map" % name)
 
-        with self._lock:
             self._stack.append(name)
             path = self._map[name]
-
-        try:
-            module_path, cls_name = path.rsplit(".", 1)
             try:
-                module = importlib.import_module(module_path)
-                cls = getattr(module, cls_name, None)
-                if cls is None:
+                module_path, cls_name = path.rsplit(".", 1)
+                try:
+                    module = importlib.import_module(module_path)
+                    cls = getattr(module, cls_name, None)
+                    if cls is None:
+                        raise RuntimeError(
+                            "get(): cannot find class '%s' in module '%s'"
+                            % (cls_name, module_path)
+                        )
+
+                except ModuleNotFoundError:
                     raise RuntimeError(
-                        "get(): cannot find class '%s' in module '%s'"
-                        % (cls_name, module_path)
+                        "get(): mapped module '%s' not found when discovering path %s"
+                        % (module_path, path)
                     )
 
-            except ModuleNotFoundError:
-                raise RuntimeError(
-                    "get(): mapped module '%s' not found when discovering path %s"
-                    % (module_path, path)
-                )
-
-            obj = self.build(cls)
-            with self._lock:
+                obj = self.build(cls)
                 self._loaded[name] = obj
-            return obj
-        finally:
-            with self._lock:
+                return obj
+            finally:
                 if name in self._stack:
                     self._stack.remove(name)
 

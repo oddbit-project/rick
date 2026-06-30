@@ -260,6 +260,11 @@ Register a class directly.
 Dynamic class loader that resolves dotted paths to classes and instantiates them with the `Di`
 container. Results are cached and circular dependencies are detected.
 
+`get()` is thread-safe: construction is serialized under a reentrant lock with a double-checked
+cache, so concurrent resolution of the same name builds the object exactly once and every caller
+receives the same instance. Circular-dependency detection is per-thread, so concurrent resolution
+of the same name from different threads does not raise a false positive.
+
 **Location:** `rick.base.MapLoader`
 
 ```python
