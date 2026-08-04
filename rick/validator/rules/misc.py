@@ -27,7 +27,14 @@ class Id(Rule):
         self, value, options: list = None, error_msg=None, translator: Translator = None
     ):
         value = cast_str(value)
-        if value is not None and value.isnumeric() and int(value) > 0:
+        # ASCII digits only. isnumeric() is true for the whole Unicode numeric
+        # family — vulgar fractions and superscripts ('½', '⅓', '²') that int()
+        # refuses, and non-ASCII decimal digits ('٣', '๓') that it silently
+        # accepts. The first group turned the int() below into a ValueError
+        # raised from inside validation, where no caller can convert it into a
+        # validation failure; the second silently accepted an id nobody wrote.
+        # An id is a database key, so the accepted set is [0-9].
+        if value is not None and value.isascii() and value.isdigit() and int(value) > 0:
             return True, ""
         return False, self.error_message(error_msg, translator)
 
@@ -193,7 +200,8 @@ class RuleIdList(Rule):
 
         for item in value:
             item = cast_str(item)
-            if item is None or not item.isnumeric():
+            # see Id.validate() — ASCII digits only
+            if item is None or not (item.isascii() and item.isdigit()):
                 return False, self.error_message(error_msg, translator)
             if int(item) <= 0:
                 return False, self.error_message(error_msg, translator)
