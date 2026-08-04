@@ -6,7 +6,7 @@
 |----------|-------------------|--------------------------------------------------------------------------|
 | required |                   | Value is required                                                        |
 | bail     |                   | Special validator to skip running all validators on failure              |
-| id       |                   | Value must be a positive numeric greater than 0                          |
+| id       |                   | Value must be ASCII digits, greater than 0                               |
 | uuid     |                   | Value must be a valid UUID                                               |
 | notempty |                   | Value must not be empty                                                  |
 | in       | list,of,values... | Value must be in the specified list of values                            |
@@ -34,7 +34,7 @@
 |---------|-------------|-----------------------------------------------------------------------|
 | list    |             | Value must be a list of items                                         |
 | listlen | min[, max]] | Item list must have at least min elements and optionally max elements |
-| idlist  |             | Value must be a list of ids (positive numeric greater than 0)         |
+| idlist  |             | Value must be a list of ids (ASCII digits, greater than 0)            |
 
 ## Numeric Validators
 

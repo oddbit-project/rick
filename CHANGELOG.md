@@ -4,7 +4,12 @@ All notable changes to the [Rick](https://github.com/oddbit-project/rick) projec
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.8.5] - Unreleased
+## [0.8.6] - 2026-08-04
+
+### Fixed
+- Validator `id` and `idlist`: both rules guarded their `int()` conversion with `str.isnumeric()`, which is true for the whole Unicode numeric family while `int()` accepts only decimal digits. Vulgar fractions and superscripts (`'½'`, `'⅓'`, `'²'`, `'Ⅷ'`) passed the guard and made `int()` raise `ValueError` from inside `Validator.is_valid()`, where a caller has no opportunity to turn it into a validation failure — in a request pipeline that surfaces as an unhandled error rather than a rejected field. Non-ASCII decimal digits (`'٣'`, `'๓'`) did not raise, but were silently accepted as ids. Both rules now accept ASCII digits only, which is the intended set for a database key
+
+## [0.8.5] - 2026-06-30
 
 ### Fixed
 - MapLoader: `get()` no longer double-constructs an object when the same name is resolved concurrently from multiple threads during a cold start; the loaded-cache check, build, and store now run together under a reentrant lock with a double-checked `_loaded` cache, so each name is built exactly once (previously `build()` ran outside the lock, allowing duplicate instances). The unsynchronized `functools.lru_cache` on `get()` was removed in favour of the existing `_loaded` memoization, mirroring the 0.8.4 `Di` fix
